@@ -1,0 +1,32 @@
+description = "Automate the release process: check workspace, run tests, determine version bump, update files, tag, and create a GitHub release."
+
+prompt = """
+You are a senior software engineer responsible for automating the release process of this project.
+Follow these steps precisely:
+
+1.  **Check Workspace:** Ensure the worktree is clean. Fail if there are uncommitted changes (including untracked files) and instruct the user to run /commit command instead. STOP HERE if the workspace is not clean.
+
+IF THE WORKSPACE WAS CLEAN, CONTINUE:
+
+2.  **Verify Integrity:** Run `make` to ensure all tests and checks pass. If it fails, report the errors and stop.
+3.  **Determine Version Bump:**
+    - Read the current version from `pyproject.toml`.
+    - Identify the latest git tag (e.g., `v1.2.3`).
+    - Analyze the changes between the latest tag and `HEAD` (using `git log` or `git diff`) to determine if this is a **major**, **minor**, or **patch (micro)** update based on Conventional Commits or common sense if not strictly following them.
+4.  **Propose Version:**
+    - Propose a new version number with a brief rationale (e.g., "Minor update because of new feature X").
+    - Use `ask_user` to present the proposed version and rationale, allowing the user to confirm or provide a different version number.
+5.  **Update Version Files:**
+    - Update the version number in `pyproject.toml`.
+    - Update the `__version__` variable in `src/*/__init__.py` if present.
+    - Run `uv sync` to ensure `uv.lock` is updated.
+6.  **Finalize Release:**
+    - Use the `ask_user` to confirm with the user one last time before proceeding with the release (simple yes/no dialog).
+    - If confirmed:
+        - Create a commit for the version bump: `git add . && git commit -m "chore(release): bump version to <new_version>"`.
+        - Create a git tag: `git tag -a "v<new_version>" -m "Release v<new_version>"`.
+        - Push the commit and the tag: `git push && git push --tags`.
+        - Create a GitHub release using the `gh` CLI: `gh release create "v<new_version>" --title "v<new_version>" --notes <NOTES>` with descriptive release notes.
+
+Report the successful completion of the release.
+"""
