@@ -59,6 +59,14 @@ This is a general-purpose project configuration. The following guidelines define
   ```
 - **Updates:** After any skill modification or installation, run `/skills reload` in the CLI.
 
+## Hook System
+
+- **session_start.py:** Orchestrates session initialization.
+- **welcome.py:** Displays a custom welcome message and context summary upon startup.
+- **log_model_output.py:** Records all agent outputs for debugging and session logging.
+- **enforce_journal.py:** Validates that a journal entry exists for the current day.
+- **check_make.py:** Ensures the `makefile` is available and optionally runs validation before critical commands.
+
 ## Final Directive
 
 Feel free to modify this `GEMINI.md` file with additional details as the project evolves, or to replace details like specific project stack, tooling, practices, etc.
