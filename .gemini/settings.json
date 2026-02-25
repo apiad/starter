@@ -15,7 +15,7 @@
           {
             "name": "reset-log-on-startup",
             "type": "command",
-            "command": "python3 .gemini/hooks/gemini_logger.py"
+            "command": "python3 .gemini/hooks/session_start.py"
           },
           {
             "name": "welcome-message",
@@ -30,7 +30,7 @@
           {
             "name": "reset-log-on-resume",
             "type": "command",
-            "command": "python3 .gemini/hooks/gemini_logger.py"
+            "command": "python3 .gemini/hooks/session_start.py"
           },
           {
             "name": "welcome-message",
@@ -45,7 +45,7 @@
           {
             "name": "reset-log-on-clear",
             "type": "command",
-            "command": "python3 .gemini/hooks/gemini_logger.py"
+            "command": "python3 .gemini/hooks/session_start.py"
           },
           {
             "name": "welcome-message",
@@ -62,7 +62,7 @@
           {
             "name": "log-model-output",
             "type": "command",
-            "command": "python3 .gemini/hooks/gemini_logger.py"
+            "command": "python3 .gemini/hooks/log_model_output.py"
           }
         ]
       }
@@ -80,7 +80,7 @@
           {
             "name": "update-journal-and-changelog",
             "type": "command",
-            "command": "python3 .gemini/hooks/gemini_logger.py"
+            "command": "python3 .gemini/hooks/enforce_journal.py"
           }
         ]
       }
