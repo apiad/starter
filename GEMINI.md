@@ -22,9 +22,10 @@ This is a general-purpose project configuration. The following guidelines define
 
 ## Project Overview
 
-- **Current State:** Starter/General purpose repository.
+> (!) NOTE: This section is MEANT to be updated with relevant project information. Keep this note for future reference, and feel free to modify below.
+
+- **Current State:** Starter repository with specialized Gemini CLI configuration.
 - **Primary Goal:** To serve as a well-structured environment for high-quality engineering.
-- **THIS SECTION IS MEANT TO BE UPDATED AS THE PROJECT PROGRESSES**.
 
 ## Final Directive
 
