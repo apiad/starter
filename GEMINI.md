@@ -43,6 +43,22 @@ This is a general-purpose project configuration. The following guidelines define
   - **Changelog:** All functional changes must be documented in `CHANGELOG.md`.
   - **Git:** Commit messages following Conventional Commits format.
 
+## Skill Development & Distribution
+
+- **Creation:** Use the `skill-creator` skill to initialize new skills:
+  ```bash
+  node <path-to-skill-creator>/scripts/init_skill.cjs <skill-name> --path .
+  ```
+- **Packaging:** Skills must be packaged into `.skill` files before distribution:
+  ```bash
+  node <path-to-skill-creator>/scripts/package_skill.cjs <path/to/skill-folder>
+  ```
+- **Installation:** Install skills in the workspace scope for project-specific needs:
+  ```bash
+  gemini skills install <skill-name>.skill --scope workspace --consent
+  ```
+- **Updates:** After any skill modification or installation, run `/skills reload` in the CLI.
+
 ## Final Directive
 
 Feel free to modify this `GEMINI.md` file with additional details as the project evolves, or to replace details like specific project stack, tooling, practices, etc.
