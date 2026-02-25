@@ -13,6 +13,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Refactored `GEMINI.md` to include a project overview, technical stack, and recent progress updates.
-- Documented Skill Development & Distribution workflows in `GEMINI.md`.
-- Documented the existing Hook System in `GEMINI.md`.
-- Updated `CHANGELOG.md` and `journal/2026-02-25.md` with recent documentation improvements.
+- Documented Skill Development & Distribution workflows and the Hook System in `GEMINI.md`.
+- Persisted the installed `deep-research` skill into the repository.
+- Updated `CHANGELOG.md` and `journal/2026-02-25.md` with a summary of the session's progress.
