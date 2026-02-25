@@ -26,6 +26,11 @@ This is a general-purpose project configuration. The following guidelines define
 
 - **Current State:** Starter repository with specialized Gemini CLI configuration.
 - **Primary Goal:** To serve as a well-structured environment for high-quality engineering.
+- **Recent Progress:**
+  - **Hooks Refactor:** Monolithic logger split into specialized hooks for session start, output logging, and journal enforcement.
+  - **Custom Subagents:** Support for experimental custom subagents has been enabled.
+  - **Online Researcher Subagent:** A dedicated subagent for deep online investigation is now available in `.gemini/agents/`.
+  - **Deep Research Skill:** A structured `deep-research` skill has been implemented and integrated into the `/research` command.
 
 ## Final Directive
 
