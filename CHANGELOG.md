@@ -12,4 +12,5 @@ All notable changes to this project will be documented in this file.
 - Enabled `enableAgents` in `.gemini/settings.json`.
 
 ### Changed
-- Refactored `GEMINI.md` to include a project overview and update the current state.
+- Refactored `GEMINI.md` to include a project overview, technical stack, and recent progress updates.
+- Updated `CHANGELOG.md` and `journal/2026-02-25.md` with recent documentation improvements.

@@ -32,6 +32,17 @@ This is a general-purpose project configuration. The following guidelines define
   - **Online Researcher Subagent:** A dedicated subagent for deep online investigation is now available in `.gemini/agents/`.
   - **Deep Research Skill:** A structured `deep-research` skill has been implemented and integrated into the `/research` command.
 
+## Technical Stack & Workflow
+
+- **Gemini CLI:** Extensive use of hooks (`.gemini/hooks/`), custom commands (`.gemini/commands/`), and agent skills (`.gemini/skills/`).
+- **Research Workflow:** The `/research` command triggers an iterative process using sub-agents:
+  - `codebase_investigator` for internal deep dives.
+  - `online_researcher` for external web searches.
+- **Standards:**
+  - **Journals:** Daily summaries required in `journal/YYYY-MM-DD.md`.
+  - **Changelog:** All functional changes must be documented in `CHANGELOG.md`.
+  - **Git:** Commit messages following Conventional Commits format.
+
 ## Final Directive
 
 Feel free to modify this `GEMINI.md` file with additional details as the project evolves, or to replace details like specific project stack, tooling, practices, etc.
