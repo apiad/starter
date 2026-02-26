@@ -27,26 +27,24 @@ def main():
         modified_files = get_modified_files()
         output = {"decision": "allow"}
 
-        # Check if there are changes other than journal/changelog
+        today = datetime.now().strftime("%Y-%m-%d")
+        journal_file = f"journal/{today}.md"
+
+        # Check if there are changes other than the daily journal
         significant_changes = [
             f for f in modified_files
-            if f != "CHANGELOG.md" and not f.startswith("journal/")
+            if f != journal_file
         ]
 
-        today = datetime.now().strftime("%Y-%m-%d")
-        updates = [
-            f for f in modified_files
-            if f == "CHANGELOG.md" or f == f"journal/{today}.md"
-        ]
+        # Check if the daily journal was updated
+        journal_updated = journal_file in modified_files
 
-        if significant_changes and not updates:
+        if significant_changes and not journal_updated:
             output = {
                 "decision": "deny",
                 "reason": (
-                    "Please update CHANGELOG.md and add a one-line entry to journal/" + today + ".md "
-                    "describing the changes you just made. Do not stop until these files are updated."
-                    "If necessary, update GEMINI.md with extra details that are relevant for the future,"
-                    " such as specific project stack, tooling, practices, etc."
+                    f"Please add a one-line entry to {journal_file} "
+                    "describing the changes you just made. Do not stop until this file is updated."
                 )
             }
 
