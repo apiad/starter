@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Created a comprehensive `README.md` explaining the starter pack features, commands, skills, and workflow.
 - Conducted deep research on "best practices of prompt engineering for code review" using the `deep-research` skill.
 - Generated a comprehensive research report at `research/research_prompt_engineering_code_review.md`.
 - Created a comprehensive `deep-research` Gemini CLI skill for structured, iterative research using `codebase_investigator` and `online_researcher`.
