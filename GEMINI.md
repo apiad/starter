@@ -20,55 +20,14 @@ This is a general-purpose project configuration. The following guidelines define
 - **Modern Stack:** For the current development environment strictly enforce modern tooling, like an appropriate package manager, linter, test runner, etc.
 - **Validation:** Use `make` (if a `makefile` exists) to run tests and validation suites. Update the `makefile` with appropriate commands as the repostory expands.
 
-## Project Overview
-
-> (!) NOTE: This section is MEANT to be updated with relevant project information. Keep this note for future reference, and feel free to modify below.
-
-- **Current State:** Starter repository with specialized Gemini CLI configuration.
-- **Primary Goal:** To serve as a well-structured environment for high-quality engineering.
-- **Recent Progress:**
-  - **Hooks Refactor:** Monolithic logger split into specialized hooks for session start, output logging, and journal enforcement.
-  - **Custom Subagents:** Support for experimental custom subagents has been enabled.
-  - **Online Researcher Subagent:** A dedicated subagent for deep online investigation is now available in `.gemini/agents/`.
-  - **Deep Research Skill:** A structured `deep-research` skill has been implemented and integrated into the `/research` command.
-
-## Technical Stack & Workflow
-
-- **Gemini CLI:** Extensive use of hooks (`.gemini/hooks/`), custom commands (`.gemini/commands/`), and agent skills (`.gemini/skills/`).
-- **Research Workflow:** The `/research` command triggers an iterative process using sub-agents:
-  - `codebase_investigator` for internal deep dives.
-  - `online_researcher` for external web searches.
-- **Standards:**
-  - **Journals:** Daily summaries required in `journal/YYYY-MM-DD.md`.
-  - **Changelog:** All functional changes must be documented in `CHANGELOG.md`.
-  - **Git:** Commit messages following Conventional Commits format.
-
-## Skill Development & Distribution
-
-- **Creation:** Use the `skill-creator` skill to initialize new skills:
-  ```bash
-  node <path-to-skill-creator>/scripts/init_skill.cjs <skill-name> --path .
-  ```
-- **Packaging:** Skills must be packaged into `.skill` files before distribution:
-  ```bash
-  node <path-to-skill-creator>/scripts/package_skill.cjs <path/to/skill-folder>
-  ```
-- **Installation:** Install skills in the workspace scope for project-specific needs:
-  ```bash
-  gemini skills install <skill-name>.skill --scope workspace --consent
-  ```
-- **Updates:** After any skill modification or installation, run `/skills reload` in the CLI.
-
-## Hook System
-
-- **session_start.py:** Orchestrates session initialization.
-- **welcome.py:** Displays a custom welcome message and context summary upon startup.
-- **log_model_output.py:** Records all agent outputs for debugging and session logging.
-- **enforce_journal.py:** Validates that a journal entry exists for the current day.
-- **check_make.py:** Ensures the `makefile` is available and optionally runs validation before critical commands.
-
 ## Final Directive
 
-Feel free to modify this `GEMINI.md` file with additional details as the project evolves, or to replace details like specific project stack, tooling, practices, etc.
+Feel free to modify the next section (**Project Notes**) of this `GEMINI.md` file with additional details as the project evolves, or to replace details like specific project stack, tooling, practices, etc., in that specific section.
 
 This document is your soul, treat it with love and care.
+
+---
+
+## Project Notes
+
+> (!) NOTE: This section is MEANT to be updated with relevant project information. Keep this note for future reference, and feel free to modify below this line.
