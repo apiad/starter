@@ -1,81 +1,79 @@
-# Gemini CLI Starter Pack
+# Gemini CLI Opinionated Framework
 
-This is a specialized starter repository for building new projects with a focus on **safe and coherent AI-assisted coding**. It's pre-configured for the **Gemini CLI** with advanced hooks, commands, agents, and skills to ensure a high-quality engineering lifecycle.
+This is a highly opinionated repository framework designed to transform how developers work with AI agents, specifically optimized for the [Gemini CLI](https://github.com/google/gemini-cli). It’s not just a collection of files; it’s a **cognitive partnership model** that enforces rigorous engineering standards, strategic planning, and continuous validation.
 
-## Why Use This Starter Pack?
+While tailored for Gemini CLI, the core philosophy—folders like `.gemini/`, files like `GEMINI.md`, and the journaling/task-tracking workflow—can be adapted to any AI agent by simply renaming the relevant files and folders (e.g., to `.cursor/` or `.aider/`).
 
-*   **Strategic Planning:** Forces a "Research -> Strategy -> Execution" cycle for non-trivial changes.
-*   **Validation-First:** Integrated `makefile` hooks ensure code passes linting and tests before being committed.
-*   **Deep Context:** Pre-configured with a robust `deep-research` skill for complex technical investigations.
-*   **Auditability:** Automated journaling (`journal/`) and changelog (`CHANGELOG.md`) management.
-*   **Specialized Agents:** Includes sub-agents like `online_researcher` for high-signal web investigations.
+## The Core Philosophy: AI as a Senior Partner
 
----
+In this framework, the AI agent is not a "code generator" or a "copilot". It is a **Senior Architect and Critical Thinking Partner**.
 
-## Getting Started
+*   **Critical Feedback First:** The agent is instructed to challenge unsafe, redundant, or poorly conceived ideas *before* writing a single line of code.
+*   **Research -> Plan -> Execute:** Every non-trivial change follows a strict lifecycle. The agent first researches the context, proposes a detailed plan, waits for your explicit approval, and only then begins implementation.
+*   **Validation-Always:** The framework uses `make` as a source of truth. The agent is hooked into the `makefile` to ensure that every change is validated (linted and tested) before being finalized.
 
-### 1. Fork and Clone
-Fork this repository and clone it to your local machine:
-```bash
-git clone https://github.com/your-username/your-new-project.git
-cd your-new-project
-```
+## The Workflow: Start Fresh, Move Fast
 
-### 2. Initialize the Project
-Update the `GEMINI.md` and `package.json` (or equivalent) with your specific project details.
-```bash
-# Example: Run the onboard command
-gemini /onboard
-```
+To use this framework for a new project, follow these steps:
 
-### 3. Usage
-Use the Gemini CLI to interact with the repository.
-```bash
-gemini /research "how to implement X in this stack"
-gemini /commit
-```
+1.  **Clone the Repo:**
+    ```bash
+    git clone https://github.com/apiad/starter.git my-new-project
+    cd my-new-project
+    ```
+2.  **Reset for a New Project:**
+    Remove the existing history and documentation to start with a blank slate:
+    ```bash
+    rm -rf .git README.md CHANGELOG.md journal/*.md
+    git init
+    ```
+3.  **Scaffold Your Stack:**
+    Use the built-in `/scaffold` command to initialize your project with modern tooling (Python/uv, TS/npm, Rust/cargo, etc.):
+    ```bash
+    gemini /scaffold
+    ```
+    The agent will ask you about your preferred stack, architecture, and tools, then generate the project structure and a compatible `makefile`.
 
----
+## The Hook System: Staying in Sync
 
-## Core Features
+The framework uses a robust hook system (`.gemini/hooks/`) that synchronizes the agent with your project state:
 
-### 1. Advanced Commands (`.gemini/commands/`)
-*   **/commit:** Analyzes changes, groups them into logical features/bugfixes, and commits with Conventional Commits.
-*   **/research:** Invokes the `deep-research` skill for exhaustive online and codebase investigations.
-*   **/onboard:** Assists in setting up the project and understanding its structure.
-*   **/maintainance:** Deep analysis and planning for codebase refactoring or cleanup.
-*   **/release:** Handles version bumping and release documentation.
-*   **/docs:** Automates the generation and maintenance of project documentation.
+*   **`session_start.py`**: Initializes the environment and greets you.
+*   **`welcome.py`**: Provides a high-level summary of the current project state and available commands.
+*   **`enforce_journal.py`**: Ensures a journal entry exists for the current date, maintaining an audit trail of decisions and progress.
+*   **`check_make.py`**: Automatically runs `make` (minimal lint+test) after critical agent actions to prevent regressions.
+*   **`log_model_output.py`**: Records agent outputs for debugging and session review.
 
-### 2. Specialized Agents (`.gemini/agents/`)
-*   **online_researcher:** A senior research specialist that decomposes complex queries, performs deep web searches, and synthesizes data with full citations.
+## Powerful Commands
 
-### 3. Agent Skills (`.gemini/skills/`)
-*   **deep-research:** A robust, iterative skill that tracks progress via `research.plan.md`, aggregates raw data in `research.dump.md`, and synthesizes it into a section-by-section `report.md`.
+The `.gemini/commands/` directory defines specialized workflows:
 
----
+*   **/scaffold**: Initializes a new project from scratch with modern standard practices.
+*   **/task**: A unified command to `create`, `work` on, `report`, or `update` your project roadmap (`TASKS.md`).
+*   **/research**: A robust 3-phase workflow (Planning -> Data Gathering via `researcher` agent -> Reporting via `reporter` agent) for exhaustive investigations.
+*   **/commit**: Analyzes changes, groups them logically, and commits them one-by-one using Conventional Commits.
+*   **/release**: Automates version bumping, `CHANGELOG.md` updates, and git tagging.
+*   **/maintainance**: Performs deep analysis and proposes step-by-step refactoring plans.
+*   **/docs**: Generates and maintains project documentation.
+*   **/onboard**: Helps new developers (or the agent itself) understand the project structure.
 
-## Workflow & Hooks Lifecycle
+## The Journaling Idea
 
-The project enforces a strict engineering standard through its **Hook System** (`.gemini/hooks/`):
+Journaling is central to this framework. Every day you work on the project, a new entry is created in `journal/YYYY-MM-DD.md`.
 
-1.  **Session Start (`session_start.py`):** Orchestrates session initialization and greets the developer.
-2.  **Welcome & Context (`welcome.py`):** Provides a high-level summary of the current project state.
-3.  **Journal Enforcement (`enforce_journal.py`):** Ensures that a journal entry exists for the current date, maintaining an audit trail of decisions.
-4.  **Make Validation (`check_make.py`):** Automatically runs `make lint` and `make test` before critical AI actions to prevent regressions.
-5.  **Audit Logging (`log_model_output.py`):** Records agent outputs for debugging and session review.
+*   **Why?** It provides a persistent "memory" for the agent and a clear audit trail for you. When you start a new session, the agent reads the recent journals to understand exactly where you left off.
+*   **Enforcement:** The `enforce_journal.py` hook ensures you never forget to document your progress.
 
----
+## Engineering Standards (GEMINI.md)
 
-## Development Standards
-
-As defined in `GEMINI.md`, the AI agent acts as a **Senior Architect and Critical Thinking Partner**. It is mandate-bound to:
-*   Critique unsafe or flawed proposals before implementation.
-*   Present a detailed strategy and seek approval for non-trivial changes.
-*   Enforce a clean "Research -> Strategy -> Execution" lifecycle.
-*   Prioritize modular, maintainable code over "just-in-case" complexity.
+The `GEMINI.md` file is the **"Soul" of the Agent**. It contains the core mandates that the agent must follow, including:
+*   Critical cognitive partnership.
+*   Strategic planning and approval.
+*   Modern engineering standards (DRY, documentation, testing).
+*   Rigorous tool validation.
 
 ---
 
 ## License
-MIT (or as specified in your fork).
+
+MIT

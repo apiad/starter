@@ -18,10 +18,10 @@ Put done tasks into the Archive.
 
 ---
 
-## Archive
+ ## Archive
 
+- [x] Rewrite the `README.md` to explain the opinionated framework and its key features. (2026-02-28)
 - [x] Refactor the `/research` command into a 3-phase workflow with researcher and reporter subagents. (2026-02-28)
 - [x] Consolidate the `/task/*` commands into a single `/task` command. (2026-02-28)
-
 
 > Done tasks go here, in the order they where finished, with a finished date.
