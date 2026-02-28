@@ -16,12 +16,11 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
-### Refactoring
-
 ---
 
 ## Archive
 
+- [x] Refactor the `/research` command into a 3-phase workflow with researcher and reporter subagents. (2026-02-28)
 - [x] Consolidate the `/task/*` commands into a single `/task` command. (2026-02-28)
 
 
