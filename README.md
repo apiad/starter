@@ -52,8 +52,9 @@ The `.gemini/commands/` directory defines specialized workflows:
 *   **/task**: A unified command to `create`, `work` on, `report`, or `update` your project roadmap (`TASKS.md`).
 *   **/research**: A robust 3-phase workflow (Planning -> Data Gathering via `researcher` agent -> Reporting via `reporter` agent) for exhaustive investigations.
 *   **/commit**: Analyzes changes, groups them logically, and commits them one-by-one using Conventional Commits.
-*   **/release**: Automates version bumping, `CHANGELOG.md` updates, and git tagging.
-*   **/maintainance**: Performs deep analysis and proposes step-by-step refactoring plans.
+* **/release**: Automates version bumping, `CHANGELOG.md` updates, and git tagging.
+* **/issues**: Manage project issues with GitHub CLI: list summary, create, update, or plan work.
+* **/maintainance**: Performs deep analysis and proposes step-by-step refactoring plans.
 *   **/docs**: Generates and maintains project documentation.
 *   **/onboard**: Helps new developers (or the agent itself) understand the project structure.
 

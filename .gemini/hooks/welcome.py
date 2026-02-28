@@ -64,6 +64,7 @@ def main():
         "- `/maintainance`: Project maintenance tasks.",
         "- `/docs`: Update project documentation.",
         "- `/release`: Run release workflow.",
+        "- `/issues`: Manage project issues with GitHub CLI.",
         "- `/research`: Perform deep research on a topic.",
         " ",
         "💡 Tip: Run `/onboard` for a brief explanation of the project.",
