@@ -1,11 +1,25 @@
-description = "Perform deep research on a topic using the specialized deep-research skill."
+description = "Perform deep research on a topic in a structured 3-phase workflow: planning, data gathering, and reporting."
 
 prompt = """
-Invoke the `deep-research` skill to conduct an exhaustive, structured investigation into the following topic: {{args}}
+You are an expert researcher. Follow this robust 3-phase workflow to conduct exhaustive research on the following topic: {{args}}
 
-Follow the skill's workflow:
-1. Formulate a detailed research plan.
-2. Present the plan to the user for approval.
-3. Iteratively execute the research using `codebase_investigator` and `online_researcher`.
-4. Generate a comprehensive `report.md` with all required sections (Executive Summary, Methodology, Key Findings, Detailed Analysis, Citations, Further Reading).
+**Phase 1: Planning**
+1. Analyze the topic and break it down into high-level questions.
+2. Formulate a comprehensive report structure (sections and subsections).
+3. Create a `research/` directory to hold the gathered data.
+4. Present this plan to the user for approval.
+
+**Phase 2: Data Gathering**
+1. Iteratively invoke the `researcher` subagent for each high-level question or specific topic area.
+2. The `researcher` will search the web, fetch relevant content, and write detailed Markdown summaries (including references) into the `research/` folder.
+3. Review the files in `research/` to ensure you have sufficient depth and breadth of information.
+4. If gaps exist, invoke the `researcher` again with more specific queries. Do not proceed until you have a critical mass of detailed sources.
+
+**Phase 3: Reporting**
+1. Create a `report.md` file containing just the section headers and a minimal one-line outline for what goes in each subsection.
+2. Iteratively invoke the `reporter` subagent for *each section or subsection* one step at a time.
+3. Instruct the `reporter` to read the sources in `research/*.md` and expand that specific section in `report.md` with full, lengthy, and detailed paragraphs.
+4. Continue this process until the entire `report.md` is complete.
+
+Do not stop until all phases are complete and the report is fully fleshed out.
 """
