@@ -40,6 +40,7 @@ def main():
         git_status,
         " ",
         "🛠️  Available Commands:",
+        "- `/task`: Manage tasks, create, update, or work.",
         "- `/commit`: Prepare and commit changes.",
         "- `/maintainance`: Project maintenance tasks.",
         "- `/docs`: Update project documentation.",
