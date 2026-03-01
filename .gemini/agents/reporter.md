@@ -6,7 +6,6 @@ tools:
   - list_directory
   - read_file
   - replace
-model: gemini-2.0-flash
 max_turns: 15
 ---
 
