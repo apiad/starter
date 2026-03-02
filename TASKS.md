@@ -15,6 +15,7 @@ Put done tasks into the Archive.
 ---
 
 ## Active Tasks
+- [ ] Implement drafting (`/draft`) and editing (`/revise`) capabilities using specialized subagents. (See plan: plans/drafting-and-editing-capabilities.md)
 
 ---
 
