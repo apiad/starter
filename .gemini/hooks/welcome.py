@@ -6,7 +6,6 @@ This hook is triggered on session 'startup', 'resume', or 'clear'.
 It fetches project info from pyproject.toml and current git status.
 """
 import json
-import subprocess
 import sys
 import os
 import tomllib
@@ -30,6 +29,30 @@ def get_project_info():
     except Exception:
         return "Unknown", "No description available."
 
+def get_commands():
+    """
+    Reads the .gemini/commands/ directory and extracts descriptions from .toml files.
+    """
+    commands_dir = os.path.join(".gemini", "commands")
+    if not os.path.isdir(commands_dir):
+        return []
+    
+    commands = []
+    for filename in sorted(os.listdir(commands_dir)):
+        if filename.endswith(".toml"):
+            command_name = filename[:-5]
+            file_path = os.path.join(commands_dir, filename)
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    first_line = f.readline().strip()
+                    if "description =" in first_line:
+                        # Extract description from "description = '...'" or "description = \"...\""
+                        desc = first_line.split("=", 1)[1].strip().strip('"').strip("'")
+                        commands.append((command_name, desc))
+            except Exception:
+                continue
+    return commands
+
 def main():
     """
     Main entry point for the welcome message hook.
@@ -50,6 +73,9 @@ def main():
     else:
         status_msg = "✅ Working tree is clean."
 
+    commands = get_commands()
+    command_lines = [f"- `/{cmd_name}`: {desc}" for cmd_name, desc in commands if cmd_name != "onboard"]
+    
     message_lines = [
         f"🚀 Welcome to Gemini CLI for `{name}`",
         f"📝 {description}",
@@ -58,17 +84,12 @@ def main():
         status_msg,
         " ",
         "🛠️  Available Commands:",
-        "- `/scaffold`: Scaffold a new project.",
-        "- `/task`: Manage tasks, create, update, or work.",
-        "- `/commit`: Prepare and commit changes.",
-        "- `/maintainance`: Project maintenance tasks.",
-        "- `/docs`: Update project documentation.",
-        "- `/release`: Run release workflow.",
-        "- `/issues`: Manage project issues with GitHub CLI.",
-        "- `/research`: Perform deep research on a topic.",
+        *command_lines,
         " ",
-        "💡 Tip: Run `/onboard` for a brief explanation of the project.",
     ]
+    
+    if any(cmd[0] == "onboard" for cmd in commands):
+        message_lines.append("💡 Tip: Run `/onboard` for a brief explanation of the project.")
 
     system_message = "\n".join(message_lines)
 
