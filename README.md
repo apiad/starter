@@ -11,19 +11,28 @@
 
 *A cognitive partnership model that enforces rigorous engineering standards, strategic planning, and continuous validation.*
 
+#### 🚀 [**Check out the launch blog post!**](https://blog.apiad.net/p/how-im-using-ai-today)
+
 </div>
 
 ---
 
-## 🧠 The Core Philosophy: AI as a Senior Partner
+## 🔥 Quick Start
 
-In this framework, the AI agent is not just a "code generator" or a "copilot". It is a **Senior Architect and Critical Thinking Partner**.
+This repository is meant to be used as a template for new projects.
+
+1. Clone the repo or [create a new project directly](https://github.com/apiad/starter/generate).
+2. Delete `README.md`, `CHANGELOG.md`, and `journal/*.md` to get a fresh history.
+3. Run `gemini /scaffold` to start a new project.
+4. Follow instructions and enjoy!
+
+## 🧠 The Core Philosophy
+
+This repository is a heavily customized and oppinionanted Gemini CLI agent, ready to be used in any situation. In this framework, the AI agent is not just a "code generator" or a "copilot". It is a **Senior Architect and Critical Thinking Partner**:
 
 *   **🛡️ Critical Feedback First:** The agent is instructed to challenge unsafe, redundant, or poorly conceived ideas *before* writing a single line of code.
 *   **📋 Research -> Plan -> Execute:** Every non-trivial change follows a strict lifecycle. The agent first researches context, proposes a detailed plan, waits for your explicit approval, and only then begins implementation.
 *   **✅ Validation-Always:** The framework uses `make` as a source of truth. The agent is hooked into the `makefile` to ensure every change is validated (linted and tested) before being finalized.
-
----
 
 ## 🛠️ The Project Lifecycle
 
@@ -54,9 +63,7 @@ The `.gemini/commands/` directory defines specialized workflows that automate ev
 *   **`/commit`**: Analyzes all uncommitted changes, groups them into logical features or fixes, and guides you through committing them individually using **Conventional Commits**.
 *   **`/release`**: Automates the final shipping steps: running tests, determining the next version (semver), updating the `CHANGELOG.md`, and tagging the release.
 
----
-
-## 🔄 Standard Operating Procedures (SOPs)
+## 🔄 Common Use Cases
 
 This framework shines when you combine these commands into cohesive workflows:
 
@@ -79,9 +86,7 @@ This framework shines when you combine these commands into cohesive workflows:
 2.  **Draft:** Run `/draft` to build an outline and expand it into a full article.
 3.  **Revise:** Use `/revise` for step-by-step style guide-driven audits and refinements.
 
----
-
-## ⚓ The Hook System: Staying in Sync
+## ⚓ The Hook System
 
 The framework uses a robust hook system (`.gemini/hooks/`) that synchronizes the agent with your project state:
 
@@ -90,8 +95,6 @@ The framework uses a robust hook system (`.gemini/hooks/`) that synchronizes the
 *   **`make.py`**: Automatically runs `make` after critical agent actions to prevent regressions.
 *   **`cron.py`**: Synchronizes `cron.toml` tasks with **systemd user timers**.
 
----
+## 📄 License & Contribution
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. All contributions are welcome!
