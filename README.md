@@ -28,6 +28,7 @@ In this framework, the AI agent is not just a "code generator" or a "copilot". I
 The `.gemini/commands/` directory defines specialized workflows that automate the entire development lifecycle:
 
 ### 📁 Project Management & Discovery
+*   **`/plan`**: An interactive planning workflow that gathers context, analyzes the codebase, and generates a detailed execution plan saved in `plans/`. It also synchronizes with your `TASKS.md` and issues.
 *   **`/onboard`**: Summarizes the project's architecture, standards, and current state to quickly orient a new developer (or the agent itself).
 *   **`/task`**: Manages the project roadmap in `TASKS.md`. Use it to `create` new tasks, `work` on existing ones (marks as In Progress), `report` on priorities, or `update` the roadmap.
 *   **`/issues`**: Integrates with the GitHub CLI (`gh`) to list, create, or update issues. It can transition from an issue directly into an implementation **Plan**.

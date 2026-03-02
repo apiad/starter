@@ -19,6 +19,8 @@ Put done tasks into the Archive.
 ---
 
  ## Archive
+- [x] Implement a custom `/plan` command workflow and a `planner` sub-agent for repository analysis and plan generation in `plans/`. (2026-03-02)
+- [x] Implement a `/cron` command and synchronization hook with systemd user timers for scheduled tasks. (2026-03-02)
 - [x] Add the /issues command to manage project issues with GitHub CLI. (2026-02-28)
 - [x] Refactor the hook system: centralize shared logic into `.gemini/hooks/utils.py` and add PEP 257 docstrings. (2026-02-28)
 - [x] Rewrite the `README.md` to explain the opinionated framework and its key features. (2026-02-28)
