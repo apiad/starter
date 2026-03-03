@@ -19,12 +19,30 @@
 
 ## 🔥 Quick Start
 
-This repository is meant to be used as a template for new projects.
+The fastest way to bootstrap a new project from this template is to run the following command in your terminal:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/apiad/starter/main/install.sh | bash
+```
+
+This interactive script will:
+1.  **Prompt** for your project name and target directory.
+2.  **Clone** the template and **reset** the Git history.
+3.  **Clean** out placeholder content (`README.md`, `CHANGELOG.md`, `journal/`, etc.).
+4.  **Initialize** a fresh project structure, ready for the Gemini CLI.
+5.  **Launch** the Gemini CLI to start your first session.
+
+Once Gemini CLI is open, run `/scaffold` to begin, or `/onboard` to get an overview of the repository.
+
+---
+
+## 🏗️ Alternative Installation
+
+If you prefer a manual setup:
 
 1. Clone the repo or [create a new project directly](https://github.com/apiad/starter/generate).
 2. Delete `README.md`, `CHANGELOG.md`, and `journal/*.md` to get a fresh history.
 3. Run `gemini /scaffold` to start a new project.
-4. Follow instructions and enjoy!
 
 ## 🧠 The Core Philosophy
 
