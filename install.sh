@@ -3,6 +3,7 @@ set -e
 
 # --- Configuration ---
 REPO_URL="https://github.com/apiad/starter.git"
+VERSION="0.9.0"
 
 # --- Functions ---
 banner() {
@@ -13,7 +14,7 @@ banner() {
   echo "| |_| |  __/ | | | | | | | | | |"
   echo " \____|\___|_| |_| |_|_|_| |_|_|"
   echo -e "\033[0m"
-  echo -e "\033[1;32m   Gemini CLI Starter Scaffolding\033[0m"
+  echo -e "\033[1;32m   Gemini CLI Starter Scaffolding v$VERSION\033[0m"
   echo "------------------------------------------"
 }
 
