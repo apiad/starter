@@ -49,6 +49,7 @@ The `.gemini/commands/` directory defines specialized workflows that automate ev
 
 ### 🏗️ Phase 2: Development & Execution
 *   **`/issues`**: Your gateway to GitHub integration. It allows you to list, create, or update issues. Use `/issues work <number>` to transition an issue directly into a detailed research and planning mode.
+*   **`/debug`**: Activates a specialized `debugger` subagent to perform forensic root-cause analysis (RCA). It analyzes error logs, traces code execution, and generates structured reports to pinpoint bugs.
 *   **`/task`**: Manages the project roadmap in `TASKS.md`. Use it to `create` new tasks, `work` on existing ones (marks as In Progress), `report` on priorities, or `update` the roadmap.
 *   **`/scaffold`**: Initializes new project structures from scratch using modern, standard tooling (Python/uv, TS/npm, Rust/cargo, etc.) and sets up a compatible `makefile`.
 
@@ -77,9 +78,9 @@ This framework shines when you combine these commands into cohesive workflows:
 
 ### 2️⃣ Bug Resolution Workflow
 1.  **Triage:** Use `/issues summary` to see what needs attention.
-2.  **Reproduce:** Use `/issues work <id>` to research the root cause.
-3.  **Fix:** Develop the fix and validate with `make`.
-4.  **Sync:** Update the issue with the resolution details.
+2.  **Analyze:** Use `/debug` to activate the forensic subagent and perform root-cause analysis (RCA).
+3.  **Fix:** Develop the fix based on the RCA and validate with `make`.
+4.  **Sync:** Update the issue with the resolution details using `/issues`.
 
 ### 3️⃣ Content Creation Workflow
 1.  **Research:** Use `/research` to gather data into an executive report.
