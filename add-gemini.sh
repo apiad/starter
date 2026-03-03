@@ -8,13 +8,13 @@ VERSION="0.10.0"
 # --- Functions ---
 banner() {
   echo -e "\033[1;34m"
-  echo "  ____               _       _ "
-  echo " / ___| ___ _ __ ___(_)_ __ (_)"
-  echo "| |  _ / _ \ '_ ` _ \ | '_ \| |"
+  echo "  ____                _       _ "
+  echo " / ___| ___ _ __ ___ (_) __  (_)"
+  echo "| |  _ / _ \ '_ \' _ \ | '_ \| |"
   echo "| |_| |  __/ | | | | | | | | | |"
   echo " \____|\___|_| |_| |_|_|_| |_|_|"
   echo -e "\033[0m"
-  echo -e "\033[1;32m   Gemini CLI Integration v$VERSION\033[0m"
+  echo -e "\033[1;32m   Gemini CLI Starter v$VERSION\033[0m"
   echo "------------------------------------------"
 }
 
