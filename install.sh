@@ -3,7 +3,7 @@ set -e
 
 # --- Configuration ---
 REPO_URL="https://github.com/apiad/starter.git"
-VERSION="0.10.1"
+VERSION="0.11.0"
 
 # --- Functions ---
 banner() {
@@ -23,6 +23,15 @@ error() {
   exit 1
 }
 
+confirm() {
+  echo -n "$1 [y/N]: "
+  read CONFIRM < /dev/tty
+  if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+    echo "Aborted by user."
+    exit 0
+  fi
+}
+
 # --- Check Prerequisites ---
 for cmd in git node; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
@@ -30,75 +39,127 @@ for cmd in git node; do
   fi
 done
 
+# --- Git Environment Validation ---
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "📂 Initializing git repository..."
+  git init -q
+fi
+
+if [[ -n $(git status --porcelain) ]]; then
+  error "Working tree is not clean. Please commit or stash your changes before running this script."
+fi
+
 # --- Inputs ---
-# We use /dev/tty for input because curl | bash takes over stdin
 banner
 
-echo -n "Enter project name: "
-read PROJECT_NAME < /dev/tty
+# --- Acquisition ---
+echo "🚀 Fetching latest framework from $REPO_URL..."
+TEMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TEMP_DIR"' EXIT
 
-if [[ -z "$PROJECT_NAME" ]]; then
-  error "Project name cannot be empty."
+git clone --depth 1 -q "$REPO_URL" "$TEMP_DIR" || error "Failed to clone template repository."
+
+# --- Discovery ---
+FILES_TO_EXTRACT=(
+  "GEMINI.md"
+  "makefile"
+  "TASKS.md"
+  "CHANGELOG.md"
+  "README.md"
+)
+
+CONTENT_DIRS=(
+  "journal"
+  "plans"
+  "research"
+  "drafts"
+)
+
+WILL_CREATE=()
+WILL_UPDATE=()
+
+# Check .gemini directory
+if [[ -d ".gemini" ]]; then
+  WILL_UPDATE+=(".gemini/ (core framework)")
+else
+  WILL_CREATE+=(".gemini/ (core framework)")
 fi
 
-# Sanitize project name for default target directory
-DEFAULT_TARGET=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g')
-echo -n "Enter target directory [$DEFAULT_TARGET]: "
-read TARGET_DIR < /dev/tty
-
-TARGET_DIR=${TARGET_DIR:-$DEFAULT_TARGET}
-
-if [[ -d "$TARGET_DIR" ]]; then
-  error "Directory '$TARGET_DIR' already exists. Choose a different directory or delete the existing one."
-fi
-
-# --- Execution ---
-echo "🚀 Scaffolding new project: $PROJECT_NAME in $TARGET_DIR..."
-
-# Clone the template
-git clone --depth 1 "$REPO_URL" "$TARGET_DIR" || error "Failed to clone template repository."
-
-cd "$TARGET_DIR"
-
-# Reset Git History
-rm -rf .git
-git init -q
-
-# Reset Core Markdown Files
-cat <<EOF > README.md
-# $PROJECT_NAME
-
-This project was bootstrapped from [apiad/starter](https://github.com/apiad/starter).
-EOF
-
-cat <<EOF > CHANGELOG.md
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-## [Unreleased]
-- Initial project scaffold.
-EOF
-
-# Clear content directories but preserve .gitkeep
-for dir in journal plans drafts; do
-  if [[ -d "$dir" ]]; then
-    find "$dir" -maxdepth 1 -type f ! -name ".gitkeep" -delete
-    touch "$dir/.gitkeep"
+# Check top-level files
+for f in "${FILES_TO_EXTRACT[@]}"; do
+  if [[ -e "$f" ]]; then
+    WILL_UPDATE+=("$f")
+  else
+    WILL_CREATE+=("$f")
   fi
 done
 
-# Create first journal entry
-TODAY=$(date +%Y-%m-%d)
-cat <<EOF > "journal/$TODAY.md"
-# $TODAY - Initial Kickoff
+# Check content directories
+for d in "${CONTENT_DIRS[@]}"; do
+  if [[ ! -d "$d" ]]; then
+    WILL_CREATE+=("$d/")
+  fi
+done
 
-Started the project "$PROJECT_NAME" using the Gemini CLI framework.
-EOF
+# --- Summary & Confirmation ---
+echo -e "\033[1;33mProposed Changes:\033[0m"
+if [[ ${#WILL_CREATE[@]} -gt 0 ]]; then
+  echo -e "\033[1;32mNew files/folders to create:\033[0m"
+  for f in "${WILL_CREATE[@]}"; do echo "  + $f"; done
+fi
+
+if [[ ${#WILL_UPDATE[@]} -gt 0 ]]; then
+  echo -e "\033[1;34mExisting files/folders to update (framework only):\033[0m"
+  for f in "${WILL_UPDATE[@]}"; do echo "  ~ $f"; done
+fi
+
+echo ""
+confirm "Do you want to proceed with these changes?"
+
+# --- Execution ---
+IS_UPDATE=false
+if [[ -d ".gemini" ]]; then
+  IS_UPDATE=true
+fi
+
+echo "🛠️  Applying changes..."
+
+# 1. Update .gemini (non-destructive for user files)
+mkdir -p .gemini
+cp -r "$TEMP_DIR/.gemini/." .gemini/
+
+# 2. Update Top-Level Files
+for f in "${FILES_TO_EXTRACT[@]}"; do
+  cp "$TEMP_DIR/$f" .
+done
+
+# 3. Ensure Content Directories & .gitkeep
+for d in "${CONTENT_DIRS[@]}"; do
+  mkdir -p "$d"
+  if [[ -f "$TEMP_DIR/$d/.gitkeep" ]]; then
+    cp "$TEMP_DIR/$d/.gitkeep" "$d/"
+  fi
+done
+
+# 4. Journal Entry
+TODAY=$(date +%Y-%m-%d)
+mkdir -p journal
+JOURNAL_FILE="journal/$TODAY.md"
+if [[ ! -f "$JOURNAL_FILE" ]]; then
+  echo "# $TODAY" > "$JOURNAL_FILE"
+fi
+
+if $IS_UPDATE; then
+  echo -e "\n## Gemini CLI Update\n- Updated framework to version $VERSION." >> "$JOURNAL_FILE"
+  COMMIT_MSG="chore: update Gemini CLI framework to v$VERSION"
+else
+  echo -e "\n## Gemini CLI Integration\n- Integrated Gemini CLI framework v$VERSION." >> "$JOURNAL_FILE"
+  COMMIT_MSG="feat: integrate Gemini CLI framework v$VERSION"
+fi
 
 # --- Post-Install ---
 git add .
-git commit -m "Initial commit" -q
+git commit -m "$COMMIT_MSG" -q
 
-echo "✅ Project $PROJECT_NAME scaffolded successfully!"
-echo "🚀 Run 'gemini /onboard' to get started with your new project!"
+echo "✅ Gemini CLI framework $( [ "$IS_UPDATE" = true ] && echo "updated" || echo "integrated" ) successfully!"
+echo "🚀 Run 'gemini /onboard' to get started!"
