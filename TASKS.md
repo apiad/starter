@@ -20,6 +20,9 @@ Put done tasks into the Archive.
 
 ## Archive
 
+- [x] Refine `install.sh` to protect existing scaffolding files (README, TASKS, etc.) while ensuring the core framework (.gemini, GEMINI.md) is updated. (2026-03-16) (See plan: plans/refine-install-script.md)
+- [x] Refactor the `/task` command to prioritize a strict TCR (Test-Commit-Revert) protocol for working on tasks. (2026-03-16) (See plan: plans/implement-tcr-task-command.md)
+
 - [x] Update `install.sh` to be served via GitHub Pages and update all references to use the new URL. (2026-03-11)
 - [x] Create comprehensive User Guide (`docs/user-guide.md`) based on "The Architect in the Machine" philosophy. (2026-03-11) (See plan: plans/user-guide-integration.md)
 - [x] Refine `/plan` command to strictly enforce a non-execution mandate for generated plans. (2026-03-11)
