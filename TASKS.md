@@ -20,6 +20,7 @@ Put done tasks into the Archive.
 
 ## Archive
 
+- [x] Update the core documentation suite (index, develop, design, user-guide) to incorporate the new TCR protocol and task isolation principles. (2026-03-16)
 - [x] Refine `install.sh` to protect existing scaffolding files (README, TASKS, etc.) while ensuring the core framework (.gemini, GEMINI.md) is updated. (2026-03-16) (See plan: plans/refine-install-script.md)
 - [x] Refactor the `/task` command to prioritize a strict TCR (Test-Commit-Revert) protocol for working on tasks. (2026-03-16) (See plan: plans/implement-tcr-task-command.md)
 
