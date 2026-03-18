@@ -58,7 +58,7 @@ def log_message(message, mode="a"):
     except Exception:
         pass
 
-def send_hook_decision(decision, reason=None, system_message=None, hook_output=None):
+def send_hook_decision(decision, reason=None, system_message=None, hook_output=None, continue_flag=None):
     """
     Prints the standard JSON response for a Gemini CLI hook.
     
@@ -67,6 +67,7 @@ def send_hook_decision(decision, reason=None, system_message=None, hook_output=N
         reason (str, optional): The reason for denial.
         system_message (str, optional): A system message to display to the user.
         hook_output (dict, optional): Additional context for the UI.
+        continue_flag (bool, optional): Whether the hook loop should continue.
     """
     response = {"decision": decision}
     if reason:
@@ -75,5 +76,7 @@ def send_hook_decision(decision, reason=None, system_message=None, hook_output=N
         response["systemMessage"] = system_message
     if hook_output:
         response["hookSpecificOutput"] = hook_output
+    if continue_flag is not None:
+        response["continue"] = continue_flag
     
     print(json.dumps(response))
