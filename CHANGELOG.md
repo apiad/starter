@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.1] - 2026-03-20
+
+### Changed
+- **Documentation Suite Overhaul:** Major updates to the entire documentation suite (`index.md`, `deploy.md`, `design.md`, `develop.md`, `user-guide.md`, and `README.md`) to accurately reflect the framework's v0.19.0 improvements, including the `/learn` command, the dual-layer hook system, and the updated testing philosophy.
+
 ## [0.19.0] - 2026-03-20
 
 ### Added
