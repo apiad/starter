@@ -17,7 +17,7 @@ import utils
 def get_project_info():
     """
     Retrieves project name and description from pyproject.toml.
-    
+
     Returns:
         tuple: (name, description) or ("Unknown", "No description available.").
     """
@@ -36,7 +36,7 @@ def get_commands():
     commands_dir = os.path.join(".gemini", "commands")
     if not os.path.isdir(commands_dir):
         return []
-    
+
     commands = []
     for filename in sorted(os.listdir(commands_dir)):
         if filename.endswith(".toml"):
@@ -53,10 +53,17 @@ def get_commands():
                 continue
     return commands
 
+def is_pre_commit_installed():
+    """
+    Checks if the pre-commit hook is installed in git.
+    """
+    hook_path = os.path.join(".git", "hooks", "pre-commit")
+    return os.path.exists(hook_path) and os.access(hook_path, os.X_OK)
+
 def main():
     """
     Main entry point for the welcome message hook.
-    
+
     Reads stdin and returns JSON response with a systemMessage containing project context.
     """
     # Read stdin though we don't strictly need it for this simple message
@@ -67,7 +74,7 @@ def main():
 
     name, description = get_project_info()
     git_status_str = utils.get_git_status_short()
-    
+
     if git_status_str:
         status_msg = f"⚠️  Uncommitted changes:\n{git_status_str}"
     else:
@@ -75,7 +82,7 @@ def main():
 
     commands = get_commands()
     command_lines = [f"- `/{cmd_name}`: {desc}" for cmd_name, desc in commands if cmd_name != "onboard"]
-    
+
     message_lines = [
         f"🚀 Welcome to Gemini CLI for `{name}`",
         f"📝 {description}",
@@ -83,11 +90,19 @@ def main():
         "📊 Git Status:",
         status_msg,
         " ",
+    ]
+
+    if not is_pre_commit_installed():
+        message_lines.append("🚨 **Warning**: Git pre-commit hook is not installed.")
+        message_lines.append("💡 Suggestion: Run `make install-hooks` to enable automatic validation.")
+        message_lines.append(" ")
+
+    message_lines.extend([
         "🛠️  Available Commands:",
         *command_lines,
         " ",
-    ]
-    
+    ])
+
     if any(cmd[0] == "onboard" for cmd in commands):
         message_lines.append("💡 Tip: Run `/onboard` for a brief explanation of the project.")
 
@@ -101,7 +116,7 @@ def main():
     }
 
     utils.send_hook_decision(
-        "allow", 
+        "allow",
         system_message=system_message,
         hook_output=hook_output
     )
