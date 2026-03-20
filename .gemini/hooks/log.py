@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Hook to log agent model output to the session log file for debugging and auditing.
-
-This hook is triggered after the model response and processes JSON from stdin.
-The 'decision' is always 'allow'.
+Hook to log request and tool data throughout the agent lifecycle.
+Provides a structured view of what is sent to the API and tool executions.
 """
 import sys
 import os
@@ -15,9 +13,7 @@ import utils
 
 def main():
     """
-    Main entry point for the log model output hook.
-    
-    Reads candidate model responses from stdin and appends them to the log file.
+    Main entry point for the logging hook.
     """
     try:
         input_data = sys.stdin.read()
@@ -26,31 +22,25 @@ def main():
             return
 
         data = json.loads(input_data)
-        llm_response = data.get("llm_response", {})
-        candidates = llm_response.get("candidates", [])
-        
-        if candidates:
-            candidate = candidates[0]
-            content_obj = candidate.get("content", {})
-            parts = content_obj.get("parts", [])
-            finish_reason = candidate.get("finishReason")
+        hook_event = data.get("hook_event_name", "Unknown")
 
-            if parts or finish_reason:
-                content_to_log = ""
-                for part in parts:
-                    if isinstance(part, str):
-                        content_to_log += part
-                    elif isinstance(part, dict) and "text" in part:
-                        content_to_log += part["text"]
-                if finish_reason:
-                    content_to_log += "\n\n"
-                
-                utils.log_message(content_to_log, mode="a")
+        # Structured markers as requested
+        header = f"--- {hook_event.upper().replace('_', ' ')} ---"
+        footer = "-" * len(header)
 
+        log_entry = f"\n{header}\n"
+
+        # We log the full JSON for transparency, but could filter based on event if needed
+        # For now, keeping it verbose as per previous instruction "EXACTLY what is being sent"
+        log_entry += json.dumps(data, indent=2, ensure_ascii=False)
+
+        log_entry += f"\n{footer}\n"
+
+        utils.log_message(log_entry, mode="a")
         utils.send_hook_decision("allow")
 
-    except Exception:
-        # Failsafe: always allow if something goes wrong
+    except Exception as e:
+        sys.stderr.write(f"Error in logging hook: {str(e)}\n")
         utils.send_hook_decision("allow")
 
 if __name__ == "__main__":

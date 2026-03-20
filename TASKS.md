@@ -17,6 +17,7 @@ Put done tasks into the Archive.
 ---
 
 ## Active Tasks
+- [ ] Consolidate project hooks into a single Git pre-commit hook (See plan: plans/consolidate-hooks.md)
 
 ---
 
