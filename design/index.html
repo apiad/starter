@@ -1,0 +1,1059 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://apiad.github.io/starter/design/">
+      
+      
+        <link rel="prev" href="../deploy/">
+      
+      
+        <link rel="next" href="../develop/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Architecture & Design - Gemini CLI Opinionated Framework</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture-systems" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Gemini CLI Opinionated Framework" class="md-header__button md-logo" aria-label="Gemini CLI Opinionated Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gemini CLI Opinionated Framework
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture & Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/apiad/starter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user-guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deploy/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Setup & Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture & Design
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../develop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Development & Contribution
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Gemini CLI Opinionated Framework" class="md-nav__button md-logo" aria-label="Gemini CLI Opinionated Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Gemini CLI Opinionated Framework
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/apiad/starter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture & Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture & Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ The Core Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ The Core Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-hook-system-geminihooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Hook System (.gemini/hooks/)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The Hook System (.gemini/hooks/)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-gemini-cli-lifecycle-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Gemini CLI Lifecycle Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-git-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Git Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-script-utility-system-geminiscripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Script Utility System (.gemini/scripts/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-command-system-geminicommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Command System (.gemini/commands/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-scientific-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Deep Dive: Scientific Debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-tcr-test-commit-revert-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Deep Dive: TCR (Test-Commit-Revert) Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-timestamp-based-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Deep Dive: Timestamp-Based Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-specialized-agents-geminiagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Specialized Agents (.gemini/agents/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-the-skill-system-geminiskills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Skill System (.gemini/skills/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. State Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-technology-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ The Technology Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../develop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development & Contribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ The Core Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ The Core Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-hook-system-geminihooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Hook System (.gemini/hooks/)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The Hook System (.gemini/hooks/)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-gemini-cli-lifecycle-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Gemini CLI Lifecycle Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-git-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Git Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-script-utility-system-geminiscripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Script Utility System (.gemini/scripts/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-command-system-geminicommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Command System (.gemini/commands/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-scientific-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Deep Dive: Scientific Debugging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-tcr-test-commit-revert-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Deep Dive: TCR (Test-Commit-Revert) Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-timestamp-based-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Deep Dive: Timestamp-Based Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-specialized-agents-geminiagents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Specialized Agents (.gemini/agents/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-the-skill-system-geminiskills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Skill System (.gemini/skills/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. State Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-technology-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ The Technology Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="architecture-systems">Architecture &amp; Systems</h1>
+<p>The <strong>Gemini CLI Opinionated Framework</strong> is not just a collection of scripts; it is an integrated system designed to empower AI agents while enforcing rigorous engineering standards.</p>
+<h2 id="the-core-architecture">🏗️ The Core Architecture</h2>
+<p>The project's "brain" resides in the <code>.gemini/</code> directory, which is organized into four primary systems:</p>
+<h3 id="1-the-hook-system-geminihooks">1. The Hook System (<code>.gemini/hooks/</code>)</h3>
+<p>The framework uses a dual-layer hook system to enforce standards and automate workflows.</p>
+<h4 id="a-gemini-cli-lifecycle-hooks"><strong>A. Gemini CLI Lifecycle Hooks</strong></h4>
+<p>These scripts are registered in <code>.gemini/settings.json</code> and intercept the turn-by-turn lifecycle of the agent.</p>
+<ul>
+<li><strong><code>session.py</code> / <code>welcome.py</code>:</strong> Initialize the session, provide a project summary, and check for environment readiness (e.g., verifying if Git hooks are installed).</li>
+<li><strong><code>log.py</code>:</strong> Provides a comprehensive audit trail of every interaction, logging structured markers for <code>BeforeAgent</code>, <code>AfterModel</code>, and <code>AfterTool</code> events.</li>
+<li><strong><code>notify.py</code>:</strong> Sends a desktop notification and plays a system sound once the agent completes its turn, ensuring the user is alerted when the agent is waiting for input.</li>
+<li><strong><code>cron.py</code>:</strong> Synchronizes the <code>cron.toml</code> task definitions with <strong>systemd user timers</strong> for background execution.</li>
+</ul>
+<h4 id="b-git-hooks"><strong>B. Git Hooks</strong></h4>
+<p>These are linked to the repository's <code>.git/hooks/</code> directory and manage the finality of changes.</p>
+<ul>
+<li><strong><code>pre-commit.py</code>:</strong> The primary enforcement mechanism. It performs <strong>timestamp-based validation</strong>, ensuring that a journal entry exists for the current date and that its timestamp is newer than any modified files. It also serves as the trigger for project-wide health checks.</li>
+<li><strong><code>utils.py</code>:</strong> A shared Python library providing common functions for git analysis, hook decisions, and communication with the Gemini CLI.</li>
+</ul>
+<h3 id="2-the-script-utility-system-geminiscripts">2. The Script Utility System (<code>.gemini/scripts/</code>)</h3>
+<p>Helper scripts that standardize framework operations across different environments.</p>
+<ul>
+<li><strong><code>journal.py</code>:</strong> A dedicated script to correctly format and append new journal entries (<code>[timestamp ISO] - description</code>). This is the <strong>only recommended way</strong> to update the journal, as it ensures temporal consistency for the <code>pre-commit.py</code> hook.</li>
+</ul>
+<h3 id="3-the-command-system-geminicommands">3. The Command System (<code>.gemini/commands/</code>)</h3>
+<p>Commands define structured, multi-phase workflows that automate the development lifecycle. Each command is a TOML file containing specific instructions and context for the agent.</p>
+<ul>
+<li><strong><code>/plan</code>:</strong> An interactive workflow that transitions between clarification, analysis, and strategy generation.</li>
+<li><strong><code>/research</code>:</strong> A deep-dive exploration that produces exhaustive reports in the <code>research/</code> directory.</li>
+<li><strong><code>/debug</code>:</strong> Activates a <strong>forensic investigation mode</strong> using a scientific, hypothesis-driven workflow.</li>
+<li><strong><code>/learn</code>:</strong> A grounded learning lifecycle for mastering new technologies and codifying them into project skills.</li>
+<li><strong><code>/document</code>:</strong> Analyzes the codebase and project state to update the documentation suite.</li>
+<li><strong><code>/task</code>:</strong> The primary execution engine, managing <code>TASKS.md</code> and enforcing the <strong>strict TCR (Test-Commit-Revert) loop</strong> and feature branch isolation.</li>
+</ul>
+<h3 id="deep-dive-scientific-debugging">🔍 Deep Dive: Scientific Debugging</h3>
+<p>The <code>/debug</code> command implements a principled approach to problem-solving, moving through four distinct phases:</p>
+<ol>
+<li><strong>Status &amp; Context Analysis:</strong> The agent gathers all relevant error logs, stack traces, and recent changes.</li>
+<li><strong>Hypothesis Formulation:</strong> Instead of guessing, the agent must propose a specific hypothesis for the root cause and obtain user approval.</li>
+<li><strong>Isolated Hypothesis Testing:</strong> The agent creates a temporary <strong>diagnostic branch</strong> (<code>debug/hyp-*</code>) and is granted restricted <code>write_file</code> access <em>only</em> for diagnostic code (logs, reproduction scripts).</li>
+<li><strong>Synthesis &amp; RCA Report:</strong> Once verified, the agent synthesizes the findings into a structured Root Cause Analysis (RCA) report, ensuring the "fix" is understood before it is implemented.</li>
+</ol>
+<h3 id="deep-dive-tcr-test-commit-revert-protocol">🔍 Deep Dive: TCR (Test-Commit-Revert) Protocol</h3>
+<p>The <code>/task work</code> command enforces a high-discipline development lifecycle through a strict TCR loop:</p>
+<ol>
+<li><strong>Pre-flight Verification:</strong> Ensures a clean <code>main</code> branch and passing tests.</li>
+<li><strong>Isolation:</strong> All work occurs on an auto-generated, kebab-case feature branch.</li>
+<li><strong>The Loop (Red-Green-Verify):</strong><ul>
+<li><strong>Red:</strong> A failing test is written to define the step's goal.</li>
+<li><strong>Green:</strong> Minimal code is written to pass the test.</li>
+<li><strong>Verify:</strong> If the test fails, the agent is allowed <strong>one quick fix</strong>. If it fails again, the change is <strong>automatically reverted</strong> (<code>git checkout .</code>), preserving the last known stable state.</li>
+</ul>
+</li>
+<li><strong>Integration:</strong> Upon completion, the feature branch is merged, the roadmap is updated, and the branch is deleted.</li>
+</ol>
+<h3 id="deep-dive-timestamp-based-validation">🔍 Deep Dive: Timestamp-Based Validation</h3>
+<p>The <code>pre-commit.py</code> hook implements a sophisticated cross-file validation strategy:</p>
+<ol>
+<li><strong>Change Detection:</strong> Uses <code>git status --porcelain</code> to identify all modified files, excluding internal framework files (<code>.gemini/</code>) and the journal itself.</li>
+<li><strong>MTime Analysis:</strong> Calculates the maximum modification time (<code>max(mtime)</code>) among all meaningful changes.</li>
+<li><strong>Audit Trail Check:</strong> Parses the <strong>last entry</strong> in the current day's journal file (<code>journal/YYYY-MM-DD.md</code>) and extracts its ISO timestamp.</li>
+<li><strong>Temporal Consistency:</strong> If the journal entry timestamp is <strong>older</strong> than the latest file change, the commit is blocked. This forces the agent (or user) to document the work <em>after</em> it is done but <em>before</em> it is finalized.</li>
+</ol>
+<h3 id="4-specialized-agents-geminiagents">4. Specialized Agents (<code>.gemini/agents/</code>)</h3>
+<p>Instead of a single "do-it-all" AI, the framework delegates tasks to specialized sub-agents with restricted toolsets and focused personas.</p>
+<ul>
+<li><strong><code>planner</code>:</strong> Responsible for high-level architectural design and roadmap generation.</li>
+<li><strong><code>debugger</code>:</strong> A forensic investigation specialist using a scientific, hypothesis-driven workflow.</li>
+<li><strong><code>learner</code>:</strong> A "Grounded Learning Specialist" who masters new technologies by writing, executing, and documenting code experiments.</li>
+<li><strong><code>researcher</code>:</strong> Optimized for deep information gathering and multi-source synthesis.</li>
+<li><strong><code>reporter</code> / <code>editor</code>:</strong> Content generation and refinement specialists.</li>
+</ul>
+<h3 id="5-the-skill-system-geminiskills">5. The Skill System (<code>.gemini/skills/</code>)</h3>
+<p>The framework's permanent knowledge base. Each skill is a directory containing:
+- <strong><code>SKILL.md</code>:</strong> The entry point with mandatory YAML frontmatter (<code>name</code> and <code>description</code>) for autonomous activation.
+- <strong><code>reference-*.md</code>:</strong> Granular documentation for specific learning objectives.
+- <strong><code>assets/</code>:</strong> Idiomatic, verified code examples and experiment scripts.</p>
+<h3 id="6-state-management">6. State Management</h3>
+<p>The framework maintains internal state to optimize operations and ensure continuity:</p>
+<ul>
+<li><strong><code>.gemini/last_make_run</code></strong>: Stores the timestamp of the last successful validation, allowing the framework to skip redundant tests.</li>
+<li><strong><code>.gemini/last_journal_update</code></strong>: Tracks when the journal was last updated to intelligently enforce the journaling requirement.</li>
+<li><strong><code>.gemini/settings.json</code></strong>: Configures the framework's global behavior and hook execution order.</li>
+</ul>
+<h2 id="the-technology-stack">⚙️ The Technology Stack</h2>
+<ul>
+<li><strong>CLI Engine:</strong> Gemini CLI (Interactive Node.js-based terminal).</li>
+<li><strong>Core Automation:</strong> Python (Hooks and specialized scripts).</li>
+<li><strong>Validation &amp; Health:</strong> Make (Central source of truth for builds and tests).</li>
+<li><strong>State &amp; Versioning:</strong> Git (Change detection and history tracking).</li>
+<li><strong>Documentation:</strong> Markdown (Universal format for journals, plans, and reports).</li>
+</ul>
+<hr />
+<p><em>Next: See <a href="../develop/">Development &amp; Contribution</a> for the rules of the road.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
