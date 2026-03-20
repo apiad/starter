@@ -4,7 +4,7 @@ The **Gemini CLI Opinionated Framework** enforces a high-discipline development 
 
 ## 🔄 The Mandatory Workflow Lifecycle
 
-Every non-trivial change must follow this strict three-phase process:
+Every non-trivial change must follow this strict four-phase process:
 
 ### 1. Research & Analysis
 
@@ -40,6 +40,16 @@ For every granular step of the implementation:
 
 Once all steps are complete, a final test run is performed. Upon user approval, the branch is merged back to `main` and the roadmap in `TASKS.md` is updated.
 
+### 4. Audit & Documentation (NEW)
+
+Before merging or committing any final change, the work **must** be documented in the daily journal. This is enforced by a **timestamp-based git hook**. Use the following tool to satisfy the requirement:
+
+```bash
+python3 .gemini/scripts/journal.py 'one-line description of the work'
+```
+
+Failure to do this will block your commit or turn execution.
+
 ## ✅ Testing & Quality Standards
 
 - **Source of Truth:** The `makefile` is the central definition of project health.
@@ -56,10 +66,10 @@ The framework requires a clean working tree for critical actions. Commit often t
 
 All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) standard:
 
-- **`feat:`**: A new feature for the user.
+- **`feat:`**: A new feature for the user (e.g., `feat(hooks): add notify-send alert`).
 - **`fix:`**: A bug fix for the user.
 - **`docs:`**: Documentation-only changes.
-- **`chore:`**: Maintenance, dependencies, or internal tooling updates.
+- **`chore:`**: Maintenance, dependencies, or internal tooling updates (e.g., `chore(release): version 0.17.1`).
 - **`refactor:`**: Code changes that neither fix a bug nor add a feature.
 
 ### 3. Commit Scoping

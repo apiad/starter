@@ -10,27 +10,38 @@ The project's "brain" resides in the `.gemini/` directory, which is organized in
 
 Hooks are Python-based scripts that intercept the Gemini CLI turn lifecycle. They are the framework's primary enforcement mechanism.
 
-- **`session.py`:** Initializes the session and provides a project summary to the agent.
-- **`journal.py`:** Enforces the mandatory daily journaling requirement for all significant changes.
+- **`welcome.py`:** Initializes the session and provides a project summary to the agent. It also checks for the presence of the pre-commit hook and alerts the user if missing.
+- **`pre-commit.py`:** Enforces the mandatory daily journaling and **timestamp-based validation** before any code changes are finalized.
 - **`make.py`:** Automatically runs the `makefile` (tests/linting) to prevent regressions.
-- **`cron.py`:** Synchronizes the project's background tasks with systemd user timers.
+- **`notify.py`:** Sends a desktop notification after each agent turn is successfully completed and validated.
 - **`utils.py`:** Provides a shared set of utilities for git status analysis and communication with the CLI.
 
-### 2. The Command System (`.gemini/commands/`)
+### 2. The Script Utility System (`.gemini/scripts/`)
+
+Helper scripts that standardize framework operations across different environments.
+
+- **`journal.py`:** A dedicated script to correctly format and append new journal entries (`[timestamp ISO] - description`). This ensures consistency and prevents AI hallucinations of dates or formats.
+
+### 3. The Command System (`.gemini/commands/`)
 
 Commands define structured, multi-phase workflows that automate the development lifecycle. Each command is a TOML file containing specific instructions and context for the agent.
 
 - **`/plan`:** An interactive workflow that transitions between clarification, analysis, and strategy generation.
 - **`/research`:** A deep-dive exploration that produces exhaustive reports in the `research/` directory.
 - **`/debug`:** Activates a forensic investigation mode for root-cause analysis.
-- **`/docs`:** Analyzes the codebase and project state to update the documentation suite.
+- **`/document`:** Analyzes the codebase and project state to update the documentation suite.
 - **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the strict TCR (Test-Commit-Revert) loop and feature branch isolation.
 
-### 🔌 Synergistic Validation
+### 🔍 Deep Dive: Timestamp-Based Validation
 
-The `/task` command works in tandem with the `make.py` hook to ensure a "no-regression" policy. While `/task` enforces testing during the Red-Green-Verify cycle, the `make.py` hook provides a final, infrastructure-level check after every turn. If any turn (manual or automated) results in broken code, the framework immediately detects it, ensuring that the repository's "last known state" is always stable.
+The `pre-commit.py` hook implements a sophisticated cross-file validation strategy:
 
-### 3. Specialized Agents (`.gemini/agents/`)
+1.  **Change Detection:** Uses `git status --porcelain` to identify all modified files, excluding internal framework files (`.gemini/`) and the journal itself.
+2.  **MTime Analysis:** Calculates the maximum modification time (`max(mtime)`) among all meaningful changes.
+3.  **Audit Trail Check:** Parses the **last entry** in the current day's journal file (`journal/YYYY-MM-DD.md`) and extracts its ISO timestamp.
+4.  **Temporal Consistency:** If the journal entry timestamp is **older** than the latest file change, the commit is blocked. This forces the agent (or user) to document the work *after* it is done but *before* it is finalized.
+
+### 4. Specialized Agents (`.gemini/agents/`)
 
 Instead of a single "do-it-all" AI, the framework delegates tasks to specialized sub-agents with restricted toolsets and focused personas (e.g., `planner`, `debugger`, `editor`, `reporter`). This ensures higher reliability and more consistent results.
 

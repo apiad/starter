@@ -99,11 +99,35 @@ The approved plan is linked to a task. You trigger the execution:
 
 After all steps pass, the agent presents the final work. Upon your approval, it merges back to `main` and cleans up the feature branch.
 
-### **Step 5: Document & Release with `/docs` & `/release`**
+### Step 5: Document & Release with `/docs` & `/release`
 
 Finally, use `/docs` to update the technical documentation and `/release` to publish the new version.
 
+## ✍️ Maintaining your Journal
+
+The framework's most powerful feature is its automated audit trail. This is enforced by a **timestamp-based pre-commit hook** that ensures your code never gets ahead of your documentation.
+
+### The Rule of Temporal Consistency
+
+Every code change must be documented in `journal/YYYY-MM-DD.md`. If you modify a file at 10:00 AM, you must have a journal entry with a timestamp of 10:00 AM or later before you can commit.
+
+### Using the Journal Tool
+
+To simplify this, the framework includes a dedicated script. Always use it instead of manual editing:
+
+```bash
+python3 .gemini/scripts/journal.py "Brief description of your work"
+```
+
+This tool automatically:
+1.  Detects the current date and finds/creates the correct journal file.
+2.  Generates a precise ISO timestamp.
+3.  Appends the entry in the standard `[timestamp] - description` format.
+
+By following this discipline, you ensure that the AI agent always has an up-to-date "long-term memory" to draw from in future sessions.
+
 ## ⚙️ Background Tasks & Maintenance
+
 
 The real magic of AI-assisted development is what happens when you're not looking or when dealing with technical debt.
 

@@ -20,17 +20,21 @@ Running `install.sh` in an empty directory will:
 - Initialize baseline files (`README.md`, `CHANGELOG.md`, `TASKS.md`, `makefile`).
 - Perform an initial "feat" commit.
 
-### 2. Existing Project (Integration)
+### 2. Existing Project (Integration & Updates)
 
-If run inside an existing project, the script will:
+If run inside an existing project, the script performs a **Surgical Update**:
 
-- **Validate:** Ensure you have a clean Git working tree.
-- **Analyze:** Identify which framework files are missing or need updating.
-- **Confirm:** Present a summary of all proposed changes and wait for your approval.
-- **Integrate:** Add the `.gemini/` directory and core Markdown files without deleting your existing content.
-- **Commit:** Create a descriptive "feat" or "chore" commit with the changes.
+- **Validate:** Ensure a clean Git working tree to prevent data loss.
+- **Surgical Sync:** Updates core framework components (`hooks/`, `commands/`, `agents/`, `scripts/`) individually.
+- **Protection:** Explicitly preserves user configurations in **Protected Files**:
+    - `.gemini/settings.json`
+    - `.gemini/style-guide.md`
+- **Intelligent GEMINI.md Merge:** Preserves your custom content in the `## Project Notes` section of `GEMINI.md` while updating the core mandates above it.
+- **Confirm:** Presents a detailed summary of which files will be **created**, **updated**, or **protected** and waits for your approval.
+- **Integrate:** Adds missing directory structures (`journal/`, `plans/`, etc.) if they don't exist.
+- **Commit:** Automatically creates a descriptive `chore` commit marking the update.
 
-## 🛠️ Prerequisites
+## 🛠️ Prerequisites & Setup
 
 To ensure full functionality, your environment should have:
 
@@ -38,6 +42,16 @@ To ensure full functionality, your environment should have:
 - **Node.js:** Necessary for running the `gemini` CLI.
 - **Python 3.10+:** Required for executing the project's automation hooks (`.gemini/hooks/`).
 - **Make:** Used for project validation and health checks.
+
+### Installing Git Hooks
+
+After installation, you **must** link the framework's hooks to your git repository:
+
+```bash
+make install-hooks
+```
+
+This target creates a symbolic link from `.gemini/hooks/pre-commit.py` to `.git/hooks/pre-commit`, enabling the automated journal and validation checks.
 
 ## 🚢 Getting Started
 

@@ -12,7 +12,11 @@ The framework is built on the belief that AI is most effective when it is constr
 
 The agent is mandated to challenge ideas before implementing them. It identifies technical flaws, security risks, or redundant logic, acting as a "peer reviewer" in real-time.
 
-### 2. Strategy-First (Research -> Plan -> Execute)
+### 2. Journal-First Discipline (NEW)
+
+All significant work must be preceded or accompanied by a structured journal entry. The framework enforces this via a **timestamp-based pre-commit hook**, ensuring that the project's history is an accurate, human-and-AI-readable audit trail of intent and execution.
+
+### 3. Strategy-First (Research -> Plan -> Execute)
 
 Every non-trivial change follows a strict, non-negotiable lifecycle. The agent first researches the domain, proposes a detailed implementation plan, obtains user approval, and only then begins writing code. This is enforced by the **TCR (Test-Commit-Revert)** protocol, ensuring a "Green-only" development path.
 
