@@ -200,12 +200,7 @@ else
 fi
 
 # Use the project's journal script if it exists
-if [[ -f ".gemini/scripts/journal.py" ]]; then
-  python3 .gemini/scripts/journal.py "$MSG"
-else
-  TODAY=$(date +%Y-%m-%d)
-  echo -e "\n## Gemini CLI Integration\n- $MSG" >> "journal/$TODAY.md"
-fi
+python3 .gemini/scripts/journal.py "$MSG"
 
 # --- Post-Install ---
 git add .
