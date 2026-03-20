@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2026-03-20
+
+### Added
+- **Timestamp-Based Journal Validation:** Implemented an automated check in the `pre-commit.py` hook that parses the latest journal entry's ISO timestamp and compares it against the modification times of any changed files.
+- **Journal Script Tooling:** Added `.gemini/scripts/journal.py`, a simple utility script for correctly formatting and appending new journal entries.
+- **Hook Installation Check:** Added an automatic check to the `welcome.py` script that alerts the user if the project's pre-commit hooks are not installed.
+
+### Changed
+- **Improved Hook Robustness:** Enhanced the pre-commit script to correctly ignore the journal file's own modification when checking for pending documentation updates.
+
 ## [0.15.0] - 2026-03-20
 
 ### Added
