@@ -56,9 +56,28 @@ Failure to do this will block your commit or turn execution.
 
 ## ✅ Testing & Quality Standards
 
+- **Agent-Driven Validation:** This project does **not** maintain a traditional suite of unit or integration tests (e.g., in a `tests/` directory). Instead, it relies on high-discipline agent execution and **Grounded Experimentation** to verify behavior.
 - **Source of Truth:** The `makefile` is the central definition of project health.
-- **Mandatory Commands:** Ensure `make test`, `make lint`, and `make format` pass before committing.
-- **Documentation-as-Code:** Any new feature must be accompanied by relevant updates to the `docs/` directory.
+- **TCR Protocol:** The primary mechanism for ensuring "Green-only" development is the mandatory **Test-Commit-Revert** loop during task execution.
+
+## 🧠 Codifying Knowledge with Skills
+
+The `/learn` command is the primary tool for expanding the project's knowledge base. All generated skills must adhere to the following structure:
+
+### 1. Mandatory Frontmatter (`SKILL.md`)
+
+The root `SKILL.md` file **must** include a YAML block at the top. This allows the framework to autonomously recognize and activate the skill in future sessions.
+
+```yaml
+---
+name: <unique-identifier>
+description: <concise-summary-for-autonomous-activation>
+---
+```
+
+### 2. Asset Management
+
+Move all successful experiment scripts and idiomatic examples to the `assets/` subdirectory within the skill folder.
 
 ## 🌲 Git & Source Control
 

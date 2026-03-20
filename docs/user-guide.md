@@ -36,6 +36,17 @@ Your tool for internal strategy and architectural design.
 - **How it works:** The `planner` subagent conducts a thorough analysis of your codebase and journal. After clarifying the goal with you interactively, it produces a comprehensive Markdown plan in the `plans/` directory.
 - **Crucial Rule:** The `/plan` command *never* executes the code. It maps the territory and provides a step-by-step execution roadmap for you to approve first.
 
+### `/learn`
+
+Your tool for mastering new technologies and codifying them into project skills.
+
+- **How it works:** Implements a "Grounded Learning" philosophy through a 4-phase lifecycle:
+    1.  **Environment Audit:** Automatically detects if the library is already installed or has local integration points.
+    2.  **Strategic Mapping:** Researches the topic and defines 3-5 granular Learning Objectives (the "Learning Map"). **Requires user approval via `ask_user`.**
+    3.  **Grounded Execution:** The specialized `learner` sub-agent performs real-world experiments (writing and running scripts) to verify "gotchas," performance, and idiomatic patterns.
+    4.  **Skill Codification:** Consolidates all findings into a permanent project skill in `.gemini/skills/<name>/`, including a mandatory `SKILL.md` file and reference documents.
+- **Why it works:** It transforms ephemeral research into a permanent, machine-readable knowledge base that future agents can autonomously activate.
+
 ---
 
 ## 💻 The Software Development Workflow

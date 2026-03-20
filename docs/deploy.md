@@ -69,6 +69,10 @@ gemini /onboard
 
 Check the current `TASKS.md` file and use the `/task` command to define your project's initial goals.
 
+### 3. Codified Knowledge
+
+Knowledge mastered via `/learn` is stored in `.gemini/skills/`. These are permanent project assets and **must** be tracked in version control to ensure the AI's long-term memory persists across environments.
+
 ### 3. Start a New Feature
 
 For your first feature, follow the standard workflow:

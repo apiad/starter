@@ -64,7 +64,19 @@ The `pre-commit.py` hook implements a sophisticated cross-file validation strate
 
 ### 4. Specialized Agents (`.gemini/agents/`)
 
-Instead of a single "do-it-all" AI, the framework delegates tasks to specialized sub-agents with restricted toolsets and focused personas (e.g., `planner`, `debugger`, `editor`, `reporter`). This ensures higher reliability and more consistent results.
+Instead of a single "do-it-all" AI, the framework delegates tasks to specialized sub-agents with restricted toolsets and focused personas.
+
+- **`planner`:** Responsible for high-level architectural design and roadmap generation.
+- **`debugger`:** A forensic investigation specialist using a scientific, hypothesis-driven workflow.
+- **`learner`:** A "Grounded Learning Specialist" who master new technologies by writing, executing, and documenting code experiments.
+- **`reporter` / `editor`:** Content generation and refinement specialists.
+
+### 5. The Skill System (`.gemini/skills/`)
+
+The framework's permanent knowledge base. Each skill is a directory containing:
+- **`SKILL.md`:** The entry point with mandatory YAML frontmatter (`name` and `description`) for autonomous activation.
+- **`reference-*.md`:** Granular documentation for specific learning objectives.
+- **`assets/`:** Idiomatic, verified code examples and experiment scripts.
 
 ### 4. State Management
 
