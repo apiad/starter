@@ -56,15 +56,19 @@ Failure to do this will block your commit or turn execution.
 
 ## ✅ Testing & Quality Standards
 
-- **Agent-Driven Validation:** This project does **not** maintain a traditional suite of unit or integration tests (e.g., in a `tests/` directory). Instead, it relies on high-discipline agent execution and **Grounded Experimentation** to verify behavior.
-- **Source of Truth:** The `makefile` is the central definition of project health.
-- **TCR Protocol:** The primary mechanism for ensuring "Green-only" development is the mandatory **Test-Commit-Revert** loop during task execution.
+- **Agent-Driven Validation:** This project maintains a **minimalist, transient testing philosophy**. Instead of a static suite of thousands of unit tests, it relies on high-discipline agent execution and **Grounded Experimentation** to verify behavior in real-time.
+- **On-the-Fly Verification:** During the mandatory TCR (Test-Commit-Revert) loop, the agent is required to write specific, temporary test cases (e.g., `test_feature_x.py`) that verify the granular step being implemented.
+- **Source of Truth:** The `makefile` is the central definition of project health. Even if it initially points to an empty `test` target, it serves as the hook point for the agent's automated validation.
+- **The TCR Mandate:** The primary mechanism for ensuring "Green-only" development is the mandatory **Test-Commit-Revert** loop. If a change fails its temporary verification, it is instantly reverted, ensuring the `main` branch remains a "known-good" state.
 
 ## 🧠 Codifying Knowledge with Skills
 
-The `/learn` command is the primary tool for expanding the project's knowledge base. All generated skills must adhere to the following structure:
+The `/learn` command is the primary tool for expanding the project's long-term memory. When mastering a new technology, follow this workflow:
 
-### 1. Mandatory Frontmatter (`SKILL.md`)
+### 1. Grounded Learning Lifecycle
+The agent follows a 4-phase process: **Audit** (environment check), **Strategic Mapping** (learning objectives), **Execution** (real-world experimentation), and **Codification**.
+
+### 2. Mandatory Frontmatter (`SKILL.md`)
 
 The root `SKILL.md` file **must** include a YAML block at the top. This allows the framework to autonomously recognize and activate the skill in future sessions.
 
@@ -75,9 +79,9 @@ description: <concise-summary-for-autonomous-activation>
 ---
 ```
 
-### 2. Asset Management
+### 3. Asset Management
 
-Move all successful experiment scripts and idiomatic examples to the `assets/` subdirectory within the skill folder.
+All successful experiment scripts and idiomatic examples generated during the `/learn` phase should be moved to the `assets/` subdirectory within the skill folder. These serve as verified reference points for future agent turns.
 
 ## 🌲 Git & Source Control
 

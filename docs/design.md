@@ -8,19 +8,27 @@ The project's "brain" resides in the `.gemini/` directory, which is organized in
 
 ### 1. The Hook System (`.gemini/hooks/`)
 
-Hooks are Python-based scripts that intercept the Gemini CLI turn lifecycle. They are the framework's primary enforcement mechanism.
+The framework uses a dual-layer hook system to enforce standards and automate workflows.
 
-- **`welcome.py`:** Initializes the session and provides a project summary to the agent. It also checks for the presence of the pre-commit hook and alerts the user if missing.
-- **`pre-commit.py`:** Enforces the mandatory daily journaling and **timestamp-based validation** before any code changes are finalized.
-- **`make.py`:** Automatically runs the `makefile` (tests/linting) to prevent regressions.
-- **`notify.py`:** Sends a desktop notification after each agent turn is successfully completed and validated.
-- **`utils.py`:** Provides a shared set of utilities for git status analysis and communication with the CLI.
+#### **A. Gemini CLI Lifecycle Hooks**
+These scripts are registered in `.gemini/settings.json` and intercept the turn-by-turn lifecycle of the agent.
+
+- **`session.py` / `welcome.py`:** Initialize the session, provide a project summary, and check for environment readiness (e.g., verifying if Git hooks are installed).
+- **`log.py`:** Provides a comprehensive audit trail of every interaction, logging structured markers for `BeforeAgent`, `AfterModel`, and `AfterTool` events.
+- **`notify.py`:** Sends a desktop notification and plays a system sound once the agent completes its turn, ensuring the user is alerted when the agent is waiting for input.
+- **`cron.py`:** Synchronizes the `cron.toml` task definitions with **systemd user timers** for background execution.
+
+#### **B. Git Hooks**
+These are linked to the repository's `.git/hooks/` directory and manage the finality of changes.
+
+- **`pre-commit.py`:** The primary enforcement mechanism. It performs **timestamp-based validation**, ensuring that a journal entry exists for the current date and that its timestamp is newer than any modified files. It also serves as the trigger for project-wide health checks.
+- **`utils.py`:** A shared Python library providing common functions for git analysis, hook decisions, and communication with the Gemini CLI.
 
 ### 2. The Script Utility System (`.gemini/scripts/`)
 
 Helper scripts that standardize framework operations across different environments.
 
-- **`journal.py`:** A dedicated script to correctly format and append new journal entries (`[timestamp ISO] - description`). This ensures consistency and prevents AI hallucinations of dates or formats.
+- **`journal.py`:** A dedicated script to correctly format and append new journal entries (`[timestamp ISO] - description`). This is the **only recommended way** to update the journal, as it ensures temporal consistency for the `pre-commit.py` hook.
 
 ### 3. The Command System (`.gemini/commands/`)
 
@@ -29,6 +37,7 @@ Commands define structured, multi-phase workflows that automate the development 
 - **`/plan`:** An interactive workflow that transitions between clarification, analysis, and strategy generation.
 - **`/research`:** A deep-dive exploration that produces exhaustive reports in the `research/` directory.
 - **`/debug`:** Activates a **forensic investigation mode** using a scientific, hypothesis-driven workflow.
+- **`/learn`:** A grounded learning lifecycle for mastering new technologies and codifying them into project skills.
 - **`/document`:** Analyzes the codebase and project state to update the documentation suite.
 - **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the **strict TCR (Test-Commit-Revert) loop** and feature branch isolation.
 
@@ -68,7 +77,8 @@ Instead of a single "do-it-all" AI, the framework delegates tasks to specialized
 
 - **`planner`:** Responsible for high-level architectural design and roadmap generation.
 - **`debugger`:** A forensic investigation specialist using a scientific, hypothesis-driven workflow.
-- **`learner`:** A "Grounded Learning Specialist" who master new technologies by writing, executing, and documenting code experiments.
+- **`learner`:** A "Grounded Learning Specialist" who masters new technologies by writing, executing, and documenting code experiments.
+- **`researcher`:** Optimized for deep information gathering and multi-source synthesis.
 - **`reporter` / `editor`:** Content generation and refinement specialists.
 
 ### 5. The Skill System (`.gemini/skills/`)
@@ -78,7 +88,7 @@ The framework's permanent knowledge base. Each skill is a directory containing:
 - **`reference-*.md`:** Granular documentation for specific learning objectives.
 - **`assets/`:** Idiomatic, verified code examples and experiment scripts.
 
-### 4. State Management
+### 6. State Management
 
 The framework maintains internal state to optimize operations and ensure continuity:
 

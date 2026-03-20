@@ -58,6 +58,7 @@ The `.gemini/commands/` directory defines specialized workflows that automate ev
 
 ### 🔍 Phase 1: Planning & Discovery
 *   **`/research <topic>`**: A deep, 3-phase investigation (Planning -> Data Gathering -> Reporting) that produces exhaustive Markdown reports in the `research/` directory. **Crucial for gathering technical requirements and state-of-the-art context.**
+*   **`/learn <topic>`**: A grounded learning lifecycle (Audit -> Strategic Mapping -> Execution -> Codification) for mastering new technologies and building a permanent, machine-readable knowledge base in `.gemini/skills/`.
 *   **`/plan`**: The **Architectural Bridge**. This interactive workflow translates ideas into actionable execution plans:
     *   **Phase 1 (Clarification):** The agent interviews you to resolve ambiguities before planning.
     *   **Phase 2 (Agentic Analysis):** A specialized `planner` subagent scans the codebase and generates a detailed technical strategy.
@@ -107,12 +108,14 @@ This framework shines when you combine these commands into cohesive workflows:
 
 ## ⚓ The Hook System
 
-The framework uses a robust hook system (`.gemini/hooks/`) that synchronizes the agent with your project state:
+The framework uses a dual-layer hook system to synchronize the agent with your project state:
 
-*   **`session.py`**: Initializes the environment and provides a project summary.
-*   **`journal.py`**: Ensures a journal entry exists for the current date (`journal/YYYY-MM-DD.md`).
-*   **`make.py`**: Automatically runs `make` after critical agent actions to prevent regressions.
-*   **`cron.py`**: Synchronizes `cron.toml` tasks with **systemd user timers**.
+*   **`session.py` / `welcome.py`**: Initialize the environment, provide a project summary, and check for environment readiness.
+*   **`log.py`**: Provides a comprehensive, structured audit trail of every agent turn and tool execution.
+*   **`notify.py`**: Sends a desktop notification and sound when the agent completes its work, minimizing downtime.
+*   **`cron.py`**: Synchronizes repetitive tasks with **systemd user timers**.
+*   **`pre-commit.py` (Git Hook)**: Enforces daily journaling and timestamp-based validation before any code changes are finalized.
+*   **`journal.py` (Script)**: The dedicated utility for correctly formatting and appending new journal entries.
 
 ## 📄 License & Contribution
 

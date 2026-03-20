@@ -60,6 +60,17 @@ Your gateway to GitHub.
 - **How it works:** Interfaces with the GitHub CLI to analyze open issues and recommend what to tackle next based on strategic impact.
 
 
+### `/learn`
+
+Your tool for mastering new technologies and codifying them into project skills.
+
+- **How it works:** Implements a "Grounded Learning" philosophy through a 4-phase lifecycle:
+    1.  **Environment Audit:** Automatically detects if the library is already installed or has local integration points.
+    2.  **Strategic Mapping:** Researches the topic and defines 3-5 granular Learning Objectives (the "Learning Map"). **Requires user approval via `ask_user`.**
+    3.  **Grounded Execution:** The specialized `learner` sub-agent performs real-world experiments (writing and running scripts) to verify "gotchas," performance, and idiomatic patterns.
+    4.  **Skill Codification:** Consolidates all findings into a permanent project skill in `.gemini/skills/<name>/`, including a mandatory `SKILL.md` file and reference documents.
+- **Why it works:** It transforms ephemeral research into a permanent, machine-readable knowledge base that future agents can autonomously activate.
+
 ### `/task`
 
 Your roadmap manager.
