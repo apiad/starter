@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-03-20
+
+### Added
+- **Consolidated Lifecycle Hooks:** Integrated all project-specific lifecycle hooks into a single, efficient `pre-commit.py` script.
+- **Enabled Gemini Lifecycle Hooks:** Enabled the Gemini CLI framework's automatic hook execution system in `.gemini/settings.json`.
+- **Improved Hook Robustness:** Enhanced the pre-commit script to correctly detect staged files and automatically set the executable bit for required scripts.
+- **Makefile Integration:** Added a new `install-hooks` target to the `makefile` for easy setup of the project's hook system.
+
+### Changed
+- **Refactored Hook System:** Simplified the hook architecture by moving from individual task-based hooks to a unified validation strategy.
+- **Enhanced Hook Feedback:** Improved error messages and output formatting for all lifecycle hooks.
+
 ## [0.14.0] - 2026-03-18
 
 ### Added
