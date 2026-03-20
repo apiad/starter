@@ -13,9 +13,9 @@ def main():
     journal_path = f"journal/{today}.md"
     
     # Scan for changes (staged, modified, untracked)
-    # git ls-files --modified --others --exclude-standard
-    res = run_command("git ls-files --modified --others --exclude-standard")
-    changed_files = res.stdout.strip().splitlines()
+    # git status --porcelain shows all changes
+    res = run_command("git status --porcelain")
+    changed_files = [line[3:] for line in res.stdout.strip().splitlines() if line]
     
     if not changed_files:
         return 0
