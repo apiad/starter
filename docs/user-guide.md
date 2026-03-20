@@ -22,12 +22,12 @@ This framework solves this problem by enforcing three core principles:
 
 The most critical phase of any project occurs before you write a single line of code. This framework moves away from impulsive execution toward a deliberate, architected approach.
 
-### `/research`
+### `/debug`
 
-Your primary tool for gathering external knowledge.
+Your primary tool for forensic, scientific investigation.
 
-- **How it works:** When triggered, the `researcher` subagent scours the web for technical documentation, APIs, or case studies. It synthesizes this data into granular summaries saved in the `research/` directory.
-- **When to use:** Use this when you need to understand a new library, a technical specification, or gather data for an article.
+- **How it works:** When a bug is detected, the `/debug` command implements a principled approach to problem-solving. It moves through four distinct phases: Context Analysis, Hypothesis Formulation, Isolated Testing on a temporary branch (`debug/hyp-*`), and finally a Synthesis of the findings into a **Root Cause Analysis (RCA)** report.
+- **Why it works:** It forces the agent to identify the root cause *before* attempting a fix, preventing "guess-and-check" coding that can lead to regressions.
 
 ### `/plan`
 
@@ -53,7 +53,7 @@ Your gateway to GitHub.
 
 Your roadmap manager.
 
-- **How it works:** Manages a living `TASKS.md` document. Use it to `create` new tasks, `work` on existing ones, or `report` on the project's current status.
+- **How it works:** Manages a living `TASKS.md` document. Use it to `create` new tasks, `work` on existing ones, `report` on priorities, or `update` statuses.
 
 ### `/commit`
 
@@ -90,10 +90,11 @@ The approved plan is linked to a task. You trigger the execution:
 - **Pre-flight:** The agent verifies the tree is clean on `main`.
 - **Isolation:** A `feature/auth-integration` branch is created.
 - **Loop (Red-Green-Verify):**
-    1.  Agent writes a failing `test_auth_logic.py`.
+    1.  Agent writes a failing `test_auth_logic.py` based on the plan.
     2.  Agent implements the minimal logic to pass.
     3.  Agent runs `make test`. If successful, the step is committed.
-    4.  The loop repeats for every granular step.
+    4.  If it fails, the agent tries **one quick fix**. If it fails again, the change is **automatically reverted**, preserving the last stable state.
+    5.  The loop repeats for every granular step defined in the plan.
 
 ### **Step 4: Review & Integrate**
 
@@ -102,6 +103,15 @@ After all steps pass, the agent presents the final work. Upon your approval, it 
 ### Step 5: Document & Release with `/docs` & `/release`
 
 Finally, use `/docs` to update the technical documentation and `/release` to publish the new version.
+
+## 🔍 Walkthrough: Solving a Bug with `/debug`
+
+When a bug is detected, the `/debug` command ensures a scientific resolution:
+
+1.  **Analyze Context:** The agent gathers all relevant logs and context.
+2.  **Formulate Hypothesis:** The agent proposes a root cause hypothesis (e.g., "The auth token is not being correctly passed to the header").
+3.  **Isolate & Test:** The agent creates a temporary branch `debug/hyp-auth-token`. It implements a minimal reproduction script or logging.
+4.  **RCA Synthesis:** Once confirmed, the agent generates a **Root Cause Analysis (RCA)** report. This report is used as the basis for the subsequent `/task work` to implement the fix on a feature branch.
 
 ## ✍️ Maintaining your Journal
 

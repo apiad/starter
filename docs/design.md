@@ -28,9 +28,30 @@ Commands define structured, multi-phase workflows that automate the development 
 
 - **`/plan`:** An interactive workflow that transitions between clarification, analysis, and strategy generation.
 - **`/research`:** A deep-dive exploration that produces exhaustive reports in the `research/` directory.
-- **`/debug`:** Activates a forensic investigation mode for root-cause analysis.
+- **`/debug`:** Activates a **forensic investigation mode** using a scientific, hypothesis-driven workflow.
 - **`/document`:** Analyzes the codebase and project state to update the documentation suite.
-- **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the strict TCR (Test-Commit-Revert) loop and feature branch isolation.
+- **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the **strict TCR (Test-Commit-Revert) loop** and feature branch isolation.
+
+### 🔍 Deep Dive: Scientific Debugging
+
+The `/debug` command implements a principled approach to problem-solving, moving through four distinct phases:
+
+1.  **Status & Context Analysis:** The agent gathers all relevant error logs, stack traces, and recent changes.
+2.  **Hypothesis Formulation:** Instead of guessing, the agent must propose a specific hypothesis for the root cause and obtain user approval.
+3.  **Isolated Hypothesis Testing:** The agent creates a temporary **diagnostic branch** (`debug/hyp-*`) and is granted restricted `write_file` access *only* for diagnostic code (logs, reproduction scripts).
+4.  **Synthesis & RCA Report:** Once verified, the agent synthesizes the findings into a structured Root Cause Analysis (RCA) report, ensuring the "fix" is understood before it is implemented.
+
+### 🔍 Deep Dive: TCR (Test-Commit-Revert) Protocol
+
+The `/task work` command enforces a high-discipline development lifecycle through a strict TCR loop:
+
+1.  **Pre-flight Verification:** Ensures a clean `main` branch and passing tests.
+2.  **Isolation:** All work occurs on an auto-generated, kebab-case feature branch.
+3.  **The Loop (Red-Green-Verify):**
+    - **Red:** A failing test is written to define the step's goal.
+    - **Green:** Minimal code is written to pass the test.
+    - **Verify:** If the test fails, the agent is allowed **one quick fix**. If it fails again, the change is **automatically reverted** (`git checkout .`), preserving the last known stable state.
+4.  **Integration:** Upon completion, the feature branch is merged, the roadmap is updated, and the branch is deleted.
 
 ### 🔍 Deep Dive: Timestamp-Based Validation
 

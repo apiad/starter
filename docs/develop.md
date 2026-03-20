@@ -14,33 +14,37 @@ Before proposing a change, use the `/research` command to gather context, analyz
 
 A feature is not considered "active" until a persistent Markdown plan has been created in the `plans/` directory. Use the `/plan` command to generate this strategy and synchronize it with `TASKS.md`.
 
-### 3. Execution & Validation (TCR Protocol)
+### 3. Execution & Validation (The TCR Protocol)
 
-The `/task work on ...` command implements a strict **TCR (Test-Commit-Revert)** protocol to ensure high-velocity, high-quality code.
+The `/task` command is the primary tool for repository execution. It supports multiple actions to manage the project roadmap:
 
-#### **Phase 1: Pre-flight Verification**
+- **`/task create`**: Adds a new task to `TASKS.md`.
+- **`/task work on ...`**: Implements a strict **TCR (Test-Commit-Revert)** protocol to ensure high-velocity, high-quality code.
+- **`/task report`**: Provides a summary of the roadmap and current priorities.
+- **`/task update`**: Updates the status of an existing task.
 
-The agent verifies that the working tree is clean, the current branch is `main`, and `make test` passes as a baseline.
+#### **The TCR Loop (Work Action)**
 
-#### **Phase 2: Task Isolation**
+1.  **Phase 1 (Pre-flight Verification):** The agent verifies that the working tree is clean, the current branch is `main`, and `make test` passes as a baseline.
+2.  **Phase 2 (Task Isolation):** A dedicated feature branch (e.g., `feature/task-name`) is auto-generated and checked out. All work occurs on this isolated branch.
+3.  **Phase 3 (The Red-Green-Verify Loop):** For every granular step of the implementation:
+    - **Red:** Write a failing test and verify failure with `make test`.
+    - **Green:** Implement the minimal code to pass the test.
+    - **Verify:** Run `make test`.
+        - **Pass:** `git commit` the step.
+        - **Fail:** Attempt **one quick fix**. If it fails again, the change is **automatically reverted** (`git checkout .`).
+4.  **Phase 4 (Integration):** Once all steps are complete, the agent performs a final test run. Upon approval, the branch is merged into `main` and deleted.
 
-A dedicated feature branch (e.g., `feature/task-name`) is auto-generated and checked out. All subsequent work for this task occurs here.
+### 4. Forensic Investigation (The Scientific Debugging Discipline)
 
-#### **Phase 3: The Red-Green-Verify Loop**
+When a bug is detected, the `/debug` command enforces a structured, scientific investigation:
 
-For every granular step of the implementation:
+1.  **Phase 1 (Status & Context):** Analyze the current environment and gather reproduction information.
+2.  **Phase 2 (Hypothesis Formulation):** Formulate a specific hypothesis for the root cause.
+3.  **Phase 3 (Isolated Testing):** Test the hypothesis on a temporary diagnostic branch (`debug/hyp-*`). Diagnostic code should be minimal and focused.
+4.  **Phase 4 (Synthesis & RCA):** Summarize the investigation into a **Root Cause Analysis (RCA)** report. This report serves as the documentation for the subsequent fix.
 
-1.  **Red:** Write a failing test and verify failure with `make test`.
-2.  **Green:** Implement the minimal code to pass.
-3.  **Verify:** Run `make test`.
-    - **Pass:** `git commit` the step.
-    - **Fail:** Attempt one quick fix; if it still fails, **revert** to the last green state (`git checkout .`).
-
-#### **Phase 4: Integration**
-
-Once all steps are complete, a final test run is performed. Upon user approval, the branch is merged back to `main` and the roadmap in `TASKS.md` is updated.
-
-### 4. Audit & Documentation (NEW)
+### 5. Audit & Documentation (NEW)
 
 Before merging or committing any final change, the work **must** be documented in the daily journal. This is enforced by a **timestamp-based git hook**. Use the following tool to satisfy the requirement:
 
