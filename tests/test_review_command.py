@@ -52,6 +52,14 @@ def test_writer_agent_has_replace():
         content = f.read()
     assert "replace" in content
 
+def test_draft_command_is_multimode():
+    with open(".gemini/commands/draft.toml", "r") as f:
+        content = f.read()
+    assert "Refinement" in content
+    assert "Initial Drafting" in content
+    assert "writer" in content
+    assert "reporter" not in content
+
 if __name__ == "__main__":
     # Simple manual runner for now
     try:
@@ -67,6 +75,7 @@ if __name__ == "__main__":
         test_writer_agent_exists()
         test_reporter_agent_gone()
         test_writer_agent_has_replace()
+        test_draft_command_is_multimode()
         
         print("Tests Passed")
     except AssertionError as e:
