@@ -58,7 +58,7 @@ The `.gemini/commands/` directory defines specialized workflows that automate ev
 
 ### 🔍 Phase 1: Planning & Discovery
 *   **`/research <topic>`**: A deep, 3-phase investigation (Planning -> Data Gathering -> Reporting) that produces exhaustive Markdown reports in the `research/` directory. **Crucial for gathering technical requirements and state-of-the-art context.**
-*   **`/learn <topic>`**: A grounded learning lifecycle (Audit -> Strategic Mapping -> Execution -> Codification) for mastering new technologies and building a permanent, machine-readable knowledge base in `.gemini/skills/`.
+*   **`/learn <topic>`**: A grounded learning lifecycle (Audit -> Strategic Mapping -> Execution -> Codification) for mastering new technologies and building a permanent, machine-readable knowledge base in `.gemini/skills/` using the specialized `learner` subagent.
 *   **`/plan`**: The **Architectural Bridge**. This interactive workflow translates ideas into actionable execution plans:
     *   **Phase 1 (Clarification):** The agent interviews you to resolve ambiguities before planning.
     *   **Phase 2 (Agentic Analysis):** A specialized `planner` subagent scans the codebase and generates a detailed technical strategy.

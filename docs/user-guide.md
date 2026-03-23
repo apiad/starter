@@ -26,7 +26,7 @@ The most critical phase of any project occurs before you write a single line of 
 
 Your primary tool for forensic, scientific investigation.
 
-- **How it works:** When a bug is detected, the `/debug` command implements a principled approach to problem-solving. It moves through four distinct phases: Context Analysis, Hypothesis Formulation, Isolated Testing on a temporary branch (`debug/hyp-*`), and finally a Synthesis of the findings into a **Root Cause Analysis (RCA)** report.
+- **How it works:** When a bug is detected, the `/debug` command implements a principled approach to problem-solving using the specialized `debugger` subagent. It moves through four distinct phases: Context Analysis, Hypothesis Formulation, Isolated Testing on a temporary branch (`debug/hyp-*`), and finally a Synthesis of the findings into a **Root Cause Analysis (RCA)** report.
 - **Why it works:** It forces the agent to identify the root cause *before* attempting a fix, preventing "guess-and-check" coding that can lead to regressions.
 
 ### `/plan`
@@ -40,12 +40,17 @@ Your tool for internal strategy and architectural design.
 
 Your tool for mastering new technologies and codifying them into project skills.
 
-- **How it works:** Implements a "Grounded Learning" philosophy through a 4-phase lifecycle:
+- **How it works:** Implements a "Grounded Learning" philosophy through a 4-phase lifecycle using the `learner` subagent:
     1.  **Environment Audit:** Automatically detects if the library is already installed or has local integration points.
-    2.  **Strategic Mapping:** Researches the topic and defines 3-5 granular Learning Objectives (the "Learning Map"). **Requires user approval via `ask_user`.**
-    3.  **Grounded Execution:** The specialized `learner` sub-agent performs real-world experiments (writing and running scripts) to verify "gotchas," performance, and idiomatic patterns.
-    4.  **Skill Codification:** Consolidates all findings into a permanent project skill in `.gemini/skills/<name>/`, including a mandatory `SKILL.md` file and reference documents.
+...
 - **Why it works:** It transforms ephemeral research into a permanent, machine-readable knowledge base that future agents can autonomously activate.
+
+### `/onboard`
+
+Your tool for rapid project orientation.
+
+- **How it works:** Provides a high-signal overview of the repository's architecture, standards, and current state. 
+- **Why it works:** It ensures that you (and the agent) are always aligned with the project's unique conventions before starting a session.
 
 ---
 
@@ -60,16 +65,11 @@ Your gateway to GitHub.
 - **How it works:** Interfaces with the GitHub CLI to analyze open issues and recommend what to tackle next based on strategic impact.
 
 
-### `/learn`
+### `/scaffold`
 
-Your tool for mastering new technologies and codifying them into project skills.
+Your tool for project initialization.
 
-- **How it works:** Implements a "Grounded Learning" philosophy through a 4-phase lifecycle:
-    1.  **Environment Audit:** Automatically detects if the library is already installed or has local integration points.
-    2.  **Strategic Mapping:** Researches the topic and defines 3-5 granular Learning Objectives (the "Learning Map"). **Requires user approval via `ask_user`.**
-    3.  **Grounded Execution:** The specialized `learner` sub-agent performs real-world experiments (writing and running scripts) to verify "gotchas," performance, and idiomatic patterns.
-    4.  **Skill Codification:** Consolidates all findings into a permanent project skill in `.gemini/skills/<name>/`, including a mandatory `SKILL.md` file and reference documents.
-- **Why it works:** It transforms ephemeral research into a permanent, machine-readable knowledge base that future agents can autonomously activate.
+- **How it works:** Scaffolds new components or entire projects using modern, standard tooling (TS, Python, Rust, etc.) and integrates the framework's standards and `makefile` from the start.
 
 ### `/task`
 
@@ -122,15 +122,15 @@ The approved plan is linked to a task. You trigger the execution:
 
 After all steps pass, the agent presents the final work. Upon your approval, it merges back to `main` and cleans up the feature branch.
 
-### Step 5: Document & Release with `/docs` & `/release`
+### Step 5: Document & Release with `/document` & `/release`
 
-Finally, use `/docs` to update the technical documentation and `/release` to publish the new version.
-
+Finally, use `/document` to update the technical documentation and `/release` to publish the new version.
 ## 🔍 Walkthrough: Solving a Bug with `/debug`
 
-When a bug is detected, the `/debug` command ensures a scientific resolution:
+When a bug is detected, the `/debug` command ensures a scientific resolution using the specialized `debugger` subagent:
 
 1.  **Analyze Context:** The agent gathers all relevant logs and context.
+...
 2.  **Formulate Hypothesis:** The agent proposes a root cause hypothesis (e.g., "The auth token is not being correctly passed to the header").
 3.  **Isolate & Test:** The agent creates a temporary branch `debug/hyp-auth-token`. It implements a minimal reproduction script or logging.
 4.  **RCA Synthesis:** Once confirmed, the agent generates a **Root Cause Analysis (RCA)** report. This report is used as the basis for the subsequent `/task work` to implement the fix on a feature branch.

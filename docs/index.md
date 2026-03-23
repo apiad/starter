@@ -45,7 +45,7 @@ curl -fsSL https://apiad.github.io/starter/install.sh | bash
 - **Knowledge Mastering:** Use `/learn` to explore and codify new libraries or topics into permanent project skills.
 - **Architectural Planning:** Use `/plan` to generate persistent, actionable strategies.
 - **Forensic Debugging:** Use `/debug` for root-cause analysis without immediate (and potentially incorrect) fixes.
-- **Automated Documentation:** Use `/docs` to keep the documentation synchronized with the evolving codebase.
+- **Automated Documentation:** Use `/document` to keep the documentation synchronized with the evolving codebase.
 - **Roadmap Management:** Use `/task` to maintain a clear, version-controlled project roadmap in `TASKS.md`.
 
 ## 🔄 Project Lifecycle

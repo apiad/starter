@@ -4,7 +4,7 @@ all: test lint
 
 test:
 	@echo "Running tests..."
-	@python3 tests/test_review_command.py
+	@uv run pytest tests/
 
 docs-serve:
 	@mkdocs serve
