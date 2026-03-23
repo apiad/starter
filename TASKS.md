@@ -18,11 +18,11 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
-- [/] Improve the `/review` command and evolve the `reviewer` agent to a non-destructive, multi-phase audit workflow. (@apiad) (See plan: plans/improve-review-command.md)
-
 ---
 
 ## Archive
+
+- [x] Improve the `/review` command and evolve the `reviewer` agent to a non-destructive, multi-phase audit workflow. (2026-03-23) (See plan: plans/improve-review-command.md)
 
 - [x] Implement the new `/learn` command and specialized `learner` agent with a 2-layer orchestration system for technology exploration and skill codification. (2026-03-20) (See plan: plans/implement-learn-command.md)
 
