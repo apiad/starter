@@ -18,9 +18,14 @@ This framework solves this problem by enforcing three core principles:
 
 ---
 
-## 🔍 The Discovery & Strategy Workflow
+## 🔍 Phase 1: Discovery & Audit
 
-The most critical phase of any project occurs before you write a single line of code. This framework moves away from impulsive execution toward a deliberate, architected approach.
+The most critical phase of any project occurs before you write a single line of code. This phase uses read-only commands to gather information safely.
+
+### `/research`
+
+Your tool for deep domain exploration.
+- **How it works:** Gathers documentation and synthesizes it into `research/` reports.
 
 ### `/debug`
 
@@ -28,6 +33,12 @@ Your primary tool for forensic, scientific investigation.
 
 - **How it works:** When a bug is detected, the `/debug` command implements a principled approach to problem-solving using the specialized `debugger` subagent. It moves through four distinct phases: Context Analysis, Hypothesis Formulation, Isolated Testing on a temporary branch (`debug/hyp-*`), and finally a Synthesis of the findings into a **Root Cause Analysis (RCA)** report.
 - **Why it works:** It forces the agent to identify the root cause *before* attempting a fix, preventing "guess-and-check" coding that can lead to regressions.
+
+---
+
+## 🌉 Phase 2: Strategy & Planning
+
+Once you have gathered discovery artifacts, you must synthesize them into an actionable strategy.
 
 ### `/plan`
 
@@ -54,7 +65,7 @@ Your tool for rapid project orientation.
 
 ---
 
-## 💻 The Software Development Workflow
+## 🚀 Phase 3: Execution & Implementation
 
 Once you have a solid strategy in `plans/`, you can move into execution. These commands eliminate the friction of context-switching between your IDE and terminal.
 
@@ -91,13 +102,14 @@ Automates the deployment process.
 
 ## 🔄 A Full Feature Development Walkthrough
 
-A complete, principled development cycle follows the **Research -> Plan -> Execute** lifecycle.
+A complete, principled development cycle follows the **Discovery -> Plan -> Execute** lifecycle.
 
-### **Step 1: Research with `/research`**
+### **Step 1: Discovery with `/research`, `/maintenance`, or `/review`**
 
-You are integrating a new authentication library. You start by researching the technical requirements.
+Before acting, you must gather context. For example, if you are integrating a new authentication library, you start by researching the technical requirements.
 
 - The `researcher` subagent gathers documentation and synthesizes it into `research/auth-library-deep-dive.md`.
+- Alternatively, you might run `/maintenance` to audit the codebase or `/review` to audit a document. In all cases, a read-only artifact is produced.
 
 ### **Step 2: Strategy with `/plan`**
 

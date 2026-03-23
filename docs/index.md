@@ -16,15 +16,18 @@ The agent is mandated to challenge ideas before implementing them. It identifies
 
 All significant work must be preceded or accompanied by a structured journal entry. The framework enforces this via a **timestamp-based pre-commit hook**, ensuring that the project's history is an accurate, human-and-AI-readable audit trail of intent and execution.
 
-### 3. Strategy-First (Research -> Plan -> Execute)
+### 3. Strategy-First (Discovery -> Plan -> Execute)
 
-Every non-trivial change follows a strict, non-negotiable lifecycle. The agent first researches the domain, proposes a detailed implementation plan, obtains user approval, and only then begins writing code. This is enforced by the **TCR (Test-Commit-Revert)** protocol, ensuring a "Green-only" development path.
+Every non-trivial change follows a strict, non-negotiable lifecycle. 
+1. **Discovery & Audit:** The agent first researches the domain (`/research`), audits the codebase (`/maintenance`, `/review`), or investigates bugs (`/debug`) without modifying anything.
+2. **Strategy:** A detailed implementation plan is proposed (`/plan`) based on discovery artifacts and requires user approval.
+3. **Execution:** Only then does the agent begin writing code (`/task`) or content (`/draft`). This is enforced by the **TCR (Test-Commit-Revert)** protocol, ensuring a "Green-only" development path.
 
-### 3. Validation-as-Truth
+### 4. Validation-as-Truth
 
 The `makefile` is the ultimate source of truth for project health. Automated hooks ensure that every agent action is followed by a validation run (linting, testing, formatting) to prevent regressions.
 
-### 4. Task Isolation (Feature Branching)
+### 5. Task Isolation (Feature Branching)
 
 All development work is strictly performed on dedicated, auto-generated feature branches. This keeps the `main` branch protected and always in a deployable state, while providing a clean, granular history for every task.
 
@@ -52,7 +55,7 @@ curl -fsSL https://apiad.github.io/starter/install.sh | bash
 
 1.  **Onboarding:** Run `/onboard` to get a high-signal overview of the repository.
 2.  **Scaffolding:** Use `/scaffold` to initialize new project components with modern tooling.
-3.  **Iterative Development:** Follow the Research-Plan-Execute cycle for every feature.
+3.  **Iterative Development:** Follow the Discovery -> Plan -> Execute cycle for every feature.
 4.  **Quality Control:** Rely on the `make.py` hook to maintain codebase integrity.
 5.  **Releasing:** Use `/release` to automate versioning, changelog updates, and git tagging.
 

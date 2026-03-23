@@ -32,14 +32,30 @@ Helper scripts that standardize framework operations across different environmen
 
 ### 3. The Command System (`.gemini/commands/`)
 
-Commands define structured, multi-phase workflows that automate the development lifecycle. Each command is a TOML file containing specific instructions and context for the agent.
+Commands define structured, multi-phase workflows that automate the development lifecycle. They are strictly categorized by their role in the Unified Lifecycle Flow.
 
-- **`/plan`:** An interactive workflow that transitions between clarification, analysis, and strategy generation.
-- **`/research`:** A deep-dive exploration that produces exhaustive reports in the `research/` directory.
-- **`/debug`:** Activates a **forensic investigation mode** using a scientific, hypothesis-driven workflow.
+#### Phase 1: Discovery & Audit (Read-Only)
+- **`/research`:** Deep-dive exploration producing exhaustive Markdown reports.
+- **`/maintenance`:** A non-destructive codebase audit generating a 'Maintenance Report Card'.
+- **`/review`:** A multi-phase linguistic and structural audit of a document, producing a sidecar `.review.md` file.
+- **`/debug`:** A scientific, hypothesis-driven forensic investigation ending in a Root Cause Analysis (RCA) report.
 - **`/learn`:** A grounded learning lifecycle for mastering new technologies and codifying them into project skills.
-- **`/document`:** Analyzes the codebase and project state to update the documentation suite.
+
+#### Phase 2: Strategy (The Bridge)
+- **`/plan`:** The mandatory bridge. An interactive workflow that transitions between clarification, analysis of discovery artifacts, and strategy generation. It produces a persistent Markdown plan in `plans/`.
+
+#### Phase 3: Execution (Side-Effects)
 - **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the **strict TCR (Test-Commit-Revert) loop** and feature branch isolation.
+- **`/draft`:** The content execution engine, transforming plans or `.review.md` reports into finished Markdown documents.
+- **`/document`:** Analyzes the codebase and project state to update the documentation suite.
+
+### 🔄 The Unified Lifecycle Flow
+
+The framework enforces a strict architectural boundary between discovering what to do and actually doing it. Data flows unidirectionally:
+
+1. **Artifact Generation:** Discovery commands (`/maintenance`, `/review`, `/debug`) create read-only artifacts (`research/`, `*.review.md`).
+2. **Strategy Synthesis:** The `planner` agent ingests these artifacts via the `/plan` command to generate an actionable, step-by-step roadmap.
+3. **Execution Routing:** The verified plan is handed off to the appropriate execution command (`/task` for logic, `/draft` for prose).
 
 ### 🔍 Deep Dive: Scientific Debugging
 

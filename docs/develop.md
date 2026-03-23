@@ -4,20 +4,33 @@ The **Gemini CLI Opinionated Framework** enforces a high-discipline development 
 
 ## 🔄 The Mandatory Workflow Lifecycle
 
-Every non-trivial change must follow this strict four-phase process:
+Every non-trivial change must follow this strict three-phase process:
 
-### 1. Research & Analysis
+```text
+[Phase 1: Discovery] -> [Phase 2: Strategy] -> [Phase 3: Execution]
+(Audit/Research)        (Planning Bridge)      (Tasks/Drafting)
+```
 
-Before proposing a change, use the `/research` command to gather context, analyze the current codebase, and identify potential risks.
+### 1. Discovery & Audit (Read-Only)
 
-### 2. Strategic Planning
+Before proposing a change, you must gather context and identify risks. Use the specialized discovery commands:
+- **`/research`**: For domain knowledge and external libraries.
+- **`/maintenance`**: To audit the codebase for technical debt.
+- **`/debug`**: To perform a root-cause analysis (RCA) on a bug.
+- **`/review`**: To audit a document's structure and prose.
 
-A feature is not considered "active" until a persistent Markdown plan has been created in the `plans/` directory. Use the `/plan` command to generate this strategy and synchronize it with `TASKS.md`.
+*Crucially, these commands are read-only; they produce artifacts (`research/`, `*.review.md`), not code changes.*
 
-### 3. Execution & Validation (The TCR Protocol)
+### 2. Strategic Planning (The Bridge)
 
-The `/task` command is the primary tool for repository execution. It supports multiple actions to manage the project roadmap:
+A feature or fix is not considered "active" until a persistent Markdown plan has been created in the `plans/` directory. Use the `/plan` command to synthesize the artifacts generated in Phase 1 into an actionable strategy, and synchronize it with `TASKS.md`.
 
+### 3. Execution & Validation (Side-Effects)
+
+Once a plan is approved, you move to execution. This is the **only** phase where files are modified.
+
+#### For Code: The TCR Protocol
+The `/task` command is the primary tool for repository execution:
 - **`/task create`**: Adds a new task to `TASKS.md`.
 - **`/task work on ...`**: Implements a strict **TCR (Test-Commit-Revert)** protocol to ensure high-velocity, high-quality code.
 - **`/task report`**: Provides a summary of the roadmap and current priorities.

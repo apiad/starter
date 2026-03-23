@@ -40,8 +40,9 @@ To ensure full functionality, your environment should have:
 
 - **Git:** Required for state management and change detection hooks.
 - **Node.js:** Necessary for running the `gemini` CLI.
-- **Python 3.10+:** Required for executing the project's automation hooks (`.gemini/hooks/`).
-- **Make:** Used for project validation and health checks.
+- **Python 3.12+:** Required for executing the project's automation hooks (`.gemini/hooks/`).
+- **uv:** The required Python package and project manager.
+- **Make:** Used for project validation and health checks (runs `uv run pytest`).
 
 ### Installing Git Hooks
 
