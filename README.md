@@ -73,7 +73,7 @@ The `.gemini/commands/` directory defines specialized workflows that automate ev
 *   **`/scaffold`**: Initializes new project structures from scratch using modern, standard tooling (Python/uv, TS/npm, Rust/cargo, etc.) and sets up a compatible `makefile`.
 
 ### 🧹 Phase 3: Content Generation, Maintenance & Documentation
-*   **`/draft`**: Multi-phase workflow to turn research and plans into detailed, high-quality technical documents or articles section-by-section.
+*   **`/draft`**: Multi-phase workflow to turn research and plans into detailed, high-quality technical documents or articles section-by-section using the `writer` subagent.
 *   **`/review`**: Uses the `reviewer` subagent to perform non-destructive, multi-phase structural and linguistic audits based on the project's style guide.
 *   **`/maintenance`**: Performs a deep scan of the codebase to identify technical debt, refactoring opportunities, and areas to improve test coverage.
 *   **`/document`**: Analyzes the codebase and journals to generate or update comprehensive project documentation in the `docs/` folder.

@@ -14,7 +14,7 @@ This framework solves this problem by enforcing three core principles:
 
 1.  **The important things should be made explicit:** We keep track of everything important in Markdown files. Ideas are committed to `plans/`, research is summarized in `research/`, and all changes are logged in the `journal/`. This physical "long-term memory" prevents the agent from forgetting context.
 2.  **Resist the urge to guess:** We favor explicit commands over implicit actions. If you want the model to make a plan, you use the `/plan` command, which invokes a carefully crafted workflow rather than relying on the agent's default behavior.
-3.  **Delegate, delegate, delegate:** We use specialized sub-agents (`planner`, `researcher`, `reporter`, `editor`). These agents run complex, multi-step tasks in private contexts, preventing their internal reasoning (e.g., browsing 20 web pages) from polluting the main session's context window.
+3.  **Delegate, delegate, delegate:** We use specialized sub-agents (`planner`, `researcher`, `writer`, `reviewer`). These agents run complex, multi-step tasks in private contexts, preventing their internal reasoning (e.g., browsing 20 web pages) from polluting the main session's context window.
 
 ---
 
@@ -168,7 +168,7 @@ Beyond code, this framework excels at generating high-quality technical content 
 
 Your primary tool for long-form technical writing.
 
-- **How it works:** Instead of generating a single large blob of text, the `/draft` command follows a strict 6-phase workflow: Context Gathering (from `research/` or `plans/`), Title & Metadata Selection, Outline Creation (aligned with the Style Guide), Initialization of the file, Section-by-Section Drafting (using the `reporter` subagent), and finally, a Conclusion with next steps.
+- **How it works:** Instead of generating a single large blob of text, the `/draft` command follows a strict 6-phase workflow: Context Gathering (from `research/` or `plans/`), Title & Metadata Selection, Outline Creation (aligned with the Style Guide), Initialization of the file, Section-by-Section Drafting (using the `writer` subagent), and finally, a Conclusion with next steps.
 - **Why it works:** It forces structural integrity and prevents the "AI-ish" monotone by building the document incrementally based on project-specific research.
 
 ### `/review`

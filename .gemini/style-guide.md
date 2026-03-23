@@ -1,6 +1,6 @@
 # Gemini CLI Style Guide
 
-This guide defines the authoritative technical and narrative style for all project documentation, articles, and reports. The `/review` command and the `reviewer` subagent use these rules to perform structured, multi-phase, non-destructive audits.
+This guide defines the authoritative technical and narrative style for all project documentation, articles, and reports. The `/draft` command and its `writer` subagent use these rules for original composition, while the `/review` command and the `reviewer` subagent use them to perform structured, multi-phase, non-destructive audits.
 
 ## General Context
 - **Tone:** Intellectual but accessible. Conversational academic style.

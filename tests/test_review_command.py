@@ -32,14 +32,14 @@ def test_draft_command_suggests_review():
     assert "/revise" not in content
 
 def test_docs_updated():
-    files_to_check = ["README.md", ".gemini/style-guide.md", "docs/user-guide.md"]
+    files_to_check = ["README.md", ".gemini/style-guide.md", "docs/user-guide.md", "docs/design.md"]
     for f_path in files_to_check:
         with open(f_path, "r") as f:
             content = f.read()
         assert "review" in content.lower()
         assert "reviewer" in content.lower()
-        # "revise" might still exist in old context but should be gone from descriptions
-        # "editor" might still exist but "reviewer" should be the primary agent name now
+        assert "writer" in content.lower()
+        assert "reporter" not in content.lower()
 
 def test_writer_agent_exists():
     assert os.path.exists(".gemini/agents/writer.md")

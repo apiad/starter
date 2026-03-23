@@ -144,13 +144,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Implemented `/plan` command workflow and `planner` subagent for architectural planning.
-- Added `/draft` and `/revise` commands with `reporter` and `editor` subagents for structured content generation.
+- Added `/draft` and `/review` commands with `writer` and `reviewer` subagents for structured content generation.
 - Created an actionable project style guide in `.gemini/style-guide.md`.
 - Drafted the "The Architect in the Machine" Substack article showcasing the framework.
 
 ### Changed
 - Overhauled the `/research` command into an extensible, executive-style reporting workflow with iterative updates and asset linking.
-- Refactored `/draft` and `/revise` commands to integrate step-by-step, style-driven audits.
+- Refactored `/draft` and `/review` commands to integrate step-by-step, style-driven audits.
 - Refined `/plan` and `/task` workflows.
 
 ## [0.7.0] - 2026-03-02
@@ -198,7 +198,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2026-02-28
 
 ### Added
-- Refactored the `/research` command into a robust 3-phase workflow using specialized `researcher` and `reporter` subagents.
+- Refactored the `/research` command into a robust 3-phase workflow using specialized `researcher` and `writer` subagents.
 - Rewrote the `README.md` to explain the opinionated framework, the agent's behavior, hooks, commands, journaling, and the project initialization workflow.
 
 ### Changed

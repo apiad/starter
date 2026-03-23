@@ -79,7 +79,7 @@ Instead of a single "do-it-all" AI, the framework delegates tasks to specialized
 - **`debugger`:** A forensic investigation specialist using a scientific, hypothesis-driven workflow.
 - **`learner`:** A "Grounded Learning Specialist" who masters new technologies by writing, executing, and documenting code experiments.
 - **`researcher`:** Optimized for deep information gathering and multi-source synthesis.
-- **`reporter` / `editor`:** Content generation and refinement specialists.
+- **`writer` / `reviewer`:** Content generation and refinement specialists.
 
 ### 5. The Skill System (`.gemini/skills/`)
 
