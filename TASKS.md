@@ -18,11 +18,13 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
-- [/] Implement documentation harmonization and refactor tests for dynamic synchronization. (@apiad) (See plan: plans/maintenance-improvements.md)
+- [ ] Implement dynamic structural testing suite and finalize documentation sync. (See plan: plans/implement-maintenance-v2.md)
 
 ---
 
 ## Archive
+
+- [x] Implement documentation harmonization and refactor tests for dynamic synchronization. (2026-03-23) (See plan: plans/maintenance-improvements.md)
 
 - [x] Improve the `/draft` command and evolve the `writer` agent to include a review-driven "Refinement Phase." (2026-03-23) (See plan: plans/improve-draft-command-and-writer-agent.md)
 
