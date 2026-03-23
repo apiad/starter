@@ -18,7 +18,7 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
-- [ ] Implement dynamic structural testing suite and finalize documentation sync. (See plan: plans/implement-maintenance-v2.md)
+- [/] Implement dynamic structural testing suite and finalize documentation sync. (@apiad) (See plan: plans/implement-maintenance-v2.md)
 
 ---
 
