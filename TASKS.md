@@ -18,7 +18,7 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
-- [ ] Integrate `coder` subagent into `/task work` workflow to delegate granular implementation steps. (See plan: plans/implement-coder-agent.md)
+- [/] Integrate `coder` subagent into `/task work` workflow to delegate granular implementation steps. (@apiad) (See plan: plans/implement-coder-agent.md)
 
 ---
 
