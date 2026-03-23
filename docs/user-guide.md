@@ -158,6 +158,31 @@ This tool automatically:
 
 By following this discipline, you ensure that the AI agent always has an up-to-date "long-term memory" to draw from in future sessions.
 
+---
+
+## ✍️ The Content Creation Workflow
+
+Beyond code, this framework excels at generating high-quality technical content through a principled, multi-stage pipeline.
+
+### `/draft`
+
+Your primary tool for long-form technical writing.
+
+- **How it works:** Instead of generating a single large blob of text, the `/draft` command follows a strict 6-phase workflow: Context Gathering (from `research/` or `plans/`), Title & Metadata Selection, Outline Creation (aligned with the Style Guide), Initialization of the file, Section-by-Section Drafting (using the `reporter` subagent), and finally, a Conclusion with next steps.
+- **Why it works:** It forces structural integrity and prevents the "AI-ish" monotone by building the document incrementally based on project-specific research.
+
+### `/review`
+
+Your tool for deep, multi-phase editorial audits.
+
+- **How it works:** Replaces the legacy `/revise` command with a non-destructive, evidence-based reporting workflow. It uses the `reviewer` subagent to audit a file in three distinct phases:
+    1.  **Structural Audit:** Narrative arc and header hierarchy.
+    2.  **Substance Audit:** Concreteness and technical depth.
+    3.  **Linguistic Audit:** Removing "AI-isms" and polishing the prose.
+- **Why it works:** It produces a sidecar `<filename>.review.md` report instead of modifying the original file, allowing you to choose which suggestions to apply during the next `/draft` or `/task work` iteration.
+
+---
+
 ## ⚙️ Background Tasks & Maintenance
 
 

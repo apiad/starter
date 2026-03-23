@@ -1,6 +1,6 @@
 # Gemini CLI Style Guide
 
-This guide defines the authoritative technical and narrative style for all project documentation, articles, and reports. The `/revise` command and the `editor` subagent use these rules to perform structured, step-by-step audits.
+This guide defines the authoritative technical and narrative style for all project documentation, articles, and reports. The `/review` command and the `reviewer` subagent use these rules to perform structured, multi-phase, non-destructive audits.
 
 ## General Context
 - **Tone:** Intellectual but accessible. Conversational academic style.

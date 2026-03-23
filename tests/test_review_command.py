@@ -31,6 +31,16 @@ def test_draft_command_suggests_review():
     assert "/review" in content
     assert "/revise" not in content
 
+def test_docs_updated():
+    files_to_check = ["README.md", ".gemini/style-guide.md", "docs/user-guide.md"]
+    for f_path in files_to_check:
+        with open(f_path, "r") as f:
+            content = f.read()
+        assert "review" in content.lower()
+        assert "reviewer" in content.lower()
+        # "revise" might still exist in old context but should be gone from descriptions
+        # "editor" might still exist but "reviewer" should be the primary agent name now
+
 if __name__ == "__main__":
     # Simple manual runner for now
     try:
@@ -41,6 +51,7 @@ if __name__ == "__main__":
         test_reviewer_agent_has_grep_search()
         test_review_command_is_multiphase()
         test_draft_command_suggests_review()
+        test_docs_updated()
         print("Tests Passed")
     except AssertionError as e:
         print(f"Test Failed: {e}")
