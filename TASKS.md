@@ -18,6 +18,8 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
+- [ ] Implement documentation harmonization and refactor tests for dynamic synchronization. (See plan: plans/maintenance-improvements.md)
+
 ---
 
 ## Archive

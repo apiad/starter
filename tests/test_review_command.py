@@ -70,24 +70,56 @@ def test_maintenance_command_is_audit():
     # Ensure it doesn't mention Step-by-Step Implementation or modification
     assert "Step-by-Step Implementation" not in content
 
+def test_planner_agent_read_only():
+    with open(".gemini/agents/planner.md", "r") as f:
+        content = f.read()
+    assert "planner" in content.lower()
+    assert "read-only" in content.lower()
+
+def test_plan_command_persistence_responsibility():
+    with open(".gemini/commands/plan.toml", "r") as f:
+        content = f.read()
+    assert "Command Responsibility" in content
+    assert "responsible for saving the plan" in content.lower()
+    assert "planner" in content.lower()
+    assert "agent" in content.lower()
+    assert "read-only" in content.lower()
+
 if __name__ == "__main__":
     # Simple manual runner for now
     try:
+        print("Checking reviewer agent exists...")
         test_reviewer_agent_exists()
+        print("Checking editor agent gone...")
         test_editor_agent_gone()
+        print("Checking review command exists...")
         test_review_command_exists()
+        print("Checking revise command gone...")
         test_revise_command_gone()
+        print("Checking reviewer agent has grep_search...")
         test_reviewer_agent_has_grep_search()
+        print("Checking review command is multi-phase...")
         test_review_command_is_multiphase()
+        print("Checking draft command suggests review...")
         test_draft_command_suggests_review()
+        print("Checking docs updated...")
         test_docs_updated()
         
+        print("Checking writer agent exists...")
         test_writer_agent_exists()
+        print("Checking reporter agent gone...")
         test_reporter_agent_gone()
+        print("Checking writer agent has replace...")
         test_writer_agent_has_replace()
+        print("Checking draft command is multi-mode...")
         test_draft_command_is_multimode()
 
+        print("Checking maintenance command is audit...")
         test_maintenance_command_is_audit()
+        print("Checking planner agent is read-only...")
+        test_planner_agent_read_only()
+        print("Checking plan command persistence responsibility...")
+        test_plan_command_persistence_responsibility()
         
         print("Tests Passed")
     except AssertionError as e:
