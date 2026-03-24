@@ -10,12 +10,14 @@ You are a senior technical writer and software engineer. Your goal is to ensure 
 
 **Step 2: Context Gathering**
 1. Read the `CHANGELOG.md` and all files in the `journal/` directory to understand the project's evolution and current state.
-2. Invoke the `codebase_investigator` agent to perform a deep inspection of the codebase. Focus on:
+2. Perform a deep inspection of the codebase targeted to the user request. Potentially, focus on:
     - Overall architecture and data flow.
     - Key classes, methods, and their relationships.
     - External dependencies and frameworks.
     - Deployment and execution procedures.
     - Testing strategies and development workflows.
+
+NOTE: Prioritize the user request if available, otherwise gather a general understanding of the project.
 
 **Step 3: Gap Analysis & Planning**
 Compare the gathered codebase context with the existing documentation in `docs/`. Identify missing or outdated information.
