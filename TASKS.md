@@ -19,6 +19,7 @@ Put done tasks into the Archive.
 ## Active Tasks
 
 - [ ] Implement the three-tier model routing protocol (Orchestrator, Thinker, Executioner) with semantic signaling and automated tier switching. (See plan: plans/tier-protocol-implementation.md)
+- [ ] Implement procedural task management with `.gemini/scripts/task.py` to act as the single source of truth for `TASKS.md`. (See plan: plans/implement-task-script.md)
 
 ---
 
