@@ -34,6 +34,12 @@ Helper scripts that standardize framework operations across different environmen
 
 Commands define structured, multi-phase workflows that automate the development lifecycle. They are strictly categorized by their role in the Unified Lifecycle Flow.
 
+#### **Semantic Tier Routing (The Tier Protocol)**
+The framework implements a dual-tier model routing strategy to optimize for intelligence, cost, and execution speed. This is configured in `.gemini/settings.json` via `modelConfigs.overrides`.
+
+- **The "Thinking" Tier (Clever/Pro):** High-reasoning agents (`planner`, `reviewer`, `learner`, `debugger`) are mapped to `gemini-3.1-pro-preview`. This ensures that architectural decisions, master-level learning, and forensic root-cause analysis are performed by the most capable models.
+- **The "Execution" Tier (Dumber/Lite):** High-volume, procedural agents (`writer`, `researcher`) are mapped to `gemini-2.5-flash-lite`. This provides high-velocity drafting and discovery without excessive context costs.
+
 #### Phase 1: Discovery & Audit (Read-Only)
 - **`/research`:** Deep-dive exploration producing exhaustive Markdown reports.
 - **`/maintenance`:** A non-destructive codebase audit generating a 'Maintenance Report Card'.
@@ -45,7 +51,7 @@ Commands define structured, multi-phase workflows that automate the development 
 - **`/plan`:** The mandatory bridge. An interactive workflow that transitions between clarification, analysis of discovery artifacts, and strategy generation. It produces a persistent Markdown plan in `plans/`.
 
 #### Phase 3: Execution (Side-Effects)
-- **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the **strict TCR (Test-Commit-Revert) loop** and feature branch isolation.
+- **`/task`:** The primary execution engine, managing `TASKS.md` and enforcing the **strict TCR (Test-Commit-Revert) loop** and feature branch isolation. **Procedural Task Management:** The `/task` command operates exclusively via `.gemini/scripts/task.py`, which acts as the single source of truth for the project roadmap.
 - **`/draft`:** The content execution engine, transforming plans or `.review.md` reports into finished Markdown documents.
 - **`/document`:** Analyzes the codebase and project state to update the documentation suite.
 
@@ -86,6 +92,15 @@ The `pre-commit.py` hook implements a sophisticated cross-file validation strate
 2.  **MTime Analysis:** Calculates the maximum modification time (`max(mtime)`) among all meaningful changes.
 3.  **Audit Trail Check:** Parses the **last entry** in the current day's journal file (`journal/YYYY-MM-DD.md`) and extracts its ISO timestamp.
 4.  **Temporal Consistency:** If the journal entry timestamp is **older** than the latest file change, the commit is blocked. This forces the agent (or user) to document the work *after* it is done but *before* it is finalized.
+
+### 🔍 Deep Dive: Procedural Task Management (`task.py`)
+
+The framework enforces a **CLI-First** roadmap discipline. The `TASKS.md` file is a machine-managed artifact produced by the `.gemini/scripts/task.py` utility.
+
+- **Data Integrity:** The script parses `TASKS.md` into a structured `Task` model, ensuring that IDs (e.g., `G.4`), labels, and dependencies are consistent.
+- **State Lifecycle:** Tasks move through a strictly defined lifecycle: `add` (Todo) -> `start` (In Progress) -> `archive` (Done/Archive).
+- **Migration Logic:** The script automatically assigns IDs and categorizes tasks during its initial run on a legacy `TASKS.md` file.
+- **Test Isolation:** The script's test suite (`tests/test_task_script.py`) utilizes the `GEMINI_TASKS_FILE` environment variable and `tempfile` to operate on a temporary roadmap, preventing verification logic from corrupting the actual project state.
 
 ### 4. Specialized Agents (`.gemini/agents/`)
 

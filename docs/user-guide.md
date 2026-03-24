@@ -93,11 +93,34 @@ Your tool for project initialization.
 
 Your roadmap manager.
 
-- **How it works:** Manages a living `TASKS.md` document. Use it to `create` new tasks, `work` on existing ones, `report` on priorities, or `update` statuses. In the `work` mode, it acts as an orchestrator, delegating granular implementation steps to the specialized `coder` subagent.
+- **How it works:** Manages a living `TASKS.md` document **exclusively** via the `.gemini/scripts/task.py` utility. Use it to `create` new tasks, `start` work on existing ones, `report` on priorities, or `archive` completed tasks.
+- **Why it works:** By treating the roadmap as a machine-managed artifact, the framework ensures consistent formatting, automated ID generation (e.g., `G.4`), and a clear transition from `Todo` to `Archive` that aligns with the agent's turn lifecycle.
+- **Workflow Example:**
+    1.  `python .gemini/scripts/task.py add --label "New Feature" --description "..." --category "Logic"`
+    2.  `python .gemini/scripts/task.py start --task-id L.1` (marks as In Progress)
+    3.  Perform work via `/task work` (TCR loop).
+    4.  `python .gemini/scripts/task.py archive --task-id L.1` (moves to Archive)
 
 ### `/commit`
+...
+## 🌲 The Tier Protocol (Semantic Routing)
 
-Brings order to your version history.
+To balance speed, cost, and architectural integrity, the framework implements a **Tier Protocol** for model routing. This is configured in `.gemini/settings.json`.
+
+### The "Thinking" Tier (Clever/Pro)
+Specialized agents that require high-reasoning and deep causal analysis are mapped to **`gemini-3.1-pro-preview`**.
+- **`planner`**: For architectural design and strategy.
+- **`debugger`**: For forensic root-cause analysis.
+- **`learner`**: For mastering new technologies without hallucinations.
+- **`reviewer`**: For critical editorial audits.
+
+### The "Execution" Tier (Dumber/Lite)
+Agents optimized for high-volume drafting and discovery are mapped to **`gemini-2.5-flash-lite`**.
+- **`writer`**: For section-by-section drafting.
+- **`researcher`**: For rapid information gathering.
+
+## 🔄 A Full Feature Development Walkthrough
+
 
 - **How it works:** Instead of monolithic "WIP" commits, this command analyzes your `git diff` and logically groups modifications into cohesive units. It proposes a series of atomic, Conventional Commits (e.g., separating a feature update from a documentation tweak) for your approval.
 

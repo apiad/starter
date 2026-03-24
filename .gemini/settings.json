@@ -11,6 +11,22 @@
       },
       {
         "match": {
+          "overrideScope": "debugger"
+        },
+        "modelConfig": {
+          "model": "gemini-3.1-pro-preview"
+        }
+      },
+      {
+        "match": {
+          "overrideScope": "learner"
+        },
+        "modelConfig": {
+          "model": "gemini-3.1-pro-preview"
+        }
+      },
+      {
+        "match": {
           "overrideScope": "reviewer"
         },
         "modelConfig": {

@@ -31,10 +31,13 @@ Once a plan is approved, you move to execution. This is the **only** phase where
 
 #### For Code: The TCR Protocol
 The `/task` command is the primary tool for repository execution:
-- **`/task create`**: Adds a new task to `TASKS.md`.
-- **`/task work on ...`**: Implements a strict **TCR (Test-Commit-Revert)** protocol to ensure high-velocity, high-quality code.
+- **`/task create`**: Adds a new task using the `task.py` script.
+- **`/task work on ...`**: Implements a strict **TCR (Test-Commit-Revert)** protocol to ensure high-velocity, high-quality code. The orchestrator automatically uses `task.py` to mark the task as in-progress.
 - **`/task report`**: Provides a summary of the roadmap and current priorities.
-- **`/task update`**: Updates the status of an existing task.
+- **`/task update`**: Updates the status or plan-path of an existing task via the script.
+
+**CLI-First Roadmap Discipline:**
+The project roadmap (`TASKS.md`) must **never** be edited by hand. All task operations must be performed via the `.gemini/scripts/task.py` script or the corresponding `/task` actions. This ensures structural integrity and a verifiable audit trail.
 
 #### **The TCR Loop (Work Action)**
 
