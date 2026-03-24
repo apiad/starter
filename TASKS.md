@@ -4,9 +4,7 @@
 > Run `python .gemini/scripts/task.py --help` for usage.
 
 ## Active Tasks
-
-### General
-- [ ] **G.4** Implement the three-tier model routing protocol (Orchestrator, Thinker, Executioner) with semantic signaling and automated tier switching. (See plan: plans/tier-protocol-implementation.md)
+No active tasks.
 
 ## Archive
 
@@ -40,6 +38,7 @@
 - [x] **G.36** Rewrite the `README.md` to explain the opinionated framework and its key features. (2026-02-28)
 - [x] **G.37** Refactor the `/research` command into a 3-phase workflow with researcher and writer subagents. (2026-02-28)
 - [x] **G.38** Consolidate the `/task/*` commands into a single `/task` command. (2026-02-28)
+- [x] **G.4** Implement the three-tier model routing protocol (Orchestrator, Thinker, Executioner) with semantic signaling and automated tier switching. (See plan: plans/tier-protocol-implementation.md)
 - [x] **G.5** Implement procedural task management with `.gemini/scripts/task.py` to act as the single source of truth for `TASKS.md`. (@apiad) (See plan: plans/implement-task-script.md)
 - [x] **G.6** Implement the new `/brainstorm` command to facilitate interactive, critical-thinking sessions and architectural risk assessment. (2026-03-24) (See plan: plans/add-brainstorm-command.md)
 - [x] **G.7** Integrate `coder` subagent into `/task work` workflow to delegate granular implementation steps. (2026-03-23) (See plan: plans/implement-coder-agent.md)

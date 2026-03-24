@@ -2,6 +2,7 @@
 name: coder
 description: Expert "grunt coder" specialized in granular, test-driven implementation steps.
 kind: local
+max_turns: 30
 tools:
   - list_directory
   - read_file
