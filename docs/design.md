@@ -17,6 +17,7 @@ These scripts are registered in `.gemini/settings.json` and intercept the turn-b
 - **`log.py`:** Provides a comprehensive audit trail of every interaction, logging structured markers for `BeforeAgent`, `AfterModel`, and `AfterTool` events.
 - **`notify.py`:** Sends a desktop notification and plays a system sound once the agent completes its turn, ensuring the user is alerted when the agent is waiting for input.
 - **`cron.py`:** Synchronizes the `cron.toml` task definitions with **systemd user timers** for background execution.
+- **`minifier.py`:** A `BeforeModel` hook that performs **Context Minification**. It identifies redundant `<instruction>` blocks from previous turns and replaces them with a lightweight placeholder, preserving only the most recent instruction to maximize token efficiency and prevent context saturation during long sessions.
 
 #### **B. Git Hooks**
 These are linked to the repository's `.git/hooks/` directory and manage the finality of changes.

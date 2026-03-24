@@ -72,7 +72,9 @@ Failure to do this will block your commit or turn execution.
 
 ## ✅ Testing & Quality Standards
 
-- **Agent-Driven Validation:** This project maintains a **minimalist, transient testing philosophy**. Instead of a static suite of thousands of unit tests, it relies on high-discipline agent execution and **Grounded Experimentation** to verify behavior in real-time.
+- **Automated Context Minification:** To ensure maximum token efficiency and prevent context saturation during long sessions, the framework automatically identifies and replaces redundant `<instruction>` blocks from previous turns with a placeholder. Only the *latest* instruction is passed to the model in its full form, ensuring the agent stays focused on the current task while maintaining structural operational context.
+- **Agent-Driven Validation:** This project maintains a **minimalist, transient testing philosophy**.
+ Instead of a static suite of thousands of unit tests, it relies on high-discipline agent execution and **Grounded Experimentation** to verify behavior in real-time.
 - **On-the-Fly Verification:** During the mandatory TCR (Test-Commit-Revert) loop, the agent is required to write specific, temporary test cases (e.g., `test_feature_x.py`) that verify the granular step being implemented.
 - **Source of Truth:** The `makefile` is the central definition of project health. Even if it initially points to an empty `test` target, it serves as the hook point for the agent's automated validation.
 - **The TCR Mandate:** The primary mechanism for ensuring "Green-only" development is the mandatory **Test-Commit-Revert** loop. If a change fails its temporary verification, it is instantly reverted, ensuring the `main` branch remains a "known-good" state.

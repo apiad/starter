@@ -47,6 +47,7 @@ curl -fsSL https://apiad.github.io/starter/install.sh | bash
 - **Deep Discovery:** Use `/research` for multi-phase domain investigations.
 - **Knowledge Mastering:** Use `/learn` to explore and codify new libraries or topics into permanent project skills.
 - **Semantic Tier Routing (The Tier Protocol):** Optimizes for intelligence, cost, and speed by mapping specialized agents (`planner`, `debugger`, `learner`, `reviewer`) to high-reasoning models.
+- **Automated Context Optimization:** Proactively minifies historical instructions to maintain high token efficiency during long, complex sessions.
 - **Architectural Planning:** Use `/plan` to generate persistent, actionable strategies.
 - **Forensic Debugging:** Use `/debug` for root-cause analysis without immediate (and potentially incorrect) fixes.
 - **Automated Documentation:** Use `/document` to keep the documentation synchronized with the evolving codebase.

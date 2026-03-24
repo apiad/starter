@@ -15,6 +15,7 @@ This framework solves this problem by enforcing three core principles:
 1.  **The important things should be made explicit:** We keep track of everything important in Markdown files. Ideas are committed to `plans/`, research is summarized in `research/`, and all changes are logged in the `journal/`. This physical "long-term memory" prevents the agent from forgetting context.
 2.  **Resist the urge to guess:** We favor explicit commands over implicit actions. If you want the model to make a plan, you use the `/plan` command, which invokes a carefully crafted workflow rather than relying on the agent's default behavior.
 3.  **Delegate, delegate, delegate:** We use specialized sub-agents (`planner`, `researcher`, `writer`, `reviewer`, `coder`). These agents run complex, multi-step tasks in private contexts, preventing their internal reasoning (e.g., browsing 20 web pages) from polluting the main session's context window.
+4.  **Automated Context Optimization:** The framework proactively manages its own "attention span" via the **Context Minifier**. As your session grows, it surgically replaces redundant `<instruction>` blocks from previous turns with a lightweight placeholder, preserving only the most recent command to ensure the model remains efficient and responsive without losing the thread of the project's history.
 
 ---
 
