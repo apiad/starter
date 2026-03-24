@@ -18,9 +18,13 @@ Put done tasks into the Archive.
 
 ## Active Tasks
 
+- [ ] Implement the three-tier model routing protocol (Orchestrator, Thinker, Executioner) with semantic signaling and automated tier switching. (See plan: plans/tier-protocol-implementation.md)
+
 ---
 
 ## Archive
+
+- [x] Implement the new `/brainstorm` command to facilitate interactive, critical-thinking sessions and architectural risk assessment. (2026-03-24) (See plan: plans/add-brainstorm-command.md)
 
 - [x] Integrate `coder` subagent into `/task work` workflow to delegate granular implementation steps. (2026-03-23) (See plan: plans/implement-coder-agent.md)
 

@@ -34,6 +34,13 @@ Your primary tool for forensic, scientific investigation.
 - **How it works:** When a bug is detected, the `/debug` command implements a principled approach to problem-solving using the specialized `debugger` subagent. It moves through four distinct phases: Context Analysis, Hypothesis Formulation, Isolated Testing on a temporary branch (`debug/hyp-*`), and finally a Synthesis of the findings into a **Root Cause Analysis (RCA)** report.
 - **Why it works:** It forces the agent to identify the root cause *before* attempting a fix, preventing "guess-and-check" coding that can lead to regressions.
 
+### `/brainstorm`
+
+Your tool for interactive, critical-thinking sessions.
+
+- **How it works:** You present an idea, problem, or architectural choice. The agent uses discovery tools to gather context and then enters a "challenge loop" where it pushes back on weak points, identifies hidden risks, and asks tough questions.
+- **Why it works:** It forces you to defend your ideas and refine them *before* they even reach the planning stage, ensuring higher-quality strategies.
+
 ---
 
 ## 🌉 Phase 2: Strategy & Planning
