@@ -19,7 +19,7 @@
       },
       {
         "match": {
-          "overrideScope": "coder"
+          "overrideScope": "researcher"
         },
         "modelConfig": {
           "model": "gemini-2.5-flash-lite"
