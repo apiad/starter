@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0] - 2026-03-24
+
+### Added
+- **Context Minifier System:** Introduced a new hook-based system to automatically minify and optimize context for more efficient agent interaction.
+- **Procedural Task Management:** Implemented a new `/task` script and workflow for managing the project roadmap with a structured lifecycle.
+- **Multi-Model Routing Research:** Completed research into multi-model routing and hook-based configuration for improved agentic performance.
+- **Tier Protocol Implementation:** Formally codified and implemented the Tier Protocol for forensic investigation and root-cause analysis.
+
+### Changed
+- **Model Overrides:** Updated core framework configurations to support dynamic model overrides and optimized hook routing.
+- **Writer Agent Guidance:** Enhanced the `writer` subagent with specialized guidance for technical drafting and refinement.
+
+### Documentation
+- Added Tier Protocol RCA research reports and documented procedural task management workflows.
+
 ## [0.21.0] - 2026-03-23
 
 ### Added
