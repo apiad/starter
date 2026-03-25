@@ -28,19 +28,20 @@ This is a personal starter project using OpenCode for AI-assisted development.
 ## Workflow Conventions
 
 ### Task Management
-- Use the `task` tool to manage TASKS.md
+- Use the `task` tool to manage tasks in `tasks.yaml`
 - All task modifications must go through the tool
-- Task format: `- [status] **ID** Label: Description (Complexity: X) [Deps: Y] (See plan: Z)`
+- Storage: `tasks.yaml` (YAML format)
+- Actions: `add`, `start`, `cancel`, `archive`, `attach-plan`, `list`
 
 ### Journaling
 - Use the `journal` tool to add daily entries
-- Format: `[YYYY-MM-DDTHH:MM:SS] - description`
-- Journal entries must be newer than recent changes for commits
+- Storage: `journal/YYYY-MM-DD.yaml` (YAML format)
+- Actions: `add`, `list`
 
 ### Planning
 - Plans are saved to `plans/` directory
 - Filenames: kebab-case (e.g., `plans/implement-auth.md`)
-- Link plans to tasks via `task` tool
+- Link plans to tasks via `task attach-plan` action
 
 ### Pre-commit Validation
 - Run `git_precommit` tool before committing
@@ -51,11 +52,11 @@ This is a personal starter project using OpenCode for AI-assisted development.
 .opencode/
 ├── agents/          # Agent definitions
 ├── commands/        # High-level commands
-├── tools/           # Custom tools
+├── tools/           # Custom tools (TypeScript)
 └── style-guide.md   # Prose style rules
 
 plans/               # Saved plans
-journal/             # Daily journal entries
+journal/             # Daily journal entries (YAML)
 research/           # Research assets
-TASKS.md            # Project roadmap
+tasks.yaml          # Project roadmap (YAML)
 ```

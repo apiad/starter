@@ -2,6 +2,7 @@
 import os
 import subprocess
 import sys
+import re
 from datetime import date, datetime
 
 def run_command(command):
@@ -10,7 +11,7 @@ def run_command(command):
 
 def main():
     today = date.today().strftime("%Y-%m-%d")
-    journal_path = f"journal/{today}.md"
+    journal_path = f"journal/{today}.yaml"
 
     res = run_command("git status --porcelain")
     changed_files = [line[3:] for line in res.stdout.strip().splitlines() if line]
@@ -27,7 +28,7 @@ def main():
             print(res.stderr)
             return res.returncode
 
-    meaningful_changes = [f for f in changed_files if not f.startswith(".gemini") and not f.startswith(".opencode") and f != journal_path]
+    meaningful_changes = [f for f in changed_files if not f.startswith(".gemini") and not f.startswith(".opencode") and f != journal_path and not f.endswith(".yaml")]
 
     if not meaningful_changes:
         return 0
@@ -41,36 +42,32 @@ def main():
 
     if not os.path.exists(journal_path):
         print(f"Error: Updated journal required. Please read the latest entries in journal/ to understand context,")
-        print(f"then use: journal <one line summary of changes>")
+        print(f"then use: journal add \"one line summary of changes\"")
         return 1
 
     with open(journal_path, "r") as f:
-        lines = [l.strip() for l in f.readlines() if l.strip()]
+        content = f.read()
 
-    if not lines:
-        print(f"Error: Journal {journal_path} is empty.")
-        print(f"Please use: journal <one line summary of changes>")
-        return 1
-
-    last_line = lines[-1]
-    if not (last_line.startswith("[") and "] - " in last_line):
-        print(f"Error: Invalid journal entry format in {journal_path}: '{last_line}'")
-        print(f"Expected format: '[YYYY-MM-DDTHH:MM:SS] - description'")
-        print(f"Please use: journal <one line summary of changes>")
+    # Parse YAML to find last timestamp
+    # Look for pattern: timestamp: "YYYY-MM-DDTHH:MM:SS"
+    timestamps = re.findall(r'timestamp: "(.+)"', content)
+    
+    if not timestamps:
+        print(f"Error: No journal entries found in {journal_path}")
+        print(f"Please use: journal add \"one line summary of changes\"")
         return 1
 
     try:
-        ts_str = last_line[1:last_line.index("]")]
-        last_entry_time = datetime.fromisoformat(ts_str).timestamp()
+        last_entry_time = datetime.fromisoformat(timestamps[-1]).timestamp()
     except (ValueError, IndexError):
-        print(f"Error: Could not parse timestamp from journal entry: '{last_line}'")
-        print(f"Please use: journal <one line summary of changes>")
+        print(f"Error: Could not parse timestamp from journal entry: '{timestamps[-1]}'")
+        print(f"Please use: journal add \"one line summary of changes\"")
         return 1
 
     if last_entry_time < max_mtime:
         print(f"Error: Last journal entry is older than recent changes.")
         print(f"Please read {journal_path} to catch up, then add a summary of your latest work using:")
-        print(f"journal <one line summary of changes>")
+        print(f"journal add \"one line summary of changes\"")
         return 1
 
     return 0
