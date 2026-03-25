@@ -13,5 +13,5 @@ docs-build:
 	@mkdocs build
 
 install-hooks:
-	ln -sf ../../.gemini/hooks/pre-commit.py .git/hooks/pre-commit
+	ln -sf ../../.opencode/tools/pre-commit.py .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit
