@@ -23,7 +23,7 @@ Before proposing a change, you must gather context and identify risks. Use the s
 
 ### 2. Strategic Planning (The Bridge)
 
-A feature or fix is not considered "active" until a persistent Markdown plan has been created in the `plans/` directory. Use the `/plan` command to synthesize the artifacts generated in Phase 1 into an actionable strategy, and synchronize it with `TASKS.md`.
+A feature or fix is not considered "active" until a persistent Markdown plan has been created in the `plans/` directory. Use the `/plan` command to synthesize the artifacts generated in Phase 1 into an actionable strategy, and synchronize it with `tasks.yaml`.
 
 ### 3. Execution & Validation (Side-Effects)
 
@@ -31,13 +31,13 @@ Once a plan is approved, you move to execution. This is the **only** phase where
 
 #### For Code: The TCR Protocol
 The `/task` command is the primary tool for repository execution:
-- **`/task create`**: Adds a new task using the `task.py` script.
-- **`/task work on ...`**: Implements a strict **TCR (Test-Commit-Revert)** protocol to ensure high-velocity, high-quality code. The orchestrator automatically uses `task.py` to mark the task as in-progress.
-- **`/task report`**: Provides a summary of the roadmap and current priorities.
-- **`/task update`**: Updates the status or plan-path of an existing task via the script.
+- **`task add`**: Adds a new task using the `task` tool.
+- **`task start --task-id X`**: Marks a task as in-progress.
+- **`task list`**: Provides a summary of the roadmap and current priorities.
+- **`task archive --task-id X`**: Marks a task as done.
 
 **CLI-First Roadmap Discipline:**
-The project roadmap (`TASKS.md`) must **never** be edited by hand. All task operations must be performed via the `.opencode/tools/task.py` script or the corresponding `/task` actions. This ensures structural integrity and a verifiable audit trail.
+The project roadmap (`tasks.yaml`) must **never** be edited by hand. All task operations must be performed via the `task` tool or the corresponding `/task` actions. This ensures structural integrity and a verifiable audit trail.
 
 #### **The TCR Loop (Work Action)**
 
@@ -65,7 +65,7 @@ When a bug is detected, the `/debug` command enforces a structured, scientific i
 Before merging or committing any final change, the work **must** be documented in the daily journal. This is enforced by a **timestamp-based git hook**. Use the following tool to satisfy the requirement:
 
 ```bash
-python3 .opencode/tools/journal.py 'one-line description of the work'
+journal add "one-line description of the work"
 ```
 
 Failure to do this will block your commit or turn execution.
@@ -81,7 +81,10 @@ Failure to do this will block your commit or turn execution.
 
 ## 🧠 Codifying Knowledge with Skills
 
-The `/learn` command is the primary tool for expanding the project's long-term memory. When mastering a new technology, follow this workflow:
+!!! warning "[PENDING IMPLEMENTATION]"
+    The `/learn` command for expanding the project's long-term memory is **not yet implemented**. This section describes the planned feature.
+
+The planned `/learn` command will be the primary tool for expanding the project's long-term memory. When mastering a new technology, follow this workflow:
 
 ### 1. Grounded Learning Lifecycle
 The agent follows a 4-phase process: **Audit** (environment check), **Strategic Mapping** (learning objectives), **Execution** (real-world experimentation), and **Codification**.

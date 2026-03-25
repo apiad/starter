@@ -34,9 +34,9 @@ Follow these phases strictly:
 4. Use a descriptive, kebab-case filename (e.g., `plans/implement-auth.md`).
 5. Notify the user that the plan has been saved.
 
-### Phase 4: Task Synchronization (TASKS.md)
-1. Read the current `TASKS.md` file to understand the project roadmap.
-2. Use `ask_user` to ask the user if they want to link this plan to `TASKS.md`. Provide options if they are relevant:
+### Phase 4: Task Synchronization (tasks.yaml)
+1. Read the current `tasks.yaml` file to understand the project roadmap.
+2. Use `ask_user` to ask the user if they want to link this plan to `tasks.yaml`. Provide options if they are relevant:
    - "Add as a new task"
    - "Update an existing task"
    - "Skip"

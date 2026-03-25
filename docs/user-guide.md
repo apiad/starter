@@ -94,13 +94,13 @@ Your tool for project initialization.
 
 Your roadmap manager.
 
-- **How it works:** Manages a living `TASKS.md` document **exclusively** via the `.opencode/tools/task.py` utility. Use it to `create` new tasks, `start` work on existing ones, `report` on priorities, or `archive` completed tasks.
+- **How it works:** Manages a living `tasks.yaml` document **exclusively** via the `task` tool. Use it to `add` new tasks, `start` work on existing ones, `list` priorities, or `archive` completed tasks.
 - **Why it works:** By treating the roadmap as a machine-managed artifact, the framework ensures consistent formatting, automated ID generation (e.g., `G.4`), and a clear transition from `Todo` to `Archive` that aligns with the agent's turn lifecycle.
 - **Workflow Example:**
-    1.  `python .opencode/tools/task.py add --label "New Feature" --description "..." --category "Logic"`
-    2.  `python .opencode/tools/task.py start --task-id L.1` (marks as In Progress)
+    1.  `task add --label "New Feature" --description "..." --category "Logic"`
+    2.  `task start --task-id L.1` (marks as In Progress)
     3.  Perform work via `/task work` (TCR loop).
-    4.  `python .opencode/tools/task.py archive --task-id L.1` (moves to Archive)
+    4.  `task archive --task-id L.1` (moves to Archive)
 
 ### `/commit`
 ...
@@ -160,10 +160,10 @@ The approved plan is linked to a task. You trigger the execution:
 - **Pre-flight:** The agent verifies the tree is clean on `main`.
 - **Isolation:** A `feature/auth-integration` branch is created.
 - **Loop (Red-Green-Verify):**
-    The `/task` orchestrator breaks the plan into granular steps. For each step, it delegates to the **`coder` subagent**:
-    1.  **`coder`** writes a failing `test_auth_logic.py` based on the step.
-    2.  **`coder`** implements the minimal logic to pass.
-    3.  **`coder`** verifies with `make test`. If successful, the orchestrator commits the step.
+    The `/task` orchestrator breaks the plan into granular steps. For each step, it delegates to the **`builder` subagent**:
+    1.  **`builder`** writes a failing `test_auth_logic.py` based on the step.
+    2.  **`builder`** implements the minimal logic to pass.
+    3.  **`builder`** verifies with `make test`. If successful, the orchestrator commits the step.
     4.  If it fails, the orchestrator reverts the step and reports the failure.
     5.  The loop repeats for every granular step defined in the plan.
 
@@ -194,10 +194,10 @@ Every code change must be documented in `journal/YYYY-MM-DD.md`. If you modify a
 
 ### Using the Journal Tool
 
-To simplify this, the framework includes a dedicated script. Always use it instead of manual editing:
+To simplify this, the framework includes a dedicated tool. Always use it instead of manual editing:
 
 ```bash
-python3 .opencode/tools/journal.py "Brief description of your work"
+journal add "Brief description of your work"
 ```
 
 This tool automatically:

@@ -40,7 +40,7 @@ curl -fsSL https://apiad.github.io/starter/install.sh | bash
 ```
 
 !!! success "Next Steps"
-    After installation, run `gemini /onboard` to get an overview of the repository and start your first session.
+    After installation, run `opencode /onboard` to get an overview of the repository and start your first session.
 
 ## 🛠️ Key Capabilities
 
@@ -51,14 +51,14 @@ curl -fsSL https://apiad.github.io/starter/install.sh | bash
 - **Architectural Planning:** Use `/plan` to generate persistent, actionable strategies.
 - **Forensic Debugging:** Use `/debug` for root-cause analysis without immediate (and potentially incorrect) fixes.
 - **Automated Documentation:** Use `/document` to keep the documentation synchronized with the evolving codebase.
-- **Procedural Roadmap Management:** Use `/task` and the `.opencode/tools/task.py` utility to maintain a structured, machine-managed project roadmap in `TASKS.md`.
+- **Procedural Roadmap Management:** Use `/task` and the `task` tool to maintain a structured, machine-managed project roadmap in `tasks.yaml`.
 
 ## 🔄 Project Lifecycle
 
 1.  **Onboarding:** Run `/onboard` to get a high-signal overview of the repository.
 2.  **Scaffolding:** Use `/scaffold` to initialize new project components with modern tooling.
 3.  **Iterative Development:** Follow the Discovery -> Plan -> Execute cycle for every feature.
-4.  **Quality Control:** Rely on the `make.py` hook to maintain codebase integrity.
+4.  **Quality Control:** Rely on the `pre-commit` hook to maintain codebase integrity.
 5.  **Releasing:** Use `/release` to automate versioning, changelog updates, and git tagging.
 
 ---

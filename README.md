@@ -63,13 +63,13 @@ The `.opencode/commands/` directory defines specialized workflows that automate 
     *   **Phase 1 (Clarification):** The agent interviews you to resolve ambiguities before planning.
     *   **Phase 2 (Agentic Analysis):** A specialized `planner` subagent scans the codebase and generates a detailed technical strategy.
     *   **Phase 3 (Artifact Generation):** A persistent Markdown plan is saved in `plans/` (e.g., `plans/feature-x.md`).
-    *   **Phase 4 (Synchronization):** The plan is optionally linked to `TASKS.md` and can be synchronized with GitHub issues.
+    *   **Phase 4 (Synchronization):** The plan is optionally linked to `tasks.yaml` and can be synchronized with GitHub issues.
 *   **`/onboard`**: Summarizes the project's architecture, standards, and current state to quickly orient a new developer (or the agent itself).
 
 ### 🏗️ Phase 2: Development & Execution
 *   **`/issues`**: Your gateway to GitHub integration. It allows you to list, create, or update issues. Use `/issues work <number>` to transition an issue directly into a detailed research and planning mode.
 *   **`/debug`**: Activates a specialized `debugger` subagent to perform forensic root-cause analysis (RCA). It analyzes error logs, traces code execution, and generates structured reports to pinpoint bugs.
-*   **`/task`**: Manages the project roadmap in `TASKS.md`. Use it to `create` new tasks, `work` on existing ones (marks as In Progress), `report` on priorities, or `update` the roadmap.
+*   **`/task`**: Manages the project roadmap in `tasks.yaml`. Use it to `add` new tasks, `start` work on existing ones, `archive` completed ones, or `list` priorities.
 *   **`/scaffold`**: Initializes new project structures from scratch using modern, standard tooling (Python/uv, TS/npm, Rust/cargo, etc.) and sets up a compatible `makefile`.
 
 ### 🧹 Phase 3: Content Generation, Maintenance & Documentation
@@ -90,7 +90,7 @@ This framework shines when you combine these commands into cohesive workflows:
 ### 1️⃣ Feature Development Workflow
 1.  **Discover:** Run `/research` to understand the domain or library.
 2.  **Plan:** Use `/plan` to turn requirements into a technical roadmap in `plans/`.
-3.  **Track:** Link the plan to `TASKS.md` using `/plan`'s built-in sync.
+3.  **Track:** Link the plan to `tasks.yaml` using `/task attach-plan`.
 4.  **Implement:** Use `/task work` to mark progress and begin coding.
 5.  **Refine:** Run `/document` to ensure your changes are well-documented.
 6.  **Ship:** Use `/commit` for clean history and `/release` for a new version tag.
@@ -110,9 +110,9 @@ This framework shines when you combine these commands into cohesive workflows:
 
 The framework uses a git pre-commit hook to enforce engineering standards:
 
-*   **`git-precommit.py` (Git Hook)**: Enforces daily journaling and timestamp-based validation before any code changes are finalized.
-*   **`journal.py` (Script)**: The dedicated utility for correctly formatting and appending new journal entries.
-*   **`task.py` (Script)**: Manages the project roadmap in `TASKS.md`.
+*   **`pre-commit.py` (Git Hook)**: Enforces daily journaling and timestamp-based validation before any code changes are finalized.
+*   **`journal.ts` (Tool)**: The dedicated tool for correctly formatting and appending new journal entries.
+*   **`task.ts` (Tool)**: Manages the project roadmap in `tasks.yaml`.
 
 Install hooks with: `make install-hooks`
 

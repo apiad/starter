@@ -14,7 +14,7 @@ banner() {
   echo "| |_| |  __/ | | | | | | | | | |"
   echo " \____|\___|_| |_| |_|_|_| |_|_|"
   echo -e "\033[0m"
-  echo -e "\033[1;32m   Gemini CLI Starter v$VERSION\033[0m"
+  echo -e "\033[1;32m   OpenCode Framework Starter v$VERSION\033[0m"
   echo "------------------------------------------"
 }
 
@@ -70,28 +70,8 @@ EOF
 }
 
 create_tasks_boilerplate() {
-  cat <<EOF > TASKS.md
-# Tasks
-
-Legend:
-
-- [ ] Todo
-- [/] In Progress (@user)
-- [x] Done
-
-**INSTRUCTIONS:**
-
-Keep task descriptions short but descriptive. Do not add implementation details, those belong in task-specific plans.
-
----
-
-## Active Tasks
-
-- [ ] Define project requirements and initial roadmap.
-
----
-
-## Archive
+  cat <<EOF > tasks.yaml
+tasks: []
 EOF
 }
 
@@ -111,7 +91,7 @@ format:
 	@echo "Running formatting..."
 
 install-hooks:
-	ln -sf ../../.opencode/tools/git-precommit.py .git/hooks/pre-commit
+	ln -sf ../../.opencode/tools/pre-commit.py .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit
 EOF
 }
@@ -144,10 +124,8 @@ trap 'rm -rf "$TEMP_DIR"' EXIT
 git clone --depth 1 -q "$REPO_URL" "$TEMP_DIR" || error "Failed to clone template repository."
 
 # --- Discovery ---
-# Files that are ALWAYS updated (Core Framework)
-CORE_FILES=("GEMINI.md")
 # Files that are ONLY created if missing (Scaffolding)
-SCAFFOLD_FILES=("README.md" "TASKS.md" "CHANGELOG.md" "makefile")
+SCAFFOLD_FILES=("README.md" "tasks.yaml" "CHANGELOG.md" "makefile")
 # Directories that are ensured
 CONTENT_DIRS=("journal" "plans" "research" "drafts")
 # Files within .opencode/ that are PROTECTED (Never overwritten)
@@ -170,16 +148,7 @@ else
   WILL_UPDATE+=(".opencode/ (agents, commands, tools)")
 fi
 
-# 2. Core Files Logic (GEMINI.md)
-for f in "${CORE_FILES[@]}"; do
-  if [[ -e "$f" ]]; then
-    WILL_UPDATE+=("$f (will preserve 'Project Notes' section if possible)")
-  else
-    WILL_CREATE+=("$f (core framework)")
-  fi
-done
-
-# 3. Project Scaffolding Check
+# 2. Project Scaffolding Check
 for f in "${SCAFFOLD_FILES[@]}"; do
   if [[ ! -e "$f" ]]; then
     WILL_CREATE+=("$f (new scaffolding)")
@@ -188,7 +157,7 @@ for f in "${SCAFFOLD_FILES[@]}"; do
   fi
 done
 
-# 4. Content Directories Check
+# 3. Content Directories Check
 for d in "${CONTENT_DIRS[@]}"; do
   if [[ ! -d "$d" ]]; then
     WILL_CREATE+=("$d/ (new content directory)")
@@ -240,32 +209,13 @@ for f in "${PROTECTED_OPENCODE_FILES[@]}"; do
   fi
 done
 
-# 2. Update Core Files with preservation
-for f in "${CORE_FILES[@]}"; do
-  if [[ "$f" == "GEMINI.md" && -f "GEMINI.md" ]]; then
-    # Try to preserve the section after "## Project Notes"
-    # We take the header and core mandates from TEMP, and append the user's notes
-    NOTES_START=$(grep -n "## Project Notes" GEMINI.md | cut -d: -f1 || echo "")
-    if [[ -n "$NOTES_START" ]]; then
-      TEMP_CORE=$(sed "/## Project Notes/q" "$TEMP_DIR/GEMINI.md")
-      USER_NOTES=$(sed "1,$NOTES_START d" GEMINI.md)
-      echo "$TEMP_CORE" > GEMINI.md
-      echo "$USER_NOTES" >> GEMINI.md
-    else
-      cp "$TEMP_DIR/$f" .
-    fi
-  else
-    cp "$TEMP_DIR/$f" .
-  fi
-done
-
-# 3. Create Scaffolding Files (Boilerplate if missing)
+# 2. Create Scaffolding Files (Boilerplate if missing)
 if [[ ! -f "README.md" ]]; then create_readme_boilerplate; fi
 if [[ ! -f "CHANGELOG.md" ]]; then create_changelog_boilerplate; fi
-if [[ ! -f "TASKS.md" ]]; then create_tasks_boilerplate; fi
+if [[ ! -f "tasks.yaml" ]]; then create_tasks_boilerplate; fi
 if [[ ! -f "makefile" ]]; then create_makefile_boilerplate; fi
 
-# 4. Ensure Content Directories & .gitkeep
+# 3. Ensure Content Directories & .gitkeep
 for d in "${CONTENT_DIRS[@]}"; do
   mkdir -p "$d"
   if [[ -f "$TEMP_DIR/$d/.gitkeep" ]]; then
@@ -273,7 +223,7 @@ for d in "${CONTENT_DIRS[@]}"; do
   fi
 done
 
-# 5. Journal Entry
+# 4. Journal Entry
 if $IS_UPDATE; then
   MSG="Updated Gemini CLI framework to version $VERSION."
   COMMIT_MSG="chore: update Gemini CLI framework to v$VERSION"
@@ -282,8 +232,8 @@ else
   COMMIT_MSG="feat: integrate Gemini CLI framework v$VERSION"
 fi
 
-# Use the project's journal script if it exists
-python3 .opencode/tools/journal.py "$MSG"
+# Use the project's journal tool if it exists
+python3 .opencode/tools/journal.py add "$MSG"
 
 # --- Post-Install ---
 git add .

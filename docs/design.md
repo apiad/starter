@@ -70,19 +70,26 @@ The `/task work` command enforces a high-discipline development lifecycle throug
 
 ## 📝 Procedural Task Management
 
-The `TASKS.md` file is managed exclusively via `.opencode/tools/task.py`:
+The `tasks.yaml` file is managed exclusively via the `task` tool:
 
 - **Single source of truth** for project roadmap
 - **State lifecycle:** `add` (Todo) → `start` (In Progress) → `archive` (Done)
-- **Never edit `TASKS.md` by hand** — always use the task script
+- **Never edit `tasks.yaml` by hand** — always use the task tool
+
+!!! warning "Migrating from TASKS.md"
+    If you have an existing `TASKS.md` file, instruct the model to migrate it:
+    ```
+    /task please migrate from @TASKS
+    ```
 
 ### Usage
 
 ```bash
-python .opencode/tools/task.py --help
-python .opencode/tools/task.py add --label "Feature X" --description "..."
-python .opencode/tools/task.py start --task-id G.1
-python .opencode/tools/task.py archive --task-id G.1
+task list                    # Show all tasks
+task add --label "Feature X" --description "..."
+task start --task-id G.1
+task archive --task-id G.1
+task attach-plan --task-id G.1 --plan-path plans/my-plan.md
 ```
 
 ## 🔍 Scientific Debugging (`/debug`)
@@ -98,7 +105,7 @@ The `/debug` command implements a principled approach to problem-solving:
 
 The framework uses a timestamp-based git hook to enforce journaling:
 
-- **Hook location:** `.opencode/tools/git-precommit.py`
+- **Hook location:** `.opencode/tools/pre-commit.py`
 - **Install:** `make install-hooks`
 - **Rule:** Journal entry timestamp must be newer than file modifications
 
@@ -109,14 +116,14 @@ The framework uses a timestamp-based git hook to enforce journaling:
 ├── agents/          # Primary agent definitions
 │   └── subagents/  # Specialized subagents
 ├── commands/        # High-level commands
-├── tools/           # Utilities (task.py, journal.py, git-precommit.py)
+├── tools/           # Utilities (TypeScript tools: task.ts, journal.ts, pre-commit.py)
 └── style-guide.md   # Prose style rules
 
 plans/               # Saved execution plans
-journal/             # Daily journal entries (YYYY-MM-DD.md)
+journal/             # Daily journal entries (YYYY-MM-DD.yaml)
 research/           # Research artifacts
 drafts/             # Content drafts
-TASKS.md            # Project roadmap (managed by task.py)
+tasks.yaml          # Project roadmap (managed by task tool)
 ```
 
 ## ⚙️ Technology Stack

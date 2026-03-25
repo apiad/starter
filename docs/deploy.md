@@ -17,7 +17,7 @@ Running `install.sh` in an empty directory will:
 - Initialize a fresh Git repository.
 - Extract the core `.opencode/` framework and configuration files.
 - Create the standard project structure (`journal/`, `plans/`, `research/`, `drafts/`).
-- Initialize baseline files (`README.md`, `CHANGELOG.md`, `TASKS.md`, `makefile`).
+- Initialize baseline files (`README.md`, `CHANGELOG.md`, `tasks.yaml`, `makefile`).
 - Perform an initial "feat" commit.
 
 ### 2. Existing Project (Integration & Updates)
@@ -29,7 +29,6 @@ If run inside an existing project, the script performs a **Surgical Update**:
 - **Protection:** Explicitly preserves user configurations in **Protected Files**:
     - `opencode.json`
     - `.opencode/style-guide.md`
-- **Intelligent GEMINI.md Merge:** Preserves your custom content in the `## Project Notes` section of `GEMINI.md` while updating the core mandates above it.
 - **Confirm:** Presents a detailed summary of which files will be **created**, **updated**, or **protected** and waits for your approval.
 - **Integrate:** Adds missing directory structures (`journal/`, `plans/`, etc.) if they don't exist.
 - **Commit:** Automatically creates a descriptive `chore` commit marking the update.
@@ -52,7 +51,7 @@ After installation, you **must** link the framework's hooks to your git reposito
 make install-hooks
 ```
 
-This target creates a symbolic link from `.opencode/tools/git-precommit.py` to `.git/hooks/pre-commit`, enabling the automated journal and validation checks.
+This target creates a symbolic link from `.opencode/tools/pre-commit.py` to `.git/hooks/pre-commit`, enabling the automated journal and validation checks.
 
 ## 🚢 Getting Started
 
@@ -68,7 +67,7 @@ gemini /onboard
 
 ### 2. Initialize the Roadmap
 
-Check the current `TASKS.md` file and use the `/task` command to define your project's initial goals.
+Check the current `tasks.yaml` file and use the `/task` command to define your project's initial goals.
 
 ### 3. Start a New Feature
 
