@@ -17,7 +17,7 @@ interface TasksData {
   tasks: Task[];
 }
 
-const TASKS_FILE = "tasks.yaml";
+const TASKS_FILE = "todo.yaml";
 
 async function loadTasks(): Promise<TasksData> {
   const file = Bun.file(TASKS_FILE);
@@ -218,7 +218,7 @@ function formatList(tasks: Task[]): string {
 }
 
 export default tool({
-  description: "Manage tasks in tasks.yaml. Actions: add, start, cancel, archive, attach-plan, list",
+  description: "Manage tasks in todo.yaml. Actions: add, start, cancel, archive, attach-plan, list",
   args: {
     action: tool.schema.string().describe("Action: add, start, cancel, archive, attach-plan, or list"),
     taskId: tool.schema.string().optional().describe("Task ID (for start, cancel, archive, attach-plan)"),
