@@ -19,6 +19,19 @@ def main():
     if not changed_files:
         return 0
 
+    # Check if ONLY journal files changed - auto-commit and return
+    journal_files = [f for f in changed_files if f.startswith("journal/")]
+    meaningful_files = [f for f in changed_files if not f.startswith("journal/") and not f.startswith(".gemini") and not f.startswith(".opencode")]
+
+    if journal_files and not meaningful_files:
+        print("Journal-only change detected. Auto-committing...")
+        res = run_command('git add journal/ && git commit -m "chore: update journal"')
+        if res.returncode != 0:
+            print(f"Auto-commit failed:\n{res.stdout}\n{res.stderr}")
+            return 1
+        print("Journal committed successfully.")
+        return 0
+
     if os.path.exists("makefile"):
         print("Running validation (make test)...")
         res = run_command("make test")
