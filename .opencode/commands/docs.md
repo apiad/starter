@@ -1,42 +1,44 @@
 ---
-description: Analyze codebase to update or generate project documentation in the docs folder.
-agent: plan
+description: Generate or update project documentation based on codebase analysis
+agent: review
 ---
 
-Senior technical writer and software engineer. Ensure the project documentation is accurate, comprehensive, and helpful for both human developers and AI agents.
+Senior technical writer. Generate or update documentation based on codebase analysis.
 
-**Step 1: Preparation**
-1. Check if the `docs/` directory exists. If not, create it.
-2. Ensure `docs/index.md` exists. If not, create a placeholder.
-3. List and read all existing files in the `docs/` directory.
+### Phase 1: Discovery
 
-**Step 2: Context Gathering**
-1. Read the `CHANGELOG.md` and all files in the `journal/` directory to understand the project's evolution and current state.
-2. Perform a deep inspection of the codebase targeted to the user request. Potentially, focus on:
-   - Overall architecture and data flow.
-   - Key classes, methods, and their relationships.
-   - External dependencies and frameworks.
-   - Deployment and execution procedures.
-   - Testing strategies and development workflows.
+1. **Check docs/ directory:**
+   - List existing files
+   - Read `docs/index.md` if exists
 
-NOTE: Prioritize the user request if available, otherwise gather a general understanding of the project.
+2. **Gather context:**
+   - Read `CHANGELOG.md` for project evolution
+   - Read recent `journal/` entries for current state
+   - Inspect codebase: architecture, data flow, key classes
 
-**Step 3: Gap Analysis & Planning**
-Compare the gathered codebase context with the existing documentation in `docs/`. Identify missing or outdated information.
-Your plan should aim for at least the following structure:
-- `docs/index.md`: Main project overview, core functionalities, and expected use cases.
-- `docs/deploy.md`: Comprehensive guide on how to deploy, run, and execute the project.
-- `docs/design.md`: High-level architectural design, technology stack (languages, frameworks, dependencies), and design patterns used.
-- `docs/develop.md`: Development discipline, including git workflow, testing strategies, linting, and coding standards.
-- Additional files as necessary for specific components or modules.
+3. **Gap Analysis:**
+   - Compare codebase to existing docs
+   - Identify missing or outdated information
 
-**Step 4: Proposal**
-Present a detailed plan to the user. For each file (existing or new):
-- Explain what needs to be added, removed, or updated.
-- Explain the rationale for these changes.
-- Highlight specific files, classes, and methods that will be documented.
+### Phase 2: Documentation Plan
 
-**Step 5: Information Gathering**
-If you identify gaps in your knowledge that cannot be resolved by inspecting the code (e.g., specific deployment environment details, business rationale not in code), ask the user for clarification before finalizing the plan.
+Create plan for each doc file (existing or new):
+- What needs to be added/updated/removed
+- Rationale for changes
+- Key files/classes/methods to document
 
-**Crucial:** This command is strictly for analysis and planning. Do NOT modify any documentation files until the user approves your plan in a subsequent interaction.
+Target structure:
+- `docs/index.md`: Project overview, core functionalities
+- `docs/deploy.md`: Deployment and execution guide
+- `docs/design.md`: Architecture, tech stack, design patterns
+- `docs/develop.md`: Git workflow, testing, coding standards
+- Additional docs for specific components
+
+### Phase 3: Approval
+
+Present plan to user via `question` before writing anything.
+
+### Constraints
+- Read-only analysis - do not modify files until approved
+- Use `reviewer` subagent for code quality documentation
+- Focus on accuracy over comprehensiveness

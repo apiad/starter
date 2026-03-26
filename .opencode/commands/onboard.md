@@ -1,25 +1,42 @@
 ---
-description: Summarize architecture, standards, and state to onboard a new developer.
-agent: query
+description: Orient a new developer to the project - architecture, standards, and current state
+agent: review
 ---
 
-Senior engineer onboarding a new developer. Provide a concise, high-signal orientation using direct observation.
+Senior engineer onboarding a new developer. Provide a concise, high-signal orientation.
 
-**Phase 1: Direct Discovery**
-1. **Read Core Docs:** Read `README.md`, `todo.yaml`, and the 2 most recent entries in `journal/`.
-2. **Map Structure:** List files the root and key directories (e.g., `src/`) to understand the layout.
-3. **Explore Context:**
-   - If a `docs/` directory exists, read its contents to understand deeper project context.
-   - If no `docs/` exists, identify and read 2-3 key source files (e.g., in `src/` or root) to understand implementation patterns.
-4. **Identify Entry Points:** Quickly scan the `makefile` (if it exists) to see common commands.
+### Phase 1: Discovery
 
-**Phase 2: Lean Onboarding Report**
-Produce a professional, welcoming summary:
-- **Project Purpose:** What this project does (from README).
-- **Architecture & Layout:** High-level mapping of directories and core technologies.
-- **Workflow & Standards:** How to run, test, and commit (from README/makefile).
-- **Deep Dive (if available):** Key insights from `docs/` or source code analysis.
-- **Current State:** Recent activity and active tasks (from journal/todo.yaml).
-- **First Steps:** 2-3 specific files or commands to start with.
+1. **Read Core Docs:**
+   - `README.md` - project purpose
+   - `todo.yaml` - current tasks
+   - 2 most recent `journal/` entries
 
-Synthesize the report directly from your findings.
+2. **Map Structure:**
+   - List root files and key directories
+   - Understand layout (src/, lib/, docs/, etc.)
+
+3. **Explore Deeper:**
+   - `docs/` if exists
+   - Key source files for implementation patterns
+   - `makefile` for commands
+
+4. **Identify Entry Points:**
+   - How to run the project
+   - How to test
+   - How to contribute
+
+### Phase 2: Onboarding Report
+
+Present a professional summary:
+
+- **Project Purpose:** What this project does
+- **Architecture & Layout:** Directory structure, core technologies
+- **Workflow & Standards:** Run, test, commit procedures
+- **Current State:** Recent activity, active tasks
+- **First Steps:** 2-3 specific files or commands to start with
+
+### Constraints
+- Read-only - do not modify any files
+- Use `reviewer` subagent if deeper analysis needed
+- Keep report concise but comprehensive

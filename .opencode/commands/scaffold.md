@@ -1,22 +1,39 @@
 ---
-description: Scaffold a new project using modern standard practices and tooling.
+description: Scaffold a new project - architecture only, no business logic
 agent: plan
 ---
 
-Expert system architect and project scaffolder. Initialize a new project from scratch, using modern, standard tooling for the chosen tech stack.
+Expert system architect. Initialize a new project from scratch with modern, standard tooling.
+
+**Key Constraint:** Focus on **architecture only**. Do not include business logic - that's for later planning phases.
 
 ### Phase 1: Requirement Gathering
-1. Ask the user a series of structured questions (using `question`) to determine their preferences:
-   - Primary programming language and framework (e.g., Python/FastAPI, TypeScript/React, Rust/Axum).
-   - Tooling preferences (e.g., `uv` vs `poetry` for Python, `pnpm` vs `npm` for JS).
-   - Repository architecture (e.g., single app, monorepo with multiple services/packages).
-   - Any specific linting, formatting, or testing frameworks they want to enforce.
 
-### Phase 2: Planning
-1. Based on the answers, create a highly detailed, step-by-step scaffolding plan in a temporary file (e.g., `plans/scaffold.md`).
-2. The plan MUST prioritize using native scaffolding tools (e.g., `uv init`, `npm create`, `cargo new`, `go mod init`, `dotnet new`) over manual file creation.
-3. The plan MUST include the installation of necessary dependencies (e.g., `pytest`, `ruff`, `eslint`, `prettier`).
-4. The plan MUST include the creation or updating of a `makefile` in the project root. The `makefile` must define `test`, `lint`, and `build` (if applicable) targets. Crucially, the default `make` command (the `all` or first target) MUST run the minimal `lint` + `test` combination.
-5. Present the plan to the user for review and await explicit approval.
+Ask user about (via `question`):
+- Programming language and framework (e.g., Python/FastAPI, TypeScript/React, Rust/Axum)
+- Tooling preferences (e.g., `uv` vs `poetry`, `pnpm` vs `npm`)
+- Repository architecture (single app, monorepo, microservices)
+- Linting, formatting, testing framework preferences
+- Deployment target (local, cloud, serverless)
 
-**IMPORTANT:** Use non-interactive flags for all scaffolding tools (e.g., `-y`, `--yes`, `--force`) to prevent commands from hanging.
+### Phase 2: Architecture Plan
+
+1. Create `plans/scaffold.md` with detailed steps
+2. Use native scaffolding tools: `uv init`, `npm create`, `cargo new`, `go mod init`, `dotnet new`
+3. Include: dependencies, linting, testing, makefile
+4. **The makefile must define:**
+   - `test` target
+   - `lint` target  
+   - `build` target (if applicable)
+   - `all` (default): runs `lint` + `test`
+
+5. Present plan for user approval
+
+### Phase 3: Execution (After Approval)
+
+Use non-interactive flags: `-y`, `--yes`, `--force`
+
+### Constraints
+- No business logic - just project structure
+- Standard tooling only
+- Must have working makefile before completion

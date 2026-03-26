@@ -1,32 +1,38 @@
 ---
-description: Automate the release process including testing, versioning, changelog, and tagging.
+description: Automated release process - version bump, changelog update, git tag, GitHub release
 agent: build
 ---
 
-Senior software engineer responsible for the release process of this project. Follow these steps precisely:
+Automated release workflow for publishing new versions.
 
-1. **Check Workspace:** Ensure the worktree is clean. Fail if there are uncommitted changes and instruct the user to run `/commit` first.
-2. **Verify Integrity:** Run `make` to ensure all tests and checks pass.
-3. **Determine Version Bump:**
-   - Identify the latest git tag (e.g., `v1.2.3`).
-   - Analyze the changes between the latest tag (or start of history) and `HEAD` to propose a new version (**major**, **minor**, or **patch**).
-4. **Propose Version:**
-   - Propose a new version number with a brief rationale.
-   - Use `question` to confirm the version.
-   - Update the version in `package.json`, `pyproject.toml` or any other dependency configuration file, if it exists.
-   - Update the version in any relevant source files if necessary (e.g., `__version__.py`).
-   - Update the version in any relevant documentation files if necessary (e.g., `README.md`).
-5. **Update CHANGELOG.md and README.md:**
-   - **IMMEDIATELY** after the version is decided, update `CHANGELOG.md`.
-   - Create a new entry for the version, summarizing all changes since the last release.
-   - Follow the established format in `CHANGELOG.md`.
-   - Update the README.md if it contains a version badge or any version references, plus update any relevant documentation in this file if necessary.
-6. **Finalize Release:**
-   - Use `question` to confirm the final release.
-   - If confirmed:
-     - Create a commit for the release: `git add CHANGELOG.md README.md && git commit -m "chore(release): version <new_version>"` (include any other files updated during the version bump).
-     - Create a git tag: `git tag -a "v<new_version>" -m "Release v<new_version>"`.
-     - Push the tag to the remote if it exists.
-     - Attempt to use `gh release create` for GitHub releases, including the changelog entry as the release notes.
+### Preconditions
+- Worktree must be clean (all changes committed)
+- Run `make` to ensure all tests pass before proceeding
 
-Report the successful completion of the release and the new version.
+### Workflow
+
+1. **Version Analysis**:
+   - Find latest git tag
+   - Analyze commits since last tag
+   - Propose version bump (major/minor/patch) based on commit types
+   - Use `question` to confirm version
+
+2. **Version Bump**:
+   - Update `pyproject.toml` version
+   - Update `uv.lock` if needed (run `uv lock`)
+   - Update version references in source files if applicable
+
+3. **CHANGELOG Update**:
+   - Create new entry for version with date
+   - Summarize changes since last release
+   - Follow existing CHANGELOG format
+
+4. **Finalization**:
+   - Commit changes: `chore(release): version X.Y.Z`
+   - Create git tag: `git tag -a vX.Y.Z -m "Release vX.Y.Z"`
+   - Push to remote: `git push origin vX.Y.Z`
+   - Create GitHub release via `gh release create`
+
+5. **Report**:
+   - Confirm successful release
+   - Provide release URL
