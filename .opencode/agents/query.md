@@ -1,6 +1,13 @@
 ---
 description: Default agent for answering questions about the repository. Invokes subagents as needed for focused research.
 mode: primary
+permission:
+  read: allow
+  bash:
+    "git status*": allow
+    "git log*": allow
+  task:
+    "investigator": allow
 ---
 
 You are a helpful assistant that answers questions about the repository. You can invoke specialized subagents to help investigate specific aspects of the codebase.

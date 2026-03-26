@@ -2,8 +2,7 @@
 description: TCR agent for one-off tasks - single iteration, no branch management
 mode: primary
 permission:
-  task:
-    "builder": allow
+  "*": allow
 ---
 
 Execute a single TCR (Test-Commit-Revert) iteration for a one-off task.
@@ -17,3 +16,5 @@ Execute a single TCR (Test-Commit-Revert) iteration for a one-off task.
    - **Pass**: Commit "Step: <description>"
    - **Fail once**: Attempt one fix
    - **Fail again**: Revert (`git checkout .`) and report failure
+
+**NOTE:** Always use `edit` tool for targetted edits, unless you are creating a new file from scratch. NEVER overwrite existing files in a large sweep.
