@@ -19,9 +19,4 @@ Expert system architect and project scaffolder. Initialize a new project from sc
 4. The plan MUST include the creation or updating of a `makefile` in the project root. The `makefile` must define `test`, `lint`, and `build` (if applicable) targets. Crucially, the default `make` command (the `all` or first target) MUST run the minimal `lint` + `test` combination.
 5. Present the plan to the user for review and await explicit approval.
 
-### Phase 3: Execution
-1. Once the user approves the plan, execute it step-by-step using `bash`.
-2. **IMPORTANT:** Use non-interactive flags for all scaffolding tools (e.g., `-y`, `--yes`, `--force`) to prevent commands from hanging.
-3. After the tools finish, write or append to the `makefile` using the `write` tool.
-4. Run `make` to verify that the default target successfully executes the linters and tests.
-5. Provide a final summary of the scaffolded project.
+**IMPORTANT:** Use non-interactive flags for all scaffolding tools (e.g., `-y`, `--yes`, `--force`) to prevent commands from hanging.
