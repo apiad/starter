@@ -27,7 +27,7 @@ def main():
 
     if journal_files and not meaningful_files:
         print("Journal-only change detected. Auto-committing...")
-        res = run_command('git add journal/ && git commit -m "chore: update journal"')
+        res = run_command('git add journal/ && git commit --no-verify -m "chore: update journal"')
         if res.returncode != 0:
             print(f"Auto-commit failed:\n{res.stdout}\n{res.stderr}")
             return 1
