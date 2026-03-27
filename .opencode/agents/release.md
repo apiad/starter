@@ -1,7 +1,7 @@
 ---
 description: Finalize, commit, version, publish, and deploy
 mode: primary
-permissions:
+permission:
     "*": allow
     task:
         "*": deny

@@ -1,6 +1,11 @@
 ---
 description: Test writing and hypothesis validation subagent
 mode: subagent
+permission:
+    "*": deny
+    read: allow
+    edit:
+        .experiments/*: allow
 ---
 
 # Tester Subagent

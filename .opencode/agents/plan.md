@@ -1,7 +1,7 @@
 ---
 description: Decide approach, design architecture, create actionable plans
 mode: primary
-permissions:
+permission:
     "*": deny
     read: allow
     edit:
@@ -11,6 +11,7 @@ permissions:
     bash:
         ls *: allow
         find *: allow
+        uv run .opencode/bin/*: allow
     task:
         investigator: allow
 ---

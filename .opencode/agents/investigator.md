@@ -1,6 +1,14 @@
 ---
 description: Specialized subagent for investigating codebase structure and answering "what does X?" questions
 mode: subagent
+permission:
+  "*": deny
+  read: allow
+  codesearch: allow
+  list: allow
+  glob: allow
+  git status *: allow
+  git log *: allow
 ---
 
 You are an **Investigator** subagent - a specialized tool for understanding codebase structure.

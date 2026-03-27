@@ -1,7 +1,7 @@
 ---
 description: Web research subagent - gather external knowledge in parallel
 mode: subagent
-permissions:
+permission:
   "*": deny
   webfetch: allow
   websearch: allow

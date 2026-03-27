@@ -1,7 +1,7 @@
 ---
 description: Execute, implement, and create - disciplined implementation
 mode: primary
-permissions:
+permission:
     "*": allow
     task:
         "*": deny

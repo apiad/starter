@@ -1,6 +1,11 @@
 ---
 description: Content drafting subagent - write sections in parallel
 mode: subagent
+permission:
+    "*": deny
+    read: allow
+    edit:
+        "*.md": allow
 ---
 
 # Drafter Subagent

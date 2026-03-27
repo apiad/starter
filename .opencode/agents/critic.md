@@ -1,6 +1,9 @@
 ---
 description: Prose critique subagent - structured content review
 mode: subagent
+permission:
+    "*": deny
+    read: allow
 ---
 
 # Critic Subagent
