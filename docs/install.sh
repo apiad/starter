@@ -107,7 +107,7 @@ install_copy() {
 
 install_link() {
     info "Installing OpenCode Framework (link mode)..."
-    git submodule add "$REPO_URL" .opencode
+    git submodule add "$REPO_URL" .opencode --force
     success "Framework linked as git submodule at .opencode/"
 }
 
