@@ -1,4 +1,3 @@
-.opencode/
 node_modules/
 *.log
 *.env
