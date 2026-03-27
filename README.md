@@ -1,121 +1,84 @@
-# 🤖 Gemini CLI Opinionated Framework
+# OpenCode Template Repository
 
 <div align="center">
 
-[![Release](https://img.shields.io/github/v/release/apiad/starter?style=for-the-badge&color=blue)](https://github.com/apiad/starter/releases)
-[![License](https://img.shields.io/github/license/apiad/starter?style=for-the-badge&color=success)](LICENSE)
-[![Template](https://img.shields.io/badge/Repository-Template-blueviolet?style=for-the-badge&logo=github)](https://github.com/apiad/starter/generate)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/apiad/starter/graphs/commit-activity)
+[![Release](https://img.shields.io/github/v/release/apiad/opencode?style=for-the-badge&color=blue)](https://github.com/apiad/opencode/releases)
+[![License](https://img.shields.io/github/license/apiad/opencode?style=for-the-badge&color=success)](LICENSE)
+[![Template](https://img.shields.io/badge/Repository-Template-blueviolet?style=for-the-badge&logo=github)](https://github.com/apiad/opencode/generate)
 
-**Transform how you work with AI agents.**
+**Template repository for OpenCode-powered projects.**
 
-*A cognitive partnership model that enforces rigorous engineering standards, strategic planning, and continuous validation.*
+*This repository provides templates and configuration for bootstrapping new projects with the OpenCode framework.*
 
-#### 🚀 [**Check out the launch blog post!**](https://blog.apiad.net/p/how-im-using-ai-today)
+#### [View opencode-core for the framework implementation](https://github.com/apiad/opencode-core)
 
 </div>
 
 ---
 
-## 🔥 Quick Start
+## Architecture
 
-The fastest way to bootstrap a new project or integrate the framework into an existing one is to run the following command in your terminal:
+OpenCode uses a two-repository architecture:
 
-```bash
-curl -fsSL https://apiad.github.io/starter/install.sh | bash
-```
+| Repository | Purpose |
+|------------|---------|
+| [opencode-core](https://github.com/apiad/opencode-core) | Core framework, agents, and commands |
+| This repository (opencode) | Templates, configuration, and project bootstrap |
 
-This interactive script will:
-1.  **Validate** your environment (requires `git`, `node`, and a clean working tree).
-2.  **Clone** the latest framework components to a temporary location.
-3.  **Analyze** your current directory and propose a list of files to create or update.
-4.  **Prompt** for your explicit confirmation before applying any changes.
-5.  **Integrate** the `.opencode/` configuration and framework files (non-destructively).
-6.  **Commit** the changes automatically with a descriptive message.
-
-Once the installation is complete, run `gemini /onboard` to get an overview of the repository and start your first session.
-
-### 🏗️ Alternative: Manual Setup
-
-If you prefer a manual setup:
-
-1. [Create a new project from this template](https://github.com/apiad/starter/generate).
-2. Follow the onboarding instructions in the generated repository.
+When you initialize a new project, the installation script pulls templates from this repository and links them with the core framework.
 
 ---
 
-## 🧠 The Core Philosophy
+## Quick Start
 
-This repository is a heavily customized and oppinionanted Gemini CLI agent, ready to be used in any situation. In this framework, the AI agent is not just a "code generator" or a "copilot". It is a **Senior Architect and Critical Thinking Partner**:
+The fastest way to bootstrap a new project:
 
-*   **🛡️ Critical Feedback First:** The agent is instructed to challenge unsafe, redundant, or poorly conceived ideas *before* writing a single line of code.
-*   **📋 Research -> Plan -> Execute:** Every non-trivial change follows a strict lifecycle. The agent first researches context, proposes a detailed plan, waits for your explicit approval, and only then begins implementation.
-*   **✅ Validation-Always:** The framework uses `make` as a source of truth. The agent is hooked into the `makefile` to ensure every change is validated (linted and tested) before being finalized.
+```bash
+curl -fsSL https://apiad.github.io/opencode/install.sh | bash
+```
 
-## 🛠️ The Project Lifecycle
+### Installation Modes
 
-The `.opencode/commands/` directory defines specialized workflows that automate every phase of the development lifecycle:
+The installer supports two modes:
 
-### 🔍 Phase 1: Planning & Discovery
-*   **`/research <topic>`**: A deep, 3-phase investigation (Planning -> Data Gathering -> Reporting) that produces exhaustive Markdown reports in the `research/` directory. **Crucial for gathering technical requirements and state-of-the-art context.**
-*   **`/learn <topic>`**: A grounded learning lifecycle for mastering new technologies through structured exploration and experimentation.*   **`/brainstorm`**: An interactive, high-signal brainstorming session. The agent acts as a critical partner—challenging your assumptions, identifying architectural risks, and asking hard follow-up questions—without making any changes to the codebase.
-*   **`/plan`**: The **Architectural Bridge**. This interactive workflow translates ideas into actionable execution plans:
-    *   **Phase 1 (Clarification):** The agent interviews you to resolve ambiguities before planning.
-    *   **Phase 2 (Agentic Analysis):** A specialized `planner` subagent scans the codebase and generates a detailed technical strategy.
-    *   **Phase 3 (Artifact Generation):** A persistent Markdown plan is saved in `plans/` (e.g., `plans/feature-x.md`).
-    *   **Phase 4 (Synchronization):** The plan is optionally linked to `tasks.yaml` and can be synchronized with GitHub issues.
-*   **`/onboard`**: Summarizes the project's architecture, standards, and current state to quickly orient a new developer (or the agent itself).
+| Mode | Description |
+|------|-------------|
+| `--mode=copy` | Copy framework files (updates require manual sync) |
+| `--mode=link` | Symlink to opencode-core (auto-updates with the framework) |
 
-### 🏗️ Phase 2: Development & Execution
-*   **`/issues`**: Your gateway to GitHub integration. It allows you to list, create, or update issues. Use `/issues work <number>` to transition an issue directly into a detailed research and planning mode.
-*   **`/debug`**: Activates a specialized `debugger` subagent to perform forensic root-cause analysis (RCA). It analyzes error logs, traces code execution, and generates structured reports to pinpoint bugs.
-*   **`/task`**: Manages the project roadmap in `tasks.yaml`. Use it to `add` new tasks, `start` work on existing ones, `archive` completed ones, or `list` priorities.
-*   **`/scaffold`**: Initializes new project structures from scratch using modern, standard tooling (Python/uv, TS/npm, Rust/cargo, etc.) and sets up a compatible `makefile`.
+Run `curl -fsSL https://apiad.github.io/opencode/install.sh | bash -s -- --help` for options.
 
-### 🧹 Phase 3: Content Generation, Maintenance & Documentation
-*   **`/draft`**: Multi-phase workflow to turn research and plans into detailed, high-quality technical documents or articles section-by-section using the `writer` subagent.
-*   **`/review`**: Uses the `reviewer` subagent to perform non-destructive, multi-phase structural and linguistic audits based on the project's style guide.
-*   **`/maintenance`**: Performs a deep, read-only audit of the codebase using the `codebase_investigator` to identify technical debt and generate a "Maintenance Report Card" in `research/`.
-*   **`/document`**: Analyzes the codebase and journals to generate or update comprehensive project documentation in the `docs/` folder.
-*   **`/cron`**: Manages repetitive background tasks (e.g., health checks, automated reports) using **systemd user timers**.
+---
 
-### 🚀 Phase 4: Shipping & Quality
-*   **`/commit`**: Analyzes all uncommitted changes, groups them into logical features or fixes, and guides you through committing them individually using **Conventional Commits**.
-*   **`/release`**: Automates the final shipping steps: running tests, determining the next version (semver), updating the `CHANGELOG.md`, and tagging the release.
+## Directory Structure
 
-## 🔄 Common Use Cases
+```
+.
+├── templates/           # Project templates
+│   ├── .gitignore
+│   ├── CHANGELOG.md
+│   ├── README.md
+│   ├── makefile
+│   └── tasks.yaml
+├── .knowledge/          # Agent knowledge base
+│   ├── drafts/
+│   ├── log/
+│   ├── notes/
+│   └── plans/
+└── .opencode/          # Framework configuration (installed)
+```
 
-This framework shines when you combine these commands into cohesive workflows:
+---
 
-### 1️⃣ Feature Development Workflow
-1.  **Discover:** Run `/research` to understand the domain or library.
-2.  **Plan:** Use `/plan` to turn requirements into a technical roadmap in `plans/`.
-3.  **Track:** Link the plan to `tasks.yaml` using `/task attach-plan`.
-4.  **Implement:** Use `/task work` to mark progress and begin coding.
-5.  **Refine:** Run `/document` to ensure your changes are well-documented.
-6.  **Ship:** Use `/commit` for clean history and `/release` for a new version tag.
+## For Framework Development
 
-### 2️⃣ Bug Resolution Workflow
-1.  **Triage:** Use `/issues summary` to see what needs attention.
-2.  **Analyze:** Use `/debug` to activate the forensic subagent and perform root-cause analysis (RCA).
-3.  **Fix:** Develop the fix based on the RCA and validate with `make`.
-4.  **Sync:** Update the issue with the resolution details using `/issues`.
+If you're developing the framework itself, see [opencode-core](https://github.com/apiad/opencode-core) for:
+- Core agent implementations
+- Command definitions
+- Framework utilities
 
-### 3️⃣ Content Creation Workflow
-1.  **Research:** Use `/research` to gather data into an executive report.
-2.  **Draft:** Run `/draft` to build an outline and expand it into a full article.
-3.  **Review:** Use `/review` for non-destructive, multi-phase audits and refinements.
+---
 
-## ⚓ Pre-Commit Validation
+## License & Contribution
 
-The framework uses a git pre-commit hook to enforce engineering standards:
-
-*   **`pre-commit.py` (Git Hook)**: Enforces daily journaling and timestamp-based validation before any code changes are finalized.
-*   **`journal.ts` (Tool)**: The dedicated tool for correctly formatting and appending new journal entries.
-*   **`task.ts` (Tool)**: Manages the project roadmap in `tasks.yaml`.
-
-Install hooks with: `make install-hooks`
-
-## 📄 License & Contribution
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. All contributions are welcome!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

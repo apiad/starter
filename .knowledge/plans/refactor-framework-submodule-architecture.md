@@ -7,10 +7,10 @@ status: active
 expires: 2026-04-03
 phases:
   - name: Create opencode-core Repository
-    done: false
+    done: true
     goal: Extract framework components into standalone repository
   - name: Rename Current Repository
-    done: false
+    done: true
     goal: Rename starter to opencode for clarity
   - name: Implement Dual-Mode Installer
     done: false
@@ -270,9 +270,8 @@ cd project && git submodule update --init --recursive
 
 ## Related
 
-- **Current Repository:** `https://github.com/apiad/starter.git`
-- **New Framework Repository:** `https://github.com/apiad/opencode-core.git` (to be created)
-- **Renamed Repository:** `https://github.com/apiad/opencode.git` (after rename)
+- **Framework Repository:** `https://github.com/apiad/opencode-core.git` ✓
+- **Wrapper Repository:** `https://github.com/apiad/opencode.git` ✓ (renamed from starter)
 
 ---
 
