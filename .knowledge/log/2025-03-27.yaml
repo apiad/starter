@@ -1,0 +1,33 @@
+entries:
+  - timestamp: 2025-03-27T14:30:00Z
+    type: commit
+    message: "refactor(opencode): update agent definitions and remove unused deps"
+    files:
+      - .opencode/agents/analyze.md
+      - .opencode/agents/build.md
+      - .opencode/agents/plan.md
+      - .opencode/agents/scout.md
+      - .opencode/commands/audit.md
+      - .opencode/commands/build.md
+      - .opencode/commands/help.md
+      - .opencode/commands/research.md
+      - AGENTS.md
+      - makefile
+      - pyproject.toml (deleted)
+      - uv.lock (deleted)
+    issue: null
+    
+  - timestamp: 2025-03-27T14:35:00Z
+    type: commit
+    message: "docs(research): add comprehensive CLI self-documentation research"
+    files:
+      - .knowledge/notes/report-cli-ai-docs.md
+      - .knowledge/notes/research-cli-ai-docs/rq1-machine-readable-formats.md
+      - .knowledge/notes/research-cli-ai-docs/rq2-help-system-design.md
+      - .knowledge/notes/research-cli-ai-docs/rq3-ai-agent-interaction.md
+      - .knowledge/notes/research-cli-ai-docs/rq4-standards-specifications.md
+      - .knowledge/notes/research-cli-ai-docs/rq5-real-world-examples.md
+      - .knowledge/notes/research-cli-ai-docs/rq6-auto-discovery-mechanisms.md
+      - journal/2026-03-27.yaml
+      - todo.yaml
+    issue: null
