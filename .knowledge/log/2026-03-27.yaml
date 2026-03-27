@@ -1,4 +1,17 @@
 entries:
+  - timestamp: 2026-03-27T17:10:00Z
+    type: commit
+    message: "docs: fix documentation to match implementation"
+    files:
+      - docs/deploy.md
+      - docs/design.md
+      - docs/develop.md
+      - docs/index.md
+      - docs/install.sh
+      - docs/updating.md
+      - docs/user-guide.md
+      - .knowledge/notes/audits/documentation-2026-03-27.md
+    issue: null
   - timestamp: 2026-03-27T15:37:22Z
     type: commit
     message: "feat(agents): add explicit permission declarations to all agent definitions"
