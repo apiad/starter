@@ -2,6 +2,87 @@
 
 Getting the **Gemini CLI Opinionated Framework** up and running is an automated, interactive process. Whether you're starting a new project or integrating into an existing one, the `install.sh` script is your primary tool.
 
+## Installation Modes
+
+The framework supports two installation modes with different trade-offs:
+
+### Copy Mode (Default)
+
+The framework is downloaded and extracted without git tracking.
+
+**Characteristics:**
+- Framework files are a standalone copy
+- No `.git/` directory in `.opencode/`
+- Updates via re-running installer
+- Each project has its own copy
+
+**Trade-offs:**
+- Pros:
+  - Simple, no git knowledge required
+  - Projects are independent
+  - No risk of accidentally modifying framework files
+- Cons:
+  - Cannot rollback using git history
+  - Must manually track framework updates
+  - Cannot contribute to framework development
+
+**Best for:**
+- Projects that need stability
+- Users unfamiliar with git submodules
+- Production environments
+
+### Link Mode (Submodule)
+
+The framework is installed as a git submodule.
+
+**Characteristics:**
+- Framework is a git submodule linked to `opencode-core`
+- Maintains `.git/` connection
+- Updates via `git pull` or submodule commands
+- Shares framework across projects
+
+**Trade-offs:**
+- Pros:
+  - Easy updates via `git submodule update`
+  - Can rollback using git history
+  - Can contribute changes back to framework
+- Cons:
+  - More complex git workflow
+  - Requires understanding of submodules
+  - Framework changes affect all projects
+
+**Best for:**
+- Framework development
+- Active development requiring latest features
+- Users comfortable with git submodules
+
+### When to Use Each Mode
+
+| Scenario | Recommended Mode |
+|----------|------------------|
+| Production project, stability needed | Copy |
+| Experimental project | Link |
+| Contributing to framework | Link |
+| New to git | Copy |
+| Multiple projects sharing updates | Link |
+| Isolated project | Copy |
+
+### Switching Modes
+
+To switch modes, run the installer with the desired mode:
+
+```bash
+# Copy to Link
+curl -fsSL https://apiad.github.io/opencode/install.sh | bash -s -- --mode=link
+
+# Link to Copy
+curl -fsSL https://apiad.github.io/opencode/install.sh | bash -s -- --mode=copy
+```
+
+The installer will prompt for confirmation when switching modes.
+
+---
+
 ## 🚀 The Unified Installer
 
 The fastest way to install or update the framework is to run the following command:
