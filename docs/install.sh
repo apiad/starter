@@ -1,243 +1,458 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-# --- Configuration ---
-REPO_URL="https://github.com/apiad/starter.git"
-VERSION="0.19.1"
+VERSION="2.0.0"
+REPO_URL="https://github.com/apiad/opencode-core.git"
+FRAMEWORK_DIR=".opencode"
+INSTALL_JSON="opencode.json"
+JOURNAL_FILE="${HOME}/.opencode/install.log"
+DEPS_LOCK_FILE="${HOME}/.opencode/deps.lock"
 
-# --- Functions ---
-banner() {
-  echo -e "\033[1;34m"
-  echo "  ____                _       _ "
-  echo " / ___| ___ _ __ ___ (_) __  (_)"
-  echo "| |  _ / _ \ '_ \' _ \ | '_ \| |"
-  echo "| |_| |  __/ | | | | | | | | | |"
-  echo " \____|\___|_| |_| |_|_|_| |_|_|"
-  echo -e "\033[0m"
-  echo -e "\033[1;32m   OpenCode Framework Starter v$VERSION\033[0m"
-  echo "------------------------------------------"
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+log() {
+    local level="$1"
+    shift
+    local message="$*"
+    local timestamp
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo -e "${timestamp} [${level}] ${message}" >> "${JOURNAL_FILE}"
 }
 
-error() {
-  echo -e "\033[0;31m❌ Error: $1\033[0m" >&2
-  exit 1
-}
+info() { echo -e "${BLUE}[INFO]${NC} $*"; log "INFO" "$*"; }
+success() { echo -e "${GREEN}[OK]${NC} $*"; log "OK" "$*"; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $*"; log "WARN" "$*"; }
+error() { echo -e "${RED}[ERROR]${NC} $*" >&2; log "ERROR" "$*"; }
 
-confirm() {
-  echo -n "$1 [y/N]: "
-  read CONFIRM < /dev/tty
-  if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-    echo "Aborted by user."
-    exit 0
-  fi
-}
+usage() {
+    cat << EOF
+${BOLD}OpenCode Framework Installer v${VERSION}${NC}
 
-create_readme_boilerplate() {
-  cat <<EOF > README.md
-# Project Name
+${BOLD}USAGE:${NC}
+    install.sh [OPTIONS]
 
-Brief description of the project.
+${BOLD}OPTIONS:${NC}
+    --mode=MODE        Installation mode: 'copy' (default) or 'link'
+    --version          Show version information
+    --help, -h         Show this help message
+    --update           Update existing installation
 
-## 🚀 Quick Start
+${BOLD}MODES:${NC}
+    copy               Download and extract framework (default)
+                       Removes .git/ directory from installation
+                       Safe: does not modify your git history
 
-1. Install dependencies.
-2. Run the application.
+    link               Add framework as git submodule
+                       Keeps .git/ connection for easy updates
+                       Recommended for development
 
-## 🛠️ Built With
+${BOLD}EXAMPLES:${NC}
+    curl -fsSL https://apiad.github.io/opencode/install.sh | bash
+    curl -fsSL https://apiad.github.io/opencode/install.sh | bash -s -- --mode=copy
+    curl -fsSL https://apiad.github.io/opencode/install.sh | bash -s -- --mode=link
 
-- [Gemini CLI](https://github.com/apiad/gemini-cli) - AI-powered development framework.
+${BOLD}FILES:${NC}
+    .opencode/         Framework directory
+    opencode.json      Installation metadata and configuration
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 EOF
 }
 
-create_changelog_boilerplate() {
-  cat <<EOF > CHANGELOG.md
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-- Initial project setup with Gemini CLI framework.
-EOF
-}
-
-create_tasks_boilerplate() {
-  cat <<EOF > tasks.yaml
-tasks: []
-EOF
-}
-
-create_makefile_boilerplate() {
-  cat <<EOF > makefile
-.PHONY: all test lint format
-
-all: test lint
-
-test:
-	@echo "Running tests..."
-
-lint:
-	@echo "Running linting..."
-
-format:
-	@echo "Running formatting..."
-
-install-hooks:
-	ln -sf ../../.opencode/tools/pre-commit.py .git/hooks/pre-commit
-	chmod +x .git/hooks/pre-commit
-EOF
-}
-
-# --- Check Prerequisites ---
-for cmd in git node; do
-  if ! command -v "$cmd" >/dev/null 2>&1; then
-    error "$cmd is not installed. Please install it and try again."
-  fi
-done
-
-# --- Git Environment Validation ---
-if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "📂 Initializing git repository..."
-  git init -q
-fi
-
-if [[ -n $(git status --porcelain) ]]; then
-  error "Working tree is not clean. Please commit or stash your changes before running this script."
-fi
-
-# --- Inputs ---
-banner
-
-# --- Acquisition ---
-echo "🚀 Fetching latest framework from $REPO_URL..."
-TEMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TEMP_DIR"' EXIT
-
-git clone --depth 1 -q "$REPO_URL" "$TEMP_DIR" || error "Failed to clone template repository."
-
-# --- Discovery ---
-# Files that are ONLY created if missing (Scaffolding)
-SCAFFOLD_FILES=("README.md" "tasks.yaml" "CHANGELOG.md" "makefile")
-# Directories that are ensured
-CONTENT_DIRS=("journal" "plans" "research" "drafts")
-# Files within .opencode/ that are PROTECTED (Never overwritten)
-PROTECTED_OPENCODE_FILES=("opencode.json" "style-guide.md")
-
-WILL_CREATE=()
-WILL_UPDATE=()
-WILL_PROTECT=()
-
-# 1. .opencode Directory Logic
-if [[ ! -d ".opencode" ]]; then
-  WILL_CREATE+=(".opencode/ (core framework)")
-else
-  # Check for protected files
-  for f in "${PROTECTED_OPENCODE_FILES[@]}"; do
-    if [[ -f ".opencode/$f" ]]; then
-      WILL_PROTECT+=(".opencode/$f (user configuration)")
+check_prerequisites() {
+    if ! command -v git &>/dev/null; then
+        error "Git is not installed. Please install git first."
+        exit 1
     fi
-  done
-  WILL_UPDATE+=(".opencode/ (agents, commands, tools)")
-fi
+    if ! command -v curl &>/dev/null; then
+        if command -v wget &>/dev/null; then
+            warn "curl not found, but wget is available"
+        else
+            error "Neither curl nor wget is installed. Please install one of them."
+            exit 1
+        fi
+    fi
+}
 
-# 2. Project Scaffolding Check
-for f in "${SCAFFOLD_FILES[@]}"; do
-  if [[ ! -e "$f" ]]; then
-    WILL_CREATE+=("$f (new scaffolding)")
-  else
-    WILL_PROTECT+=("$f (existing project file)")
-  fi
-done
+get_package_manager() {
+    if command -v bun &>/dev/null; then
+        echo "bun"
+    elif command -v npm &>/dev/null; then
+        echo "npm"
+    elif command -v pnpm &>/dev/null; then
+        echo "pnpm"
+    elif command -v yarn &>/dev/null; then
+        echo "yarn"
+    else
+        warn "No Node.js package manager found. Skipping dependency installation."
+        return 1
+    fi
+}
 
-# 3. Content Directories Check
-for d in "${CONTENT_DIRS[@]}"; do
-  if [[ ! -d "$d" ]]; then
-    WILL_CREATE+=("$d/ (new content directory)")
-  fi
-done
+backup_configs() {
+    local configs=("${INSTALL_JSON}" "style-guide.md")
+    declare -A backups
 
-# --- Summary & Confirmation ---
-echo -e "\033[1;33mProposed Changes:\033[0m"
-if [[ ${#WILL_CREATE[@]} -gt 0 ]]; then
-  echo -e "\033[1;32mNew files/folders to create:\033[0m"
-  for f in "${WILL_CREATE[@]}"; do echo "  + $f"; done
-fi
+    for config in "${configs[@]}"; do
+        if [[ -f "${config}" ]]; then
+            backups["${config}"]=$(mktemp)
+            cp "${config}" "${backups[${config}]}"
+            info "Backed up existing ${config}"
+        fi
+    done
 
-if [[ ${#WILL_UPDATE[@]} -gt 0 ]]; then
-  echo -e "\033[1;34mExisting files to update:\033[0m"
-  for f in "${WILL_UPDATE[@]}"; do echo "  ~ $f"; done
-fi
+    printf '%s\n' "${!backups[@]}" > /tmp/opencode_config_files
+    for config in "${!backups[@]}"; do
+        echo "${config}:${backups[${config}]}" >> /tmp/opencode_config_map
+    done
+}
 
-if [[ ${#WILL_PROTECT[@]} -gt 0 ]]; then
-  echo -e "\033[1;35mFiles to preserve (will NOT be modified):\033[0m"
-  for f in "${WILL_PROTECT[@]}"; do echo "  # $f"; done
-fi
+restore_configs() {
+    if [[ -f /tmp/opencode_config_map ]]; then
+        while IFS=: read -r config backup; do
+            if [[ -f "${backup}" ]]; then
+                cp "${backup}" "${config}"
+                info "Restored ${config}"
+            fi
+        done < /tmp/opencode_config_map
+        rm -f /tmp/opencode_config_files /tmp/opencode_config_map
+    fi
+}
 
-echo ""
-confirm "Do you want to proceed with these changes?"
+install_copy_mode() {
+    local tag="${1:-v${VERSION}}"
+    local temp_dir
+    temp_dir=$(mktemp -d)
 
-# --- Execution ---
-IS_UPDATE=false
-if [[ -d ".opencode" ]]; then
-  IS_UPDATE=true
-fi
+    info "Installing OpenCode Framework (copy mode)..."
+    info "Cloning repository tag ${tag}..."
 
-echo "🛠️  Applying changes..."
+    if command -v git &>/dev/null; then
+        git clone --depth 1 --branch "${tag}" "${REPO_URL}" "${temp_dir}/opencode-core" 2>&1 | while IFS= read -r line; do
+            info "  ${line}"
+        done
+    fi
 
-# 1. Update .opencode (Surgical Update)
-mkdir -p .opencode
-# Copy subdirectories one by one, preserving protected files
-for subdir in agents commands tools; do
-  if [[ -d "$TEMP_DIR/.opencode/$subdir" ]]; then
-    mkdir -p ".opencode/$subdir"
-    cp -r "$TEMP_DIR/.opencode/$subdir/." ".opencode/$subdir/"
-  fi
-done
+    if [[ ! -d "${temp_dir}/opencode-core" ]]; then
+        error "Failed to clone repository"
+        rm -rf "${temp_dir}"
+        exit 1
+    fi
 
-# Restore protected files if they existed in temp (preventing accidental overwrite if cp -r was used)
-for f in "${PROTECTED_OPENCODE_FILES[@]}"; do
-  if [[ -f "$TEMP_DIR/.opencode/$f" && ! -f ".opencode/$f" ]]; then
-    cp "$TEMP_DIR/.opencode/$f" ".opencode/$f"
-  fi
-done
+    if [[ -d "${FRAMEWORK_DIR}" ]]; then
+        warn "Removing existing ${FRAMEWORK_DIR}..."
+        rm -rf "${FRAMEWORK_DIR}"
+    fi
 
-# 2. Create Scaffolding Files (Boilerplate if missing)
-if [[ ! -f "README.md" ]]; then create_readme_boilerplate; fi
-if [[ ! -f "CHANGELOG.md" ]]; then create_changelog_boilerplate; fi
-if [[ ! -f "tasks.yaml" ]]; then create_tasks_boilerplate; fi
-if [[ ! -f "makefile" ]]; then create_makefile_boilerplate; fi
+    mv "${temp_dir}/opencode-core" "${FRAMEWORK_DIR}"
 
-# 3. Ensure Content Directories & .gitkeep
-for d in "${CONTENT_DIRS[@]}"; do
-  mkdir -p "$d"
-  if [[ -f "$TEMP_DIR/$d/.gitkeep" ]]; then
-    cp "$TEMP_DIR/$d/.gitkeep" "$d/"
-  fi
-done
+    if [[ -d "${FRAMEWORK_DIR}/.git" ]]; then
+        info "Removing .git directory..."
+        rm -rf "${FRAMEWORK_DIR}/.git"
+    fi
 
-# 4. Journal Entry
-if $IS_UPDATE; then
-  MSG="Updated Gemini CLI framework to version $VERSION."
-  COMMIT_MSG="chore: update Gemini CLI framework to v$VERSION"
-else
-  MSG="Integrated Gemini CLI framework version $VERSION."
-  COMMIT_MSG="feat: integrate Gemini CLI framework v$VERSION"
-fi
+    rm -rf "${temp_dir}"
+    success "Framework copied to ${FRAMEWORK_DIR}/"
+}
 
-# Use the project's journal tool if it exists
-python3 .opencode/tools/journal.py add "$MSG"
+install_link_mode() {
+    local tag="${1:-v${VERSION}}"
 
-# --- Post-Install ---
-git add .
-git commit -m "$COMMIT_MSG" -q
+    info "Installing OpenCode Framework (link mode)..."
+    info "Adding framework as git submodule..."
 
-echo "✅ Gemini CLI framework $( [ "$IS_UPDATE" = true ] && echo "updated" || echo "integrated" ) successfully!"
-echo "🚀 Run 'gemini /onboard' to get started!"
+    if [[ -d "${FRAMEWORK_DIR}" ]]; then
+        if git submodule status "${FRAMEWORK_DIR}" &>/dev/null 2>&1; then
+            warn "Submodule already exists, updating..."
+            git submodule update --remote --merge "${FRAMEWORK_DIR}" 2>&1 | while IFS= read -r line; do
+                info "  ${line}"
+            done
+        else
+            error "${FRAMEWORK_DIR} exists but is not a submodule"
+            exit 1
+        fi
+    else
+        git submodule add -b "${tag}" "${REPO_URL}" "${FRAMEWORK_DIR}" 2>&1 | while IFS= read -r line; do
+            info "  ${line}"
+        done
+    fi
+
+    success "Framework linked as git submodule at ${FRAMEWORK_DIR}/"
+}
+
+create_opencode_json() {
+    local mode="${1}"
+    local install_date
+    install_date=$(date '+%Y-%m-%dT%H:%M:%SZ')
+    local commit_hash
+    commit_hash=$(git -C "${FRAMEWORK_DIR}" rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+    if [[ -f "${INSTALL_JSON}" ]]; then
+        info "Updating ${INSTALL_JSON}..."
+    else
+        info "Creating ${INSTALL_JSON}..."
+    fi
+
+    cat > "${INSTALL_JSON}" << EOF
+{
+  "name": "opencode",
+  "version": "${VERSION}",
+  "installed": "${install_date}",
+  "mode": "${mode}",
+  "commit": "${commit_hash}",
+  "repository": "${REPO_URL}",
+  "config": {
+    "frameworkPath": "${FRAMEWORK_DIR}"
+  }
+}
+EOF
+    success "Created ${INSTALL_JSON}"
+}
+
+install_framework_deps() {
+    local pm
+    pm=$(get_package_manager) || return 0
+
+    info "Installing framework dependencies using ${pm}..."
+
+    if [[ ! -f "${FRAMEWORK_DIR}/package.json" ]]; then
+        warn "No package.json found in framework"
+        return 0
+    fi
+
+    local lock_file=".${pm}.lock"
+    if [[ -f "${DEPS_LOCK_FILE}" ]]; then
+        local last_pm
+        last_pm=$(cat "${DEPS_LOCK_FILE}")
+        if [[ "${last_pm}" == "${pm}" ]]; then
+            info "Dependencies already installed with ${pm}"
+            return 0
+        fi
+    fi
+
+    (
+        cd "${FRAMEWORK_DIR}" || exit 1
+        case "${pm}" in
+            bun)
+                bun install 2>&1 | while IFS= read -r line; do
+                    info "  ${line}"
+                done
+                ;;
+            npm)
+                npm install 2>&1 | while IFS= read -r line; do
+                    info "  ${line}"
+                done
+                ;;
+            pnpm)
+                pnpm install 2>&1 | while IFS= read -r line; do
+                    info "  ${line}"
+                done
+                ;;
+            yarn)
+                yarn install 2>&1 | while IFS= read -r line; do
+                    info "  ${line}"
+                done
+                ;;
+        esac
+    )
+
+    echo "${pm}" > "${DEPS_LOCK_FILE}"
+    success "Dependencies installed"
+}
+
+handle_update() {
+    local mode="${1}"
+    local tag="${2:-v${VERSION}}"
+
+    if [[ ! -d "${FRAMEWORK_DIR}" ]]; then
+        return 1
+    fi
+
+    if [[ -f "${INSTALL_JSON}" ]]; then
+        local installed_mode
+        installed_mode=$(grep -o '"mode"[[:space:]]*:[[:space:]]*"[^"]*"' "${INSTALL_JSON}" | sed 's/.*"\([^"]*\)"/\1/')
+
+        if [[ "${installed_mode}" != "${mode}" ]]; then
+            warn "Existing installation uses '${installed_mode}' mode but you requested '${mode}' mode"
+            echo -n "Switch modes? This will reinstall the framework. [y/N]: "
+            read -r response
+            if [[ ! "${response}" =~ ^[Yy]$ ]]; then
+                info "Keeping existing installation"
+                return 2
+            fi
+            backup_configs
+            return 1
+        fi
+
+        info "Updating existing ${mode} installation to ${tag}..."
+        if [[ "${mode}" == "copy" ]]; then
+            backup_configs
+            return 1
+        else
+            git submodule update --remote --merge "${FRAMEWORK_DIR}" 2>&1 | while IFS= read -r line; do
+                info "  ${line}"
+            done
+            return 2
+        fi
+    fi
+
+    return 1
+}
+
+cleanup() {
+    rm -f /tmp/opencode_config_files /tmp/opencode_config_map 2>/dev/null || true
+}
+
+interactive_mode() {
+    echo -e "${BOLD}OpenCode Framework Installer v${VERSION}${NC}"
+    echo ""
+    echo "Please select installation mode:"
+    echo ""
+    echo -e "  ${BOLD}[1]${NC} ${CYAN}copy${NC}     - Download and extract framework"
+    echo "                Removes .git/ from installation"
+    echo "                Safe: does not affect git history"
+    echo ""
+    echo -e "  ${BOLD}[2]${NC} ${CYAN}link${NC}     - Add as git submodule"
+    echo "                Keeps .git/ connection for updates"
+    echo "                Recommended for development"
+    echo ""
+    echo -ne "Select mode [1]: "
+    read -r choice
+    choice="${choice:-1}"
+
+    case "${choice}" in
+        1) echo "copy" ;;
+        2) echo "link" ;;
+        *) echo "copy" ;;
+    esac
+}
+
+print_summary() {
+    local mode="${1}"
+    local tag="${2:-v${VERSION}}"
+
+    echo ""
+    echo -e "${BOLD}${GREEN}════════════════════════════════════════════════════════${NC}"
+    echo -e "${BOLD}${GREEN}  OpenCode Framework Installation Complete!${NC}"
+    echo -e "${GREEN}════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "  ${BOLD}Mode:${NC}    ${CYAN}${mode}${NC}"
+    echo -e "  ${BOLD}Version:${NC} ${tag}"
+    echo -e "  ${BOLD}Location:${NC} ${FRAMEWORK_DIR}/"
+    echo ""
+    echo -e "${BOLD}Next Steps:${NC}"
+    echo ""
+    if [[ "${mode}" == "copy" ]]; then
+        echo "  1. cd ${FRAMEWORK_DIR}"
+        echo "  2. Configure your settings in opencode.json"
+        echo "  3. Run 'bun run dev' or 'npm run dev' to start"
+        echo ""
+        echo -e "  ${YELLOW}Note: To update, run the installer again${NC}"
+    else
+        echo "  1. cd ${FRAMEWORK_DIR}"
+        echo "  2. Configure your settings in opencode.json"
+        echo "  3. Run 'bun run dev' or 'npm run dev' to start"
+        echo ""
+        echo -e "  ${CYAN}Note: Update anytime with: git submodule update --remote --merge${NC}"
+    fi
+    echo ""
+    echo -e "${BOLD}Documentation:${NC} ${FRAMEWORK_DIR}/README.md"
+    echo ""
+    echo -e "${GREEN}════════════════════════════════════════════════════════${NC}"
+}
+
+main() {
+    mkdir -p "$(dirname "${JOURNAL_FILE}")" 2>/dev/null || true
+    mkdir -p "${HOME}/.opencode" 2>/dev/null || true
+
+    local mode=""
+    local update=false
+    local tag="v${VERSION}"
+
+    for arg in "$@"; do
+        case "${arg}" in
+            --help|-h)
+                usage
+                exit 0
+                ;;
+            --version)
+                echo "OpenCode Installer v${VERSION}"
+                exit 0
+                ;;
+            --mode=*)
+                mode="${arg#*=}"
+                ;;
+            --update)
+                update=true
+                ;;
+            *)
+                warn "Unknown option: ${arg}"
+                ;;
+        esac
+    done
+
+    check_prerequisites
+
+    if [[ -z "${mode}" ]]; then
+        mode=$(interactive_mode)
+    fi
+
+    if [[ "${mode}" != "copy" && "${mode}" != "link" ]]; then
+        error "Invalid mode: ${mode}. Use 'copy' or 'link'"
+        exit 1
+    fi
+
+    info "Starting OpenCode Framework installation..."
+    info "Mode: ${mode}"
+    info "Tag: ${tag}"
+
+    if [[ "${update}" == "true" ]]; then
+        local update_result
+        update_result=$(handle_update "${mode}" "${tag}" || echo "$?")
+        if [[ "${update_result}" == "2" ]]; then
+            create_opencode_json "${mode}"
+            install_framework_deps
+            print_summary "${mode}" "${tag}"
+            exit 0
+        elif [[ "${update_result}" == "1" ]]; then
+            :
+        else
+            backup_configs
+        fi
+    else
+        if [[ -d "${FRAMEWORK_DIR}" ]]; then
+            info "Existing installation detected"
+            update_result=$(handle_update "${mode}" "${tag}" || echo "$?")
+            if [[ "${update_result}" == "2" ]]; then
+                create_opencode_json "${mode}"
+                install_framework_deps
+                print_summary "${mode}" "${tag}"
+                exit 0
+            elif [[ "${update_result}" == "1" ]]; then
+                backup_configs
+            fi
+        fi
+    fi
+
+    case "${mode}" in
+        copy)
+            install_copy_mode "${tag}"
+            ;;
+        link)
+            install_link_mode "${tag}"
+            ;;
+    esac
+
+    restore_configs
+    create_opencode_json "${mode}"
+    install_framework_deps
+    print_summary "${mode}" "${tag}"
+    cleanup
+}
+
+main "$@"
