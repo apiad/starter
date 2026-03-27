@@ -22,11 +22,11 @@ Every agent MUST follow these:
 
 | Path | Purpose | Created by |
 |------|---------|------------|
-| `plans/*.md` | Planning outputs | plan agent |
-| `research/<topic>/*` | Research campaigns | research agent |
-| `journal/<date>.yaml` | Daily journal entries | any agent |
-| `todo.yaml` | Task list | any agent |
-| `docs/*` | Project documentation | review agent |
+| `.knowledge/insights/*` | Analysis outputs (research, audits, investigations) | analyze agent |
+| `.knowledge/plans/` | Action plans | plan agent |
+| `.knowledge/log/` | Chronological activity log | release agent |
+| `.experiments/` | Subagent scratch space (gitignored) | subagents |
+| `docs/` | Project documentation | build agent |
 
 ---
 
@@ -37,60 +37,132 @@ Every agent MUST follow these:
 - `edit`, `write` — File modification (requires permission)
 - `question` — Request user clarification
 
-### Custom Tools
-- `journal` — Add/list journal entries (action: add or list)
-- `todo` — Task management (action: add, start, cancel, archive, attach-plan, list)
-
 ### External Dependencies
 | Tool | Used by | Required? |
 |------|---------|-----------|
-| `git` | ship, build | Yes |
-| `gh` | ship, issues | No |
-| `make` | ship (pre-commit hook) | Yes |
+| `git` | release, build | Yes |
+| `gh` | analyze (todo) | No |
+| `make` | build, release | Yes |
 | `uv`/`npm`/`cargo` | project-specific | No |
+
+---
+
+## Primary Agent Registry (Modes)
+
+| Agent | Purpose | Permissions |
+|-------|---------|-------------|
+| `analyze` | Understand, investigate, research | Read-only on project files; write to `.knowledge/insights/` |
+| `plan` | Decide approach, design architecture | Read-only on project files; write to `.knowledge/plans/` |
+| `build` | Execute, implement, create | Full write access to project files |
+| `release` | Finalize, commit, publish | Full write access; git operations |
+
+### Mode Detection
+
+Modes are detected from user intent:
+- Questions, research requests → **ANALYZE**
+- Strategy discussions, "should we..." → **PLAN**
+- Implementation requests → **BUILD**
+- Commit/release requests → **RELEASE**
+
+Users can also use explicit `/command` which runs in the corresponding mode.
 
 ---
 
 ## Subagent Registry
 
-| Subagent | Purpose | Allowed in |
-|----------|---------|------------|
-| `investigator` | Codebase structure analysis | review, plan |
-| `reviewer` | Structured document review (3 phases) | review |
-| `scout` | Web search and fetch | research |
-| `writer` | Document section drafting | build |
-| `coder` | Hypothesis testing with code | build |
+| Subagent | Purpose | Used By | Writes To |
+|----------|---------|---------|-----------|
+| `scout` | Web research | analyze | Returns to parent only |
+| `investigator` | Codebase analysis | analyze, plan | Returns to parent only |
+| `tester` | Hypothesis validation | build | `.experiments/tests/` |
+| `drafter` | Content drafting | build | `.experiments/drafts/` |
+| `critic` | Prose review | analyze, build | Returns to parent only |
 
-### Subagent Invocation Protocol
+### Subagent Rules
 
-When invoking a subagent:
-1. Provide clear, specific instructions
-2. Specify expected output format
-3. Do NOT chain subagents (no subagent calling subagent)
+1. **Never write to project files** — Only parent agents commit changes
+2. **Never write to `.knowledge/`** — Parent owns knowledge architecture
+3. **Can write to `.experiments/`** — Scratch space, gitignored
+4. **Must return structured output** — Parent synthesizes results
+5. **60 second timeout** — Fast feedback
+6. **No nesting** — Subagents cannot spawn subagents
 
 ---
 
 ## Command Registry
 
-### Mode Switches
-| Command | Agent | Behavior |
-|---------|-------|----------|
-| `/brainstorm` | brainstorm | New in brainstorm, infer context or ask |
-| `/plan` | plan | New in plan, infer context or ask |
-| `/research` | research | New in research, infer context or ask |
-| `/review` | review | New in review, infer context or ask |
-| `/build` | build | New in build, infer context or ask |
-| `/ship` | ship | New in ship, infer context or ask |
+### ANALYZE Commands
 
-### One-offs (run in their mode)
-| Command | Mode | Behavior |
-|---------|------|----------|
-| `/scaffold` | plan | Create project architecture |
-| `/audit` | review | Deep codebase audit |
-| `/onboard` | review | Orient new developer |
-| `/docs` | review | Generate/update documentation |
-| `/fix` | build | Hypothesis testing & issue resolution |
-| `/draft` | build | Write/refine documents |
-| `/commit` | ship | Group and commit changes |
-| `/release` | ship | Version bump, tag, publish |
-| `/issues` | ship | GitHub issue management |
+| Command | Description |
+|---------|-------------|
+| `/research [topic]` | Deep research with parallel scouts |
+| `/audit [scope]` | Comprehensive codebase audit |
+| `/investigate [problem]` | Root cause analysis |
+| `/todo` | List GitHub issues |
+| `/onboard` | Project orientation |
+
+### PLAN Commands
+
+| Command | Description |
+|---------|-------------|
+| `/plan [description]` | Create structured plan |
+| `/scaffold [template]` | Generate project structure |
+
+### BUILD Commands
+
+| Command | Description |
+|---------|-------------|
+| `/build [feature]` | TCR implementation |
+| `/fix [bug]` | Bug fix with regression test |
+| `/draft [content]` | Content creation |
+
+### RELEASE Commands
+
+| Command | Description |
+|---------|-------------|
+| `/commit [message]` | Commit with validation |
+| `/publish [version]` | Version, tag, deploy |
+
+### Freestyle vs Commands
+
+- **Freestyle** (natural language) — Agent responds conversationally in detected mode
+- **Commands** (`/research`, `/build`, etc.) — Structured workflows with rich prompts
+
+Both work in any mode, but commands add discipline and constraints.
+
+---
+
+## YAML Frontmatter Standard
+
+All `.knowledge/` files must include:
+
+```yaml
+---
+id: kebab-case-identifier
+created: YYYY-MM-DD
+modified: YYYY-MM-DD
+type: research | audit | investigation | plan | log
+status: active | stale | archived
+# Optional:
+issue: 42
+plan: plan-id
+sources: [...]
+tags: [...]
+---
+```
+
+---
+
+## Intelligent Decisions (No Hooks)
+
+This framework uses **intelligent decisions** instead of deterministic enforcement:
+
+- **No pre-commit hooks** — Agent decides if journaling is valuable
+- **No forced TCR** — Agent explains discipline, user can freestyle
+- **No mandatory planning** — Agent suggests, user decides
+
+Agent explains its reasoning. User can override at any time.
+
+---
+
+*Framework Version: 2.0*

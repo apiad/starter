@@ -1,54 +1,47 @@
 ---
-description: Write or refine technical documents section by section
+description: Create content with iterative drafting
 agent: build
+subagents: [drafter, critic]
 ---
 
-Multi-phase workflow for creating new documents or refining existing ones.
+# /draft [content brief]
 
-### Modes
+Create content from [content brief] using iterative drafting.
 
-#### Initial Drafting
-Create a new document from scratch.
+## Workflow
 
-#### Refinement
-Improve an existing document (requires `.review.md` file from `/review`).
+### Phase 1: Structure
+Define content outline:
+- Sections and their purposes
+- Target length per section
+- Key points to cover
 
-### Workflow (Initial Drafting)
+### Phase 2: Parallel Drafting
+Use `drafter` subagents (parallel):
+- Drafter 1: Section A
+- Drafter 2: Section B
+- Drafter 3: Section C
 
-1. **Context Gathering**:
-   - Read relevant research in `research/`
-   - Read relevant plans in `plans/`
-   - Check `journal/` for recent context
-   - Use `question` to clarify topic and scope
+### Phase 3: Review
+Use `critic` subagent to review:
+- Overall coherence
+- Section transitions
+- Style consistency
+- Clarity and completeness
 
-2. **Outline Creation**:
-   - Propose document structure
-   - Confirm outline with user via `question`
+### Phase 4: Refinement
+- Address critic feedback
+- Smooth transitions between sections
+- Final polish
 
-3. **Section-by-Section Writing**:
-   - For each section, invoke `writer` subagent with:
-     - Section topic
-     - Style requirements
-     - Context to draw from
-   - Use `edit` to insert writer output
+### Phase 5: Output
+Write to appropriate location:
+- `drafts/` for work in progress
+- `docs/` for documentation
+- Project root for README, etc.
 
-4. **Finalization**:
-   - Run linter if applicable
-   - Report completion
-
-### Workflow (Refinement)
-
-1. **Read Review**:
-   - Read target file
-   - Read corresponding `.review.md`
-
-2. **Identify Changes**:
-   - List issues from review phases
-   - Prioritize changes
-
-3. **Apply Changes**:
-   - For each set of changes, invoke `writer` subagent
-   - Use `edit` to apply surgically
-
-### Output
-Document saved to specified path, ready for review.
+## Key Constraints
+- Multiple drafters for parallel work
+- Critic review before finalizing
+- Iterative refinement
+- Match project style guide

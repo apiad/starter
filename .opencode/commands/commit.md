@@ -1,32 +1,56 @@
 ---
-description: Group and commit uncommitted changes using Conventional Commits
-agent: ship
+description: Commit changes with validation
+agent: release
+subagents: []
 ---
 
-Group and commit uncommitted changes.
+# /commit [message]
 
-### Preconditions
-- Git hook passes (pre-commit validation)
-- If hook fails → redirect to build mode with `/fix`
+Commit current changes with validation.
 
-### Workflow
+## Workflow
 
-1. **Analyze changes**:
-   - Use `git status` and `git diff` to identify all modified and untracked files
-   - Group files that are related to a single logical change
+### Phase 1: Validation
+Run `make test`:
+- If pass → proceed
+- If fail → report failures, ask user
 
-2. **Propose**:
-   - Present proposed commit groups with Conventional Commits format: `<type>(<scope>): <subject>`
-   - Use `question` to confirm before proceeding
+### Phase 2: Staging
+Show user what will be committed:
+```
+Files to commit:
+- modified: src/auth.py
+- new: tests/test_auth.py
+```
+Ask for confirmation.
 
-3. **Execute**:
-   - For each group: stage files, commit with proposed message
+### Phase 3: Commit
+Use conventional commit format:
+```bash
+git add -A
+git commit -m "[type]([scope]): [message]"
+```
 
-4. **Journal**:
-   - Use `journal add` to update journal after commits
+Types: feat, fix, docs, refactor, chore, test
 
-If no changes to commit, inform the user.
+### Phase 4: Log Update
+Update `.knowledge/log/{date}.yaml`:
+```yaml
+entries:
+  - timestamp: {iso}
+    type: commit
+    message: "[message]"
+    files: [list]
+    issue: #42 (if linked)
+```
 
-### Constraints
-- Never touch source code — commit metadata only
-- Enforce pre-commit hook before proceeding
+### Phase 5: Issue Check
+Check if commit message references issue:
+- "fixes #42" → suggest closing issue
+- Ask user if issue should be closed
+
+## Key Constraints
+- Tests must pass (unless user overrides)
+- Conventional commit format
+- Always update log
+- User confirmation for significant changes

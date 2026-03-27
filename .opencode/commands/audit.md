@@ -1,45 +1,83 @@
 ---
-description: Deep codebase audit to identify technical debt and maintenance issues
-agent: review
+description: Comprehensive codebase audit for technical debt and architecture
+agent: analyze
+subagents: [investigator]
 ---
 
-Lead Maintenance Engineer. Perform a deep, read-only audit to identify technical debt.
+# /audit [scope]
 
-### Phase 1: Clarification
+Audit [scope] of the codebase for architecture, tech debt, and standards.
 
-1. **Analyze Request:** Check if user specified focus area
-2. **Clarify Scope:** Use `question` if ambiguous:
-   - DRY violations?
-   - Documentation gaps?
-   - Test coverage?
-   - General code health?
+## Workflow
 
-### Phase 2: Deep Analysis
+### Phase 1: Discovery
+Use `investigator` subagent to map:
+1. Directory structure and organization
+2. Key files and their responsibilities
+3. Dependencies and relationships
+4. Entry points and APIs
 
-Audit priorities:
-- **DRY:** Find logic duplication across files
-- **Documentation:** Check for missing/outdated docs
-- **Test Gaps:** Complex functions without tests
-- **Complexity:** Deeply nested or long methods needing refactor
+### Phase 2: Analysis
+Investigate specific areas:
+1. **Architecture Patterns**
+   - Consistency of patterns
+   - Architectural drift
+   - Modularity and coupling
 
-Use `grep` and `read` to investigate thoroughly.
+2. **Code Quality**
+   - Complexity hotspots
+   - Duplication
+   - Test coverage
+
+3. **Standards Compliance**
+   - Naming conventions
+   - Documentation
+   - Project structure
+
+4. **Technical Debt**
+   - TODOs and FIXMEs
+   - Deprecated patterns
+   - Known issues
 
 ### Phase 3: Report
+Write structured audit to `.knowledge/insights/audits/{scope}-{date}.md`:
 
-Generate "Maintenance Report Card":
-1. Save to `research/audit-<date>.md`
-2. Include:
-   - High-level summary
-   - File-by-file issues
-   - Actionable fix suggestions
+```yaml
+---
+id: audit-{scope}-{date}
+created: {date}
+type: audit
+scope: [what was audited]
+status: active
+---
 
-### Phase 4: Advisory
+# Audit: [Scope]
 
-Report completion and suggest next steps:
-- Use `/plan` to formalize fixes
-- Use `/onboard` to understand context better
+## Executive Summary
+[Overall health assessment]
 
-### Constraints
-- Read-only - do not modify any files
-- Use `reviewer` subagent for code pattern analysis
-- Evidence-based findings with specific examples
+## Architecture Overview
+[Structure, patterns, entry points]
+
+## Findings
+
+### Strengths
+- [What's working well]
+
+### Concerns
+| Area | Severity | Description | Recommendation |
+|------|----------|-------------|----------------|
+| [area] | [high/med/low] | [what] | [fix] |
+
+### Technical Debt
+- [Specific debt items with locations]
+
+## Recommendations
+1. [Priority recommendation]
+2. [Secondary recommendation]
+```
+
+## Key Constraints
+- Read-only — never modify files
+- Evidence-based — cite specific files/lines
+- Actionable — every finding has recommendation

@@ -1,42 +1,78 @@
 ---
 description: Orient a new developer to the project - architecture, standards, and current state
-agent: review
+agent: analyze
+subagents: [investigator]
 ---
 
-Senior engineer onboarding a new developer. Provide a concise, high-signal orientation.
+# /onboard
 
-### Phase 1: Discovery
+Orient a new developer to project architecture, standards, and current state.
 
-1. **Read Core Docs:**
-   - `README.md` - project purpose
-   - `todo.yaml` - current tasks
-   - 2 most recent `journal/` entries
+## Workflow
 
-2. **Map Structure:**
-   - List root files and key directories
-   - Understand layout (src/, lib/, docs/, etc.)
+### Phase 1: Discovery (Parallel)
+Use `investigator` subagent for:
 
-3. **Explore Deeper:**
-   - `docs/` if exists
-   - Key source files for implementation patterns
-   - `makefile` for commands
+1. **Core Docs**
+   - Read `README.md` — project purpose
+   - Read `makefile` — available commands
+   - Check `.knowledge/plans/` — active work
 
-4. **Identify Entry Points:**
-   - How to run the project
-   - How to test
-   - How to contribute
+2. **Structure Mapping**
+   - List root files and directories
+   - Identify source directories
+   - Find configuration files
 
-### Phase 2: Onboarding Report
+3. **Technology Stack**
+   - Detect languages and frameworks
+   - Identify key dependencies
+   - Find entry points
 
-Present a professional summary:
+### Phase 2: Standards Discovery
+- How to run the project
+- How to test (`make test`?)
+- How to contribute
+- Project conventions
 
-- **Project Purpose:** What this project does
-- **Architecture & Layout:** Directory structure, core technologies
-- **Workflow & Standards:** Run, test, commit procedures
-- **Current State:** Recent activity, active tasks
-- **First Steps:** 2-3 specific files or commands to start with
+### Phase 3: Current State
+- Recent activity (git log --oneline -10)
+- Active plans/work
+- Known issues or blockers
 
-### Constraints
-- Read-only - do not modify any files
-- Use `reviewer` subagent if deeper analysis needed
-- Keep report concise but comprehensive
+### Phase 4: Onboarding Report
+Present professional summary:
+
+```
+# Project Onboarding
+
+## Project Purpose
+[What this project does]
+
+## Architecture & Layout
+```
+[directory tree]
+```
+
+**Key Technologies:** [list]
+
+## Workflow & Standards
+- **Run:** [how to start]
+- **Test:** [how to test]
+- **Build:** [how to build]
+
+## Current State
+- **Active Work:** [plans in progress]
+- **Recent Activity:** [last few commits]
+
+## First Steps
+1. [specific file to read]
+2. [specific command to run]
+3. [specific issue to explore]
+```
+
+Write to `.knowledge/insights/project-overview.md` for future reference.
+
+## Key Constraints
+- Concise — high signal, no fluff
+- Practical — focus on getting started
+- Current — reflects actual state

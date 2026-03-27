@@ -1,0 +1,6 @@
+# Experiments folder - subagent scratch space
+# This directory is never committed to git
+# Files here are temporary and can be manually cleaned up
+*
+!.gitignore
+!README.md
