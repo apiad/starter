@@ -18,3 +18,13 @@ tasks:
       - none
     createdAt: "2026-03-27T09:39:58.725Z"
     updatedAt: "2026-03-27T09:39:58.725Z"
+  - id: "F.2"
+    label: "python-cli-scripts"
+    description: "Create Python CLI scripts for structured commands (note.py, outline.py, etc.)"
+    category: "framework"
+    status: todo
+    complexity: 3
+    dependencies:
+      - none
+    createdAt: "2026-03-27T13:16:30.421Z"
+    updatedAt: "2026-03-27T13:16:30.421Z"
