@@ -79,7 +79,7 @@ select_mode() {
     echo -e "  ${BOLD}[2]${NC} ${CYAN}Link${NC}     - Add as git submodule (get upstream updates)"
     echo "                Recommended for active development"
     echo ""
-    echo -e "Enter choice [1]: "
+    echo -ne "Enter choice [1]: "
     read -r choice
     mode="${choice:-1}"
 
