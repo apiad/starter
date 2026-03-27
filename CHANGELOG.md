@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-27
+
+### Features
+- **Dual-mode installer:** Copy and link (submodule) installation modes via `--link` flag
+- **Submodule architecture:** Converted `.opencode` to git submodule pointing to opencode-core
+- **Note command:** Added `/note` command for journal entry creation
+
+### Fixes
+- **Documentation accuracy:** Fixed documentation to match actual implementation
+  - Replaced "Gemini CLI" with "OpenCode Framework"
+  - Replaced `/maintenance` with `/audit` throughout
+  - Removed unimplemented commands (/learn, /document, /brainstorm, /cron)
+  - Updated directory paths to `.knowledge/*` structure
+  - Updated agent and subagent tables
+
+### Refactored
+- **Install script:** Simplified to non-interactive mode with `--link` flag
+- **Agent architecture:** Restructured to 4-mode framework (analyze, plan, build, release)
+
+### Documentation
+- Complete documentation audit and fix
+- Updated install URLs to apiad.github.io/opencode
+- Updated command inventory tables
+
 ## [1.0.0] - 2026-03-26
 
 ### Added
