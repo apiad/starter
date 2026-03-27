@@ -1,0 +1,15 @@
+entries:
+  - timestamp: 2026-03-27T15:37:22Z
+    type: commit
+    message: "feat(agents): add explicit permission declarations to all agent definitions"
+    files:
+      - .opencode/agents/analyze.md
+      - .opencode/agents/build.md
+      - .opencode/agents/critic.md
+      - .opencode/agents/drafter.md
+      - .opencode/agents/investigator.md
+      - .opencode/agents/plan.md
+      - .opencode/agents/release.md
+      - .opencode/agents/scout.md
+      - .opencode/agents/tester.md
+    issue: null
