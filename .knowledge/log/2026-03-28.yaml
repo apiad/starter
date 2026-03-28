@@ -7,3 +7,14 @@ entries:
       - Add stdin[T] for complex JSON parsing from stdin
       - Parse JSON to dict or Pydantic models
       - Optional pydantic extra for model validation
+  - timestamp: 2026-03-28T11:30:00Z
+    type: commit
+    message: "docs: add SE2.0 philosophy outline with talking points"
+    files:
+      - .knowledge/drafts/se2-philosophy-outline.md
+    summary: |
+      Created comprehensive outline for Part I of SE2.0 guide:
+      - 8 sections, 23 subsections, ~90 talking points
+      - Core principles: explicit, resist guessing, delegate
+      - Tool principles: design for agency, enforced next steps
+      - Includes MicroCLI implementation details
