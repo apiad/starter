@@ -1,0 +1,23 @@
+entries:
+  - timestamp: 2026-03-31T00:00:00Z
+    type: commit
+    message: "feat(research): add design docs for sandbox plugin and isolated environments"
+    files:
+      - .knowledge/notes/isolated-dev-environments.md
+      - .knowledge/notes/opencode-structured-output-research.md
+      - .knowledge/notes/sandbox-plugin-design.md
+      - .knowledge/notes/sandbox-plugin-impl.md
+      - .knowledge/notes/setup-env-command-design.md
+      - .opencode
+    summary: |
+      Added research and design documents for upcoming features:
+      - Sandbox plugin: Docker-based isolation for tool execution
+      - Setup-env command: environment initialization workflow
+      - Isolated dev environments: architecture research
+      - Structured output: analysis of current implementation
+  - timestamp: 2026-03-31T11:12:00Z
+    type: commit
+    message: "chore: add Python .gitignore"
+    files:
+      - lib/microcli/.gitignore
+    summary: Added standard Python .gitignore to microcli submodule
