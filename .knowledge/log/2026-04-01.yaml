@@ -46,3 +46,20 @@ entries:
       - Added Docker prerequisite to deploy.md
       - Fixed truncated /commit section in user-guide.md
       - Updated Key Capabilities in index.md
+  - timestamp: 2026-04-01T15:30:00Z
+    type: commit
+    message: "docs: add revised draft of 'The Anatomy of AI Agents' v2"
+    files:
+      - .knowledge/drafts/the-anatomy-of-ai-agents-full.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-full.md.review_structure.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-full.review.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-outline.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-draft.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-part1-part2.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-part4-conclusion.md
+    summary: |
+      Major revision of article draft with structural fixes:
+      - Restructure Part I around context saturation symptoms
+      - Correct Mode/Skill/Command definitions (explicit vs implicit)
+      - Add three-part Part IV (commands, security, context-aware execution)
+      - Add domain intros for Software Development, Research, Technical Writing
