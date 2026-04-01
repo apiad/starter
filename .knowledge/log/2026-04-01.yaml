@@ -28,3 +28,21 @@ entries:
       - Added AGENT.md documentation
       - Updated command inventory
       - Added sandbox command docs
+  - timestamp: 2026-04-01T13:00:00Z
+    type: commit
+    message: "docs: update documentation for v2.0.0 features"
+    files:
+      - docs/deploy.md
+      - docs/design.md
+      - docs/index.md
+      - docs/user-guide.md
+      - .knowledge/notes/docs-v2-analysis.md
+      - .knowledge/plans/docs-v2-update.md
+    summary: |
+      Comprehensive documentation update covering:
+      - Added design mode and lit-commands subagent to architecture tables
+      - Added Literate Commands section explaining multi-step workflows
+      - Added Sandbox Plugin section explaining Docker isolation
+      - Added Docker prerequisite to deploy.md
+      - Fixed truncated /commit section in user-guide.md
+      - Updated Key Capabilities in index.md
