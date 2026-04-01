@@ -58,9 +58,11 @@ But "plan mode" in most tools is just a prompt. There's no enforcement. The agen
 
 This matters because a plan only works if it's actually followed. If the agent can deviate mid-execution—if "plan mode" and "build mode" are just prompts with different names—the plan becomes advisory. And advisory plans get ignored.
 
-The second problem is structural: there's no artifact that passes from plan to build. The plan lives in context. By the time build mode starts, the plan is mixed in with everything else the agent said. Which file was the plan? Which changes were approved? The agent has to re-read the conversation to remember. Context saturation accelerates.
+The second problem is structural: there's no artifact that passes from plan to build. The plan lives in the context. By the time build mode starts, the plan is mixed in with everything else the agent said. Which file was the plan? Which changes were approved? The agent has to re-read the conversation to remember. Context saturation accelerates.
 
-**The plan is a map. But terrain changes. The agent needs a compass, not just a destination.** Context—the information the agent carries—is that compass. And context has limits. After extended work, those limits become visible.
+The plan is a map. But terrain changes. The agent needs a compass, not just a destination.
+
+Context—the information the agent carries—is that compass. And context has limits. After extended work, those limits become visible.
 
 ## Symptom Three: Context Saturation
 
