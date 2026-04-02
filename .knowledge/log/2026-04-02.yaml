@@ -1,0 +1,16 @@
+entries:
+  - timestamp: 2026-04-02T00:00:00Z
+    type: commit
+    message: "docs(article): apply style review fixes to AI agents v2 draft"
+    files:
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-draft.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-draft.md.review.null
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-draft.md.review.md
+      - .knowledge/drafts/the-anatomy-of-ai-agents-v2-draft.md.review_style.md
+    summary: |
+      Applied 7 style edits to the v2 draft:
+      - Strengthened analogy on line 11 ("with the right kind of system that things click")
+      - Removed vague "for better or worse" phrase on line 15
+      - Fixed comma splice on line 35 (removed "indeed", "kind of", rewrote with em-dash)
+      - Removed 20 stale FIX comments throughout (text was already correct)
+      - Renamed review report (review_style.md → review.md)

@@ -8,13 +8,13 @@ To be sure, better models make things easier. And models are getting better by t
 
 In contrast, a good system with clear boundaries and explicit rules, that leaves the exact amount of flexibility necessary, makes creativity and productivity thrive.
 
-You see this day and night in teams (of real humans) in every industry. It's not often the smartest person in the room that solves the hard problem. Is when you mix a right of combination of intelligence with a good system.
+You see this day and night in teams (of real humans) in every industry. It's not often the smartest person in the room that solves the hard problem. It's when you combine the right kinds of intelligence with the right kind of system that things click.
 
-In this article, I want to make the case for a structured way to think about LLM-based agentic systems (mostly for coding, but also for knowledge work in general) that fixes some of the greatests pains I (and I sure most of you) have been facing when trying to scale AI-assisted workflows to professional levels.
+In this article, I want to make the case for a structured way to think about Large Language Model (LLM)-based agentic systems (mostly for coding, but also for knowledge work in general) that fixes some of the greatest pains I (and I sure most of you) have been facing when trying to scale AI-assisted workflows to professional levels.
 
-It's a system that puts the right constraints in the right places and leaves just enough space for creative exploration (or however you want to call what LLMs do when they hallucinate in your favor). It's also a system that makes it clear you are in charge, for better or worse.
+It's a system that puts the right constraints in the right places and leaves just enough space for creative exploration (or however you want to call what LLMs do when they hallucinate in your favor). It's also a system that makes it clear you are in charge.
 
-Everything an AI agent does happens inside a context window. System prompt, user input, tool results, skill injections—they all live there. The agent's only mechanism for action is the ReAct loop: think, call tools, observe results, repeat. Each cycle grows the context. Each skill activation injects more.
+Everything an AI agent does happens inside a context window. System prompt, user input, tool results, skill injections—they all live there. The agent's only mechanism for action is the ReAct (Reasoning + Acting) loop: think, call tools, observe results, repeat. Each cycle grows the context. Each skill activation injects more.
 
 This creates a fundamental tension: context is power, but context is finite. Too little and the agent can't connect the dots. Too much and the important stuff drowns. The gap between those two failure modes is narrow—and most agent frameworks ignore it entirely.
 
@@ -32,13 +32,13 @@ The agent doesn't have memory. It doesn't have state. It has context. Everything
 
 This means context engineering *is* AI agent engineering. The agent's behavior isn't determined by the model alone, or even primarily, but by what context you give it, and how you structure that context over time.
 
-Most tools treat context as a solved problem. They stuff everything in and hope the model figures it out. In-context learning indeed seems kind of magical, it has limits, and those limits become visible fast.
+Most tools treat context as a solved problem. They stuff everything in and hope the model figures it out. In-context learning seems almost magical, but it has limits—and those limits become visible fast.
 
-When context is thin, the agent simply doesn't know enough about your project to make informed decision. It relies then on baked-in assumptions from training, and falls back to consensus instead of following your style: it uses the common tools and practices it learned from pretraining. This often means it uses slightly old and outdated tools and practices.
+When context is thin, the agent simply doesn't know enough about your project to make informed decisions. It relies on baked-in assumptions from training and falls back to consensus instead of following your style: it uses the common tools and practices it learned from pretraining. This often means it uses slightly old and outdated tools and practices.
 
-So you do the sensibe thing, and inject project-specific information into the context. But then if context grows too large, even if it doesn't technically exceeds the model's capacity, things start to get lost in the middle. Moreover, failed tool calls, wrong assumptions the model had to correct, etc., start creeping up in context, not only taking valuable space but also, and more importantly, _distracting_ the model and biasing it towards mediocre decisions.
+So you do the sensible thing, and inject project-specific information into the context. But then if context grows too large, even if it doesn't technically exceed the model's capacity, things start to get lost in the middle. Moreover, failed tool calls, wrong assumptions the model had to correct, etc., start creeping up in context, not only taking up valuable space but also, and more importantly, _distracting_ the model and biasing it towards mediocre decisions.
 
-Then there is context compaction: when the context fills in to about 85%, most systems will invoke a special prompt to instruct the agent to summarize the current state. These prompts are more or less detailed, but often involved asking the agent what it is immediately doing, where is it stuck, what has failed, etc. Clever, but a hack nonetheless. This hard context reset means the agent will forget important nuances in the current conversation and will repeat past mistakes. It is annoying as hell.
+Then there is context compaction: when the context fills in to about 85%, most systems will invoke a special prompt to instruct the agent to summarize the current state. These prompts vary in detail, but often involve asking the agent what it is immediately doing, where is it stuck, what has failed, etc. Clever, but a hack nonetheless. This hard context reset means the agent will forget important nuances in the current conversation and will repeat past mistakes. It's frustrating.
 
 Let's look at how these problems surface in specific symptoms that _all_ LLM-based agents display at some point.
 
@@ -52,7 +52,7 @@ Skills are supposed to fix this. Add a skill document that says "use pytest" and
 
 You add a skill for code review. Then one for documentation. Then one for PR descriptions. Then three more for your company's specific stack. Each skill seems small. A few hundred tokens each. But they pile up—always-on knowledge the agent carries but can't prioritize.
 
-The result is context bloat. The agent can't tell what's relevant in any given moment. So it blends everything together, and hallucinations increase. More skills made it worse. Not better.
+The result is context bloat. The agent can't tell what's relevant in any given moment. So it blends everything together, and hallucinations increase. More skills made it worse—not better.
 
 ## Symptom Two: Permission Leakage
 
@@ -72,11 +72,11 @@ After extended work, you see the same pattern: the agent makes 95% of the progre
 
 But the deeper problem is internal noise. The agent keeps everything in context: all internal reasoning, all tool calls, all results. This is fine for minute-to-minute action. But after four failed attempts to solve something, the old tool calls are just noise. These were attempts that went nowhere, just add cost and accelerate saturation.
 
-The supposed solution for this is context compacto. But this is the Memento problem.  The agent is supposed to leave a trail for its future self. After context compaction, it should be able to pick up where it left off. But if agents struggle with long contexts, how are they supposed to build a good trail? The compaction report is only as good as the agent's ability to summarize. And summarization is lossy and injects back lots of unstated assumptions from pretraining.
+The supposed solution for this is context compaction. But this creates a lossy summary problem. The agent is supposed to leave a trail for its future self. After context compaction, it should be able to pick up where it left off. But if agents struggle with long contexts, how are they supposed to build a good trail? The compaction report is only as good as the agent's ability to summarize. And summarization is lossy and injects back lots of unstated assumptions from pretraining.
 
 The frustrating part: this wasn't a hard problem. The agent had all the knowledge it needed. But context filled with noise, and the important bits got pushed out. More tokens in, less signal out.
 
-The solution isn't just better prompts or larger context windows. Yes, these help. But the systoms are systemic, so the solution must be a system overhaul.
+The solution isn't just better prompts or larger context windows. Yes, these help. But the symptoms are systemic, so the solution must be a system overhaul.
 
 Let me show you how that system looks like.
 
@@ -92,7 +92,7 @@ Here's the breakdown. Every agent system you'll encounter (explicitly or implici
 
 Modes are *explicit*. They're top-level system prompts that define behavior and permissions. You tell the agent: "This is how you should think and behave. These are the tools you can use. These are the parts of the filesystem you can write to."
 
-**Skill — the knowledge.** A skill is knowledge the agent can recall when necessary. It doesn't get invoked explicitely, it gets applied _implicitely_ when necessary. When you give an agent knowledge about SQL optimization, that skill is available whenever relevant. The agent doesn't need to be told to use it. The ReAct cycle injects it when it deems suitable.
+**Skill — the knowledge.** A skill is knowledge the agent can recall when necessary. It doesn't get invoked explicitly, it gets applied _implicitly_ when necessary. When you give an agent knowledge about SQL optimization, that skill is available whenever relevant. The agent doesn't need to be told to use it. The ReAct cycle injects it when it deems suitable.
 
 Unlike modes, skills can layer. An agent might have a SQL skill, a documentation skill, and a debugging skill, all active simultaneously, all contributing when relevant. Skills are implicit because the agent should just apply them naturally. They can also contradict or complement each other. In-context learning _should_ be capable of using them in a combined manner.
 
@@ -160,7 +160,7 @@ Each experiment is run on a subagent that has the job of verifying one assumptio
 
 The result of this phase is a structured plan with step by step details on what files must be touched and what must be done in there (semantically, not code). For every phase, it defines success criteria: what must be validated before we can say we got that phase right.
 
-**Phase 3: /build (create mode)** executes the plan step by step. The agent writes tests first (following TDD discipline) for the success criteria defined for that pahse and watches them fail. Then it launches a coding subagent that has _read-only_ access to tests, so it cannot cheat and change the tests.
+**Phase 3: /build (create mode)** executes the plan step by step. The agent writes tests first (following Test-Driven Development (TDD) discipline) for the success criteria defined for that phase and watches them fail. Then it launches a coding subagent that has _read-only_ access to tests, so it cannot cheat and change the tests.
 
 The subagent attempts to implement changes that make the test pass. If it succeeds, the main agent commits and moves on. If it doesn't, the main agent retries a few times. If there is no progress, the main agent resets the work tree (no harm done), and reports on failure. This usually means the plan needs revisions.
 
@@ -196,11 +196,11 @@ A technical writing agent carries knowledge of prose style without being coached
 
 **Phase 1: /review (analyze mode)** performs detailed review in a specific order: structural issues first, then content, then style. The agent examines the narrative arc—how main points connect, whether the flow makes sense, before worrying about grammar or word choice. This ordering matters; reviewing low-level details when high-level problems exist wastes effort.
 
-Each iteration is performed by spawining several subagents that focus on specific types of problems, like transitions, unverifiable claims, etc. Each subagent returns a structured list of issues, pointing back to exact line numbers and phrasing. Then, the main agent _edits_ the original paper and injects markdown comments in every marked issue, next to the paragraph, or under the header where it best fits.
+Each iteration is performed by spawning several subagents that focus on specific types of problems, like transitions, unverifiable claims, etc. Each subagent returns a structured list of issues, pointing back to exact line numbers and phrasing. Then, the main agent _edits_ the original paper and injects markdown comments in every marked issue, next to the paragraph, or under the header where it best fits.
 
 **Phase 2: /revise (design mode)** plans changes to specific sections, prioritizing by review type. The agent maps structural fixes to particular paragraphs, content additions to thin sections, style improvements to verbose passages. It produces a concrete plan, section by section, change by change. Then it goes into the manuscript and writes markdown comments as replies to the existing review comments, thus grounding the revision plan in the exact context it must fit.
 
-**Phase 3: /rewrite (create mode)** follows the plan. The agent revises sections in priority order, applying structural changes first, then content, then style. Again, each step is performed spawining a subagent tasked with just a change (for style changes we actually do it section by section).
+**Phase 3: /rewrite (create mode)** follows the plan. The agent revises sections in priority order, applying structural changes first, then content, then style. Again, each step is performed spawning a subagent tasked with just a change (for style changes we actually do it section by section).
 
 The subagent doesn't edit; it produces a draft revision that the main agent is then tasked to paste into the document where it fits. Crucially, the main agent is instructed to _leave_ the editorial comments but mark them as solved, with a short trail of what was changed. This works wonders for a later human review phase.
 
@@ -208,8 +208,8 @@ The subagent doesn't edit; it produces a draft revision that the main agent is t
 
 These workflows work, but with some caveats. There's a gap between "working" and "working well." Three key pains remain in my implementation.
 
-1. Long commands are hard to follow when given as a single prompt. The fourth step gets forgotten since it is buried at the begining of the context.
-2. Permissions as currently implemented are all-or-nothing. You either have shell access (destructive) or you dont. I want broad permissions (run whatever you want) with provable security (nothing you run can change this file).
+1. Long commands are hard to follow when given as a single prompt. The fourth step gets forgotten since it is buried at the beginning of the context.
+2. Permissions as currently implemented are all-or-nothing. You either have shell access (destructive) or you don't. I want broad permissions (run whatever you want) with provable security (nothing you run can change this file).
 3. Context saturation still happens even with delegation. After a while, the agent will have to compact context, and this usually means you lose important information.
 
 I have three ideas for closing this gap. The first is about how commands work. The second is about security. The third is about context management. They are in different levels of implementation, so let me show you what I'm building toward.
@@ -228,7 +228,7 @@ To make commands truly useful, we need to be more like scripts. Here's what that
 
 4. Finally, commands that embed and execute external scripts. Instead of asking the agent to run some script, the command can run arbitrary Python, JS, Bash, or whatever, to, for example, transform structured information. The command becomes an orchestrator of other processes.
 
-Basically, what I'm asking for here is a DSL for guiding agents in a far more structured manner, but still having the power of arbitrary prompts for flexibility. Mixing code and prompts in this way gives us the tools to find the precise balance between constraints and capabilities.
+Basically, what I'm asking for here is a Domain-Specific Language (DSL) for guiding agents in a far more structured manner, but still having the power of arbitrary prompts for flexibility. Mixing code and prompts in this way gives us the tools to find the precise balance between constraints and capabilities.
 
 If this sounds exciting, I'm happy to tell you this is already doable, to some extent. Check out my [literate-commands](https://apiad.github.io/opencode-literate-commands) project for an OpenCode-specific implementation of these ideas. It's still a bit rough around the edges, but it works much better than plain, single-prompt commands.
 
@@ -238,11 +238,11 @@ Most agentic tools have very coarse permission settings. You can allow, deny, or
 
 This works fine for coarse-grained permissions like read-only access, or write but no shell. In OpenCode, you can even define permissions for specific paths, or even specific shell commands (with simple glob patterns, so you can, e.g., allow `ls *` but reject all other shell commands).
 
-However, even in this case, I find these permissions too restrictive. They are conflating two different dimensions into one--what tools the agent can use, and what side-effects can those tool have.
+However, even in this case, I find these permissions too restrictive. They are conflating two different dimensions into one--what tools the agent can use, and what side-effects can those tools have.
 
 For example, say I want to give my agent `git` access but only for reading operations. How do you achieve that? You need to list all safe patterns like `git ls-tree *`, `git status`, `git log *`. But what about `git branch`? Depending on the arguments, this subcommand can have read-only or write side effects. And then think about pipes, shell substitution, custom bash scripts, or worse, `python *`.
 
-If you want your agent to be capable, you need to give it access to a wide variety of tools. For example, my bug-hunting workflow depends on the agent been able to execute arbitrary code that it synthesizes on the fly. However, I want guardrails. There is simply no way to whitelist all possible commands. We need separation of permission to run a command and permission to modify the system.
+If you want your agent to be capable, you need to give it access to a wide variety of tools. For example, my bug-hunting workflow depends on the agent being able to execute arbitrary code that it synthesizes on the fly. However, I want guardrails. There is simply no way to whitelist all possible commands. We need separation of permission to run a command and permission to modify the system.
 
 The solution, of course, is some form of filesystem isolation. The most obvious one is wrapping all shell execution in Docker, so commands run in a container with proper constraints. This creates all sorts of other problems, which I can discuss in a future post, but for now, it remains my best (and simplest) solution to robust sandboxing.
 
@@ -258,13 +258,13 @@ I've been designing a system where the context never saturates. It branches when
 
 The goal is simple: keep context between 40% and 60% saturation at all times. Not by compacting a 150K tokens context down to 10K---which kills all understanding the agent had achieved---but by never letting it grow unchecked.
 
-Nothing like this exists yet, so I'm building it, but's a story for another day.
+Nothing like this exists yet, so I'm building it, but it's a story for another day.
 
 ## Conclusion
 
-The main takeaway from this article is not that _my_ system is better. Is that _you_ can design your own system to adapt perfectly to your workflows if you clearly separate concerns. The main modes are for establishing an overal persona--inquisitive and critical, versus detailed and forward-looking, versus focused and action-biased--while skills incorporate domain knowledge, and commands act as precise workflows.
+The main takeaway from this article is not that _my_ system is better. It's that _you_ can design your own system to adapt perfectly to your workflows if you clearly separate concerns. The main modes are for establishing an overall persona--inquisitive and critical, versus detailed and forward-looking, versus focused and action-biased--while skills incorporate domain knowledge, and commands act as precise workflows.
 
-The workflows I described are real, based on actual commands and promtps I'm using in production code. But I have abstracted them a bit to make them easier to understand in the context of an arbitrary agent, not tied to specific idiosincracies of the tool I happen to be using at the moment. If you want to see and try for yourself a concrete implementation of these ideas---still imperfect, but working nonetheless---check out my [opencode toolkit](https://apiad.github.io/opencode) repository. It's still pretty much work in progress, so use it with care.
+The workflows I described are real, based on actual commands and prompts I'm using in production code. But I have abstracted them a bit to make them easier to understand in the context of an arbitrary agent, not tied to specific idiosyncrasies of the tool I happen to be using at the moment. If you want to see and try for yourself a concrete implementation of these ideas---still imperfect, but working nonetheless---check out my [opencode toolkit](https://apiad.github.io/opencode) repository. It's still pretty much work in progress, so use it with care.
 
 In future articles I will explore specific problems in more detail and discuss concrete strategies to implement powerful workflows that keep you, the user, in absolute control, while delegating the majority of the grunt work.
 
