@@ -22,19 +22,25 @@ I'll walk through why current systems fail, introduce a four-element framework f
 
 ## Part I - The Symptoms
 
+To understand the problems we first need to understand how a standard agentic loop works. The typical architecture is what's called a ReAct loop. The LLM runs in a loop that determines the next action given context, which can be read some files, ask the user, invoke a tool, inject a skill, etc. When the agent decides no more actions are necessary, the loop ends and the user is given control back to continue the prompt.
+
+That's it. All the seemingly supersmart behaviours of Claude Code, Gemini CLI, and Codex are, under the hood, some form of the basic ReAct loop. There are of course nuances. For example, most systems decide that if the agent calls the same tool with the same args three times, it must be stuck in a loop and stop the turn. There are perhaps hard limits on how many tool calls the agent can do in each turn.
+
 Context is the bottleneck. Not the model. Not the prompt. Context.
 
-The agent doesn't have memory. It doesn't have state. It has context. Everything it knows about your project, your preferences, your conventions—all of it lives in the context window. When you add a skill, you're injecting more context. When you run a tool, the result goes into context. When you switch modes, you're switching which system prompt is active—all still in context.
+The agent doesn't have memory. It doesn't have state. It has context. Everything it knows about your project, your preferences, your conventions, all of it lives in the context window. When you add a skill, you're injecting more context. When you run a tool, the result goes into context. When you switch modes, you're switching which system prompt is active, all still in context.
 
-This means context engineering *is* AI agent engineering. The agent's behavior isn't determined by the model alone—it's determined by what context you give it, and how you structure that context over time.
+This means context engineering *is* AI agent engineering. The agent's behavior isn't determined by the model alone, or even primarily, but by what context you give it, and how you structure that context over time.
 
-Most tools treat context as a solved problem. They stuff everything in and hope the model figures it out. But context has limits, and those limits become visible fast:
+Most tools treat context as a solved problem. They stuff everything in and hope the model figures it out. In-context learning indeed seems kind of magical, it has limits, and those limits become visible fast.
 
-- **When context is short:** the agent can't connect distant pieces. It forgets what it did an hour ago. It makes inconsistent decisions.
-- **When context is long:** important things get lost in the middle. The agent starts contradicting itself. Old tool calls become noise.
-- **When context is unstructured:** the agent can't find what it needs. Skills pile up without priority. Assumptions go unspoken.
+When context is thin, the agent simply doesn't know enough about your project to make informed decision. It relies then on baked-in assumptions from training, and falls back to consensus instead of following your style: it uses the common tools and practices it learned from pretraining. This often means it uses slightly old and outdated tools and practices.
 
-The solution isn't more context. It's better architecture—which brings us to the symptoms.
+So you do the sensibe thing, and inject project-specific information into the context. But then if context grows too large, even if it doesn't technically exceeds the model's capacity, things start to get lost in the middle. Moreover, failed tool calls, wrong assumptions the model had to correct, etc., start creeping up in context, not only taking valuable space but also, and more importantly, _distracting_ the model and biasing it towards mediocre decisions.
+
+Then there is context compaction: when the context fills in to about 85%, most systems will invoke a special prompt to instruct the agent to summarize the current state. These prompts are more or less detailed, but often involved asking the agent what it is immediately doing, where is it stuck, what has failed, etc. Clever, but a hack nonetheless. This hard context reset means the agent will forget important nuances in the current conversation and will repeat past mistakes. It is annoying as hell.
+
+Let's look at how these problems surface in specific symptoms that _all_ LLM-based agents display at some point.
 
 ## Symptom One: Unstated Assumptions
 
@@ -50,7 +56,7 @@ The result is context bloat. The agent can't tell what's relevant in any given m
 
 ## Symptom Two: Permission Leakage
 
-Every agent framework implements the same pattern: analyze → plan → build. The idea is sound: think first, plan second, execute third. In practice, the boundaries leak.
+Every agent framework implements the same plan then build pattern. The idea is sound: think first, plan second, execute third. In practice, the boundaries leak.
 
 Plan mode is supposed to be read-only. Design the change, review the approach, lock in the scope. Build mode is supposed to execute. Write the code, run the tests, commit the result.
 
@@ -60,87 +66,79 @@ This matters because a plan only works if it's actually followed. If the agent c
 
 The second problem is structural: there's no artifact that passes from plan to build. The plan lives in the context. By the time build mode starts, the plan is mixed in with everything else the agent said. Which file was the plan? Which changes were approved? The agent has to re-read the conversation to remember. Context saturation accelerates.
 
-The plan is a map. But terrain changes. The agent needs a compass, not just a destination.
-
-Context—the information the agent carries—is that compass. And context has limits. After extended work, those limits become visible.
-
 ## Symptom Three: Context Saturation
 
 After extended work, you see the same pattern: the agent makes 95% of the progress, then fails on the last 5%. It nails the architecture. The logic is sound. The core implementation works. Then it stumbles on a detail—because context has saturated. It forgot which environment it was in, which conventions still apply, which constraints matter.
 
-I've seen this happen mid-sprint. The agent built a feature beautifully—clean code, good structure, proper error handling. Then it added hardcoded credentials because it forgot about the `.env` pattern we used everywhere. Not malicious. Not careless. Just context loss.
+But the deeper problem is internal noise. The agent keeps everything in context: all internal reasoning, all tool calls, all results. This is fine for minute-to-minute action. But after four failed attempts to solve something, the old tool calls are just noise. These were attempts that went nowhere, just add cost and accelerate saturation.
 
-But the deeper problem is internal noise. The agent keeps everything in context: all internal reasoning, all tool calls, all results. This is fine for minute-to-minute action. But after four failed attempts to solve something, the old tool calls are just noise. These were attempts that went nowhere—they add cost and accelerate saturation.
-
-And there's the Memento problem. The agent is supposed to leave a trail for its future self. After context compaction, it should be able to pick up where it left off. But if agents struggle with long contexts, how are they supposed to build a good trail? The compaction report is only as good as the agent's ability to summarize. And summarization is lossy.
+The supposed solution for this is context compacto. But this is the Memento problem.  The agent is supposed to leave a trail for its future self. After context compaction, it should be able to pick up where it left off. But if agents struggle with long contexts, how are they supposed to build a good trail? The compaction report is only as good as the agent's ability to summarize. And summarization is lossy and injects back lots of unstated assumptions from pretraining.
 
 The frustrating part: this wasn't a hard problem. The agent had all the knowledge it needed. But context filled with noise, and the important bits got pushed out. More tokens in, less signal out.
 
-The solution isn't better prompts. It's better architecture—and that architecture has four elements.
+The solution isn't just better prompts or larger context windows. Yes, these help. But the systoms are systemic, so the solution must be a system overhaul.
+
+Let me show you how that system looks like.
 
 ## Part II - The System
 
-This taxonomy isn't original to me. It's a synthesis of how modern AI agentic systems work under the hood. Most explicitly, it's implemented in the OpenCode CLI (opencode.ai), but all other tools follow a similar pattern—even if they use different names.
+Now that we understand the problem, let's look at how every agent system actually works. Every AI agent system addresses four concerns. When you conflate them, the system breaks. When you separate them, the system scales.
 
-Now that we understand the problem, let's look at how every agent system actually works.
-
-Every AI agent system addresses four concerns. When you conflate them, the system breaks. When you separate them, the system scales.
-
-I learned this the hard way. The first time I built an agent that mixed persona with workflow with domain knowledge, it worked for the happy path. Then users pushed on it, and everything tangled together like Christmas lights in storage. Mode logic leaking into commands. Skills stepping on each other. Subagents returning answers in the wrong voice. A mess.
-
-The fix wasn't better prompts. The fix was principled separation.
+This taxonomy isn't original to me. It's a synthesis of how modern AI agentic systems work under the hood. Most explicitly, it's implemented in the OpenCode CLI (opencode.ai), but all other tools follow a similar pattern, even if they use different names.
 
 Here's the breakdown. Every agent system you'll encounter (explicitly or implicitly) is managing these four things:
 
 **Mode — the who.** A mode is the persona the AI adopts. It defines the thinking style, the permissions, the available tools. When you interact with a "code assistant," you're in a coding mode. When you switch to "creative writer," you're in a creative mode.
 
-Modes are *explicit*. They're top-level system prompts that define behavior and permissions. You tell the agent: "This is how you should think and behave. These are the tools you can use. These are the parts of the filesystem you can write to." The mode doesn't emerge from context—it overrides it. Mode = the who, enforced.
+Modes are *explicit*. They're top-level system prompts that define behavior and permissions. You tell the agent: "This is how you should think and behave. These are the tools you can use. These are the parts of the filesystem you can write to."
 
-**Skill — the knowledge.** A skill is something the agent just *knows*. It doesn't get invoked—it gets applied. When you give an agent knowledge about SQL optimization, that skill is available whenever relevant. The agent doesn't need to be told to use it.
+**Skill — the knowledge.** A skill is knowledge the agent can recall when necessary. It doesn't get invoked explicitely, it gets applied _implicitely_ when necessary. When you give an agent knowledge about SQL optimization, that skill is available whenever relevant. The agent doesn't need to be told to use it. The ReAct cycle injects it when it deems suitable.
 
-Unlike modes, skills can layer. An agent might have a SQL skill, a documentation skill, and a debugging skill—all active simultaneously, all contributing when relevant. Skills are implicit because the agent should just apply them naturally.
-
-Skills aren't always-on in the way context is. Their short descriptions live in context, but the full content only injects when the agent decides it should. It's like tool activation: the trigger is contextual, the effect is an injection of relevant knowledge.
+Unlike modes, skills can layer. An agent might have a SQL skill, a documentation skill, and a debugging skill, all active simultaneously, all contributing when relevant. Skills are implicit because the agent should just apply them naturally. They can also contradict or complement each other. In-context learning _should_ be capable of using them in a combined manner.
 
 **Command — the workflow.** A command is a script. It tells the agent: do this, in this order, using these tools. "Refactor this function" is a command. "Run these tests and report results" is a command.
 
-Commands are *explicit*—you invoke them. Under the hood, commands are just prompts. The difference is who injects them: the user. When you run `/build`, you're injecting a workflow prompt into the agent's context. That's it. The command tells the agent: do this sequence of things. The complexity lives in the orchestration, not the command itself.
+Commands are *explicit*: you invoke them. Under the hood, commands are just prompts. The difference is who injects them: the user. When you run `/build`, you're injecting a workflow prompt into the agent's context. That's it. The command tells the agent: do this sequence of things. The complexity lives in the orchestration of the ReAct cycle, not the command itself.
 
-Commands are intentionally simple. They orchestrate. They delegate. They don't contain knowledge. That's intentional separation of concerns. The command itself shouldn't know *how* to build; it knows *when* to spawn subagents and which mode to use. This keeps commands thin and changeable without rewriting underlying knowledge.
+Commands are intentionally simple. They don't contain knowledge. That's intentional separation of concerns. The command itself shouldn't know *how* to build; it knows *when* to spawn subagents and which mode to use. This keeps commands thin and changeable without rewriting underlying knowledge.
 
-**Subagent — the delegation.** A subagent is a spawned agent for background or parallel tasks. It handles isolated work, returns summarized results, then disappears.
+**Subagent — the delegation.** A subagent is a spawned agent for background or parallel tasks. It handles isolated work, returns summarized results, then disappears. It is instantiated with a system prompt and specific instructions (synthesized by the primary agent that called it), and runs for one full ReAct turn.
 
-Subagents are ephemeral. Their internal reasoning stays private. The main agent only sees the synthesis. You spawn a subagent when you need parallel processing, isolation, or both.
-
-Notice the pattern: implicit vs explicit activation. Modes and skills are always there, applied contextually. Commands and subagents are triggered, run once or temporarily.
+Subagents are ephemeral. Their internal reasoning stays private. The main agent only sees the synthesis. You spawn a subagent when you need parallel processing, isolation, or both. They are the way to _fork_, solve a specific subtask, and return a result, but keep context clean. Kind of like subroutines.
 
 ### Why This Separation Matters
 
-Understanding this distinction unlocks everything else. Once you see skills as implicit knowledge and commands as explicit scripts, the rest of the architecture follows naturally. Most agent systems conflate these. They embed knowledge in commands. They make skills explicit and invocation-heavy. They mix persona into workflows.
+Understanding this distinction unlocks everything else. Once you see skills as implicit knowledge and commands as explicit scripts, the rest of the architecture clicks naturally. Most agent setups conflate these. They embed knowledge in commands. They make skills behave like workflows. They mix persona into everything else. And the massively underuse subagents.
 
-When you separate these concerns—modes for persona, skills for knowledge, commands for orchestration, subagents for delegation—you get something beautiful. You can swap skills without touching commands. You can change modes without rewriting workflows. You can spawn subagents without the main agent knowing or caring how they work internally. The result is a system that works until you need to change something—and when you do, you only touch the piece that needs changing, not the whole tangled mess.
+When you separate these concerns--modes for persona, skills for knowledge, commands for orchestration, subagents for delegation--you get something that looks like good systems engineering. You can swap skills without touching commands. You can change modes without rewriting workflows. You can spawn subagents without the main agent knowing or caring how they work internally. The result is a system that works and adapts and _scales_ like good software should do.
 
-The system scales because the pieces are independent. Change one without breaking the others. Each component has a single job, and the boundaries between them are meaningful. When context shifts, when requirements evolve, when a new skill needs adding—the system adapts incrementally rather than collapsing under the weight of accumulated complexity.
-
-These four elements aren't just theoretical categories. They're the building blocks for a practical system. But anatomy without application is just taxonomy. Let me show you how.
+The system scales because the pieces are independent. Change one without breaking the others. Each component has a single job, and the boundaries between them are meaningful. When context shifts, when requirements evolve, when a new skill needs adding, the system adapts incrementally rather than collapsing under the weight of accumulated complexity.
 
 ## Part III: The Practice
 
-The four-element framework isn't abstract. Here's how it works in practice—and why three domains illustrate it best. Software development shows the framework under constraints: deadlines, production code, real stakes. Research shows it under complexity: synthesis, evaluation, structured output. Technical writing shows it under nuance: voice, audience, iterative refinement. Three different pressures, one consistent architecture.
+If so far this seems like abstract theory for you, in this section we will ground these concepts in actual practice. Let me show you how I'm using these ideas today to improve my AI-assisted coding practice. I'm using opencode.ai but I believe the following is easily adaptable to any agentic toolkit out there.
 
-### The Three Modes
+### My Three Modes
 
-Every agentic system needs boundaries—not social contracts, but enforced constraints. In this framework, those constraints come from three modes: analyze, design, and create.
+Every agentic system needs boundaries, not social contracts, but enforced constraints. In my setup, those constraints come from three modes: analyze, design, and create.
 
-**Analyze mode** is research and investigation. This mode reads your work and writes summaries to a knowledge base. It cannot touch production files. Not "should not"—*cannot*. The permissions are built into the mode itself, not enforced through prompts or warnings.
+Each of these modes defines a thinking style---a persona---and a set of constraints for tool use and filesystem access.
 
-**Design mode** is architecture and planning. This mode bridges analysis and implementation—it can read your project and write design documents, architecture diagrams, and implementation plans, but still cannot touch production code.
+**Analyze mode** is research and investigation. This mode reads your work and writes summaries to a knowledge base. It cannot touch production files. Not "should not" but *cannot*. The permissions are built into the mode itself, not enforced through prompts or warnings. The agent is incapable of writing outside of a `.playground` folder, and is incapable of doing anything that can harm the project or the system (more on how a bit later) but it is still capable of running arbitrary code, download anything from the internet, and play around as it needs.
 
-**Create mode** is execution. Full read-write access. This is where production work happens—the agent can write code, create files, and modify the project directly.
+**Design mode** is architecture and planning. This mode bridges analysis and implementation. It can read your project and write design documents, architecture diagrams, and implementation plans, but still cannot touch production code. It cannot run shell scripts either, at all. It can look at git status and logs, read folder contents, etc., but it can only write to a space where plans and design documents go.
 
-The key insight: **modes define permissions, not just persona**. You can't accidentally prompt your way into code generation during research. The agent literally lacks the capability. The agent doesn't need to "understand" these constraints—it simply operates within them. Mode is the who, and it determines what the agent *can* do, not just how it thinks.
+**Create mode** is execution. Full read-write access. This is where production work happens. The agent can write code, create files, and modify the project directly. Again, it cannot do anything outside the project scope, though. It won't accidentally change `/etc/hosts` even if it tries to.
 
-Let me show you how they work in three different domains, software development, scientific research, and technical writing. In each of these domains we have two layers to go through: first is the set of implicit skills that are available to the agents, and second is the set of explicit commands (each tied to a specific mode) that setup concrete workflows.
+The key insight: **modes define permissions, not just persona**. You can't accidentally prompt your way into code generation during research. The agent literally lacks the capability. The agent doesn't need to "understand" these constraints, it simply operates within them.
+
+Mode is the who, and it determines what the agent *can* do, not just how it thinks.
+
+Let me show you how they work in three different domains that make the bread and butter of my daily job: software development, scientific research, and technical writing.
+
+I chose these domains because they illustrate the simplicity and scalability of the system. Software development shows the framework under constraints: deadlines, production code, real stakes. Research shows it under complexity: synthesis, evaluation, structured output. Technical writing shows it under nuance: voice, audience, iterative refinement. Three different pressures, one consistent architecture that works in all three cases.
+
+In each of these domains we have two layers to go through: first is the set of **implicit skills** that are available to the agents, and second is the set of **explicit commands** (each tied to a specific mode) that setup concrete workflows. I will show you one example workflow that cross-cuts across the three modes in each case. I will also tell you exactly where delegation occurs.
 
 ### Domain A: Software Development
 
@@ -148,15 +146,23 @@ Software development is where agentic systems face the harshest constraints. Pro
 
 #### Implicit Skills
 
-A software development agent carries knowledge it never needs to be told to use. It knows language idioms and patterns—the idiomatic way to write a list comprehension in Python, the convention for error handling in Go. It knows testing conventions: where tests live in the directory structure, how they're named, what assertions to prefer. It knows architecture conventions: layered structure, dependency injection patterns, how error states propagate. It knows code review standards: what to flag, what to praise, when to ask for clarification.
+A software development agent carries knowledge it never needs to be told to use. It knows language idioms and patterns like the idiomatic way to write a list comprehension in Python, or the conventions for error handling in Go. It knows testing conventions: where tests live in the directory structure, how they're named, what assertions to prefer. It knows architecture conventions: layered structure, dependency injection patterns, how error states propagate. It knows code review standards: what to flag, what to praise, when to ask for clarification.
 
-#### The trace/plan/build Workflow
+#### Example Workflow: Bug Hunting
 
-Debugging a subtle regression requires a specific rhythm. **Phase 1: /trace (analyze mode)** runs systematic experiments to narrow down the bug's cause. The agent examines stack traces, compares behavior across commits, and pinpoints the exact files and functions that need attention. This mode is read-only by design—research happens here, not in the code itself.
+I use this workflow for finding and fixing bugs. It starts with investigation. The agent spawns dozens of subagents to try and break the system (either guided towards a purpose, or completely unbiased). Then you build a comprehensive plan to solve it. And then you execute that plan. Simple, right?
+
+**Phase 1: /trace (analyze mode)** runs systematic experiments to detect and narrow down a bug's cause. The agent examines stack traces, compares behavior across commits, and pinpoints the exact files and functions that need attention. This mode is read-only by design, except for a `.playground` folder. Research happens here, not in the code itself.
+
+Each experiment is run on a subagent that has the job of verifying one assumption. The main agent receives only experiment results, and constructs an executive report of findings. This means you can run dozens of different experiments autonomously to detect what breaks what.
 
 **Phase 2: /plan (design mode)** takes the diagnosis and defines the changes needed, along with their architectural impact. The agent reviews the affected modules, considers alternative approaches, and documents the implementation plan before touching anything. This is where the scope gets locked in.
 
-**Phase 3: /build (create mode)** executes the plan step by step. The agent writes tests first (following TDD discipline), watches them fail, then implements just enough to pass. It commits atomically, logs its changes, and validates that the regression is resolved. This is where sequential execution and structured parsing make the difference between a helpful workflow and a chaotic one.
+The result of this phase is a structured plan with step by step details on what files must be touched and what must be done in there (semantically, not code). For every phase, it defines success criteria: what must be validated before we can say we got that phase right.
+
+**Phase 3: /build (create mode)** executes the plan step by step. The agent writes tests first (following TDD discipline) for the success criteria defined for that pahse and watches them fail. Then it launches a coding subagent that has _read-only_ access to tests, so it cannot cheat and change the tests.
+
+The subagent attempts to implement changes that make the test pass. If it succeeds, the main agent commits and moves on. If it doesn't, the main agent retries a few times. If there is no progress, the main agent resets the work tree (no harm done), and reports on failure. This usually means the plan needs revisions.
 
 ### Domain B: Research
 
@@ -164,15 +170,19 @@ Research is where agentic systems face the greatest complexity. Sources multiply
 
 #### Implicit Skills
 
-A research agent knows the conventions of academic writing without being reminded. It knows citation formats—APA, MLA, Chicago, IEEE—and when to use each. It knows how to evaluate papers: methodology soundness, sample size adequacy, replicability claims, conflict of interest disclosures. It knows the structure of literature reviews: how to organize by theme, methodology, or chronological development. It knows domain-specific terminology, distinguishing between "accuracy" and "precision" in machine learning, or between "confounding" and "colliding" in causal inference.
+A research agent knows the conventions of academic writing without being reminded. It knows citation formats like APA, MLA, Chicago, and IEEE, and when to use each. It knows how to evaluate papers: methodology soundness, sample size adequacy, replicability claims, conflict of interest disclosures. It knows the structure of literature reviews: how to organize by theme, methodology, or chronological development. It knows domain-specific terminology, distinguishing between "accuracy" and "precision" in machine learning, or between "confounding" and "colliding" in causal inference.
 
-#### The research/sota/draft Workflow
+#### Example Workflow: State-of-the-Art Report
 
-Synthesizing a research topic requires iterative collection and structured output. **Phase 1: /research (analyze mode)** spawns subagents to gather sources in parallel. Each subagent reads a batch of papers, synthesizes findings, and returns summaries. The main agent synthesizes those summaries into structured notes. This phase can be run multiple times to collect batches of sources without overwhelming context—the agent builds incrementally, not all at once.
+**Phase 1: /research (analyze mode)** spawns subagents to gather sources in parallel. Each subagent reads a batch of papers, synthesizes findings, and returns summaries. The main agent synthesizes those summaries into structured notes. This phase can be run multiple times to collect batches of sources without overwhelming context. At the end, you get hundreds of sources summarized into clean research notes.
 
-**Phase 2: /sota (design mode)** identifies patterns across the collected literature. The agent groups papers by methodology, extracts recurring findings, and maps the landscape of the field. It generates outline options for the final document, highlighting gaps where the research is thin and consensus areas where findings align.
+**Phase 2: /outline (design mode)** identifies patterns across the collected literature. The agent groups papers by methodology, extracts recurring findings, and maps the landscape of the field. It generates outline options for the final document, based on typical structures like problem-solution or paradigm-methods, highlighting gaps where the research is thin and consensus areas where findings align.
 
-**Phase 3: /draft (create mode)** builds the document section by section, following the outline from /sota. Each section draws on the structured notes, weaving together sources into coherent narrative. The agent cites as it writes, maintaining consistency with the target citation format.
+**Phase 3: /draft (create mode)** builds the document section by section, following the outline. Each section draws on the structured notes, weaving together sources into coherent narrative.
+
+The agent launches subagents for writing each subsection because typically, agents write more or less the same length in a single `write` command, so if you ask it to fill in a large outline all at once you'll only get a mediocre extended outline. By launching independent writers for specific sections of the outline, you get all the attention of a single turn to read source material and write a good 4 or 5 paragraphs for a concrete section.
+
+A cool idea I've been meaning to try is have the main agent can spawn several subagents to write the same section, with a high temperature, and then perform some sort of aggregation or evaluation before building the final draft for every section. This burns through 3x tokens but ensembles have been shown over and over to improve AI models outputs. If you try it, let me know.
 
 ### Domain C: Technical Writing
 
@@ -182,31 +192,35 @@ Technical writing is where agentic systems face the most nuance. Voice matters. 
 
 A technical writing agent carries knowledge of prose style without being coached. It knows voice and tense conventions—active voice for clarity, past tense for completed processes, second person for direct instruction. It knows structural patterns: how documentation differs from blog posts, how reports differ from tutorials, how reference material differs from guides. It knows audience awareness: what to explain for newcomers, what to omit for experts, when to elaborate and when to abbreviate. It knows cross-referencing and linking norms: when to link, when to inline, how to name anchors for scannability.
 
-#### The review/apply-review/write Workflow
+#### Example Workflow: Paper Review
 
-Refining existing text follows a review-then-apply pattern. **Phase 1: /review (analyze mode)** performs detailed review in a specific order: structural issues first, then content, then style. The agent examines the narrative arc—how main points connect, whether the flow makes sense—before worrying about grammar or word choice. This ordering matters; reviewing low-level details when high-level problems exist wastes effort.
+**Phase 1: /review (analyze mode)** performs detailed review in a specific order: structural issues first, then content, then style. The agent examines the narrative arc—how main points connect, whether the flow makes sense, before worrying about grammar or word choice. This ordering matters; reviewing low-level details when high-level problems exist wastes effort.
 
-**Phase 2: /apply-review (design mode)** plans changes to specific sections, prioritizing by review type. The agent maps structural fixes to particular paragraphs, content additions to thin sections, style improvements to verbose passages. It produces a concrete plan—section by section, change by change—before writing anything new.
+Each iteration is performed by spawining several subagents that focus on specific types of problems, like transitions, unverifiable claims, etc. Each subagent returns a structured list of issues, pointing back to exact line numbers and phrasing. Then, the main agent _edits_ the original paper and injects markdown comments in every marked issue, next to the paragraph, or under the header where it best fits.
 
-**Phase 3: /write (create mode)** follows the plan. The agent revises sections in priority order, applying structural changes first, then content, then style. Each revision is tracked, and the agent maintains the document's voice throughout.
+**Phase 2: /revise (design mode)** plans changes to specific sections, prioritizing by review type. The agent maps structural fixes to particular paragraphs, content additions to thin sections, style improvements to verbose passages. It produces a concrete plan, section by section, change by change. Then it goes into the manuscript and writes markdown comments as replies to the existing review comments, thus grounding the revision plan in the exact context it must fit.
 
----
+**Phase 3: /rewrite (create mode)** follows the plan. The agent revises sections in priority order, applying structural changes first, then content, then style. Again, each step is performed spawining a subagent tasked with just a change (for style changes we actually do it section by section).
 
-These workflows show the framework working. But there's a gap between "working" and "working well." I have three ideas for closing that gap. The first is about how commands work. The second is about security. The third is about context management. Let me show you what I'm building toward.
-
----
+The subagent doesn't edit; it produces a draft revision that the main agent is then tasked to paste into the document where it fits. Crucially, the main agent is instructed to _leave_ the editorial comments but mark them as solved, with a short trail of what was changed. This works wonders for a later human review phase.
 
 ## Part IV: A Look into the Future
 
-Here's where I want to take this. Three ideas, each addressing a different pain point.
+These workflows work, but with some caveats. There's a gap between "working" and "working well." Three key pains remain in my implementation.
+
+1. Long commands are hard to follow when given as a single prompt. The fourth step gets forgotten since it is buried at the begining of the context.
+2. Permissions as currently implemented are all-or-nothing. You either have shell access (destructive) or you dont. I want broad permissions (run whatever you want) with provable security (nothing you run can change this file).
+3. Context saturation still happens even with delegation. After a while, the agent will have to compact context, and this usually means you lose important information.
+
+I have three ideas for closing this gap. The first is about how commands work. The second is about security. The third is about context management. They are in different levels of implementation, so let me show you what I'm building toward.
 
 ### Idea One: Better Commands
 
-Commands in most tools (Claude Code, Gemini CLI, Codex, Copilot) are one-shot interactions: you invoke, it runs, you get a result. Real work isn't like that. It's iterative, adaptive. It pauses to ask questions, makes decisions based on context, and sometimes needs to call other scripts.
+Commands in most tools (Claude Code, Gemini CLI, Codex, Copilot) are one-shot interactions: you invoke the command, a single massive prompt is injected. The agent runs until it decides to stop.
 
-Here's what commands need to become:
+To make commands truly useful, we need to be more like scripts. Here's what that means:
 
-1. Commands that inject prompt instructions one step at a time, waiting for the agent to do a full turn each time. Instead of dumping a large prompt to run all steps at once, a command like `/review` could insert surgical mini prompts that say "read the file", wait for the agent, "analyze structure", wait for agent, and so on, until "write the report". This massively reduces the problem of lost-in-middle context saturation.
+1. Commands that inject prompt instructions one step at a time, waiting for the agent to do a full turn each time. Instead of dumping a large prompt to run all steps at once, a command like `/review` could insert surgical mini prompts that say "read the file", wait for the agent, "analyze structure", wait for agent, and so on, until "write the report". This massively reduces the problem of lost-in-middle context saturation. Each turn the agent is focused on one specific step, and you get N times the compute power to solve an N-step workflow.
 
 2. Commands that extract structured information from the agent response, and can later inject variables back into prompt. This allows to reinject important information into later prompts, keeping important information as a contextual variable, not just a string lost in the middle of the prompt. But it allows for something else.
 
@@ -220,13 +234,21 @@ If this sounds exciting, I'm happy to tell you this is already doable, to some e
 
 ### Idea Two: Sandboxed Security
 
-Most agentic tools give the agent filesystem access, network access, tool execution—all the power, none of the guardrails. This is fine for experiments. It's dangerous for production.
+Most agentic tools have very coarse permission settings. You can allow, deny, or set a specific tool to "ask" mode, which means the agent will pause and emit a notification for the user to give permission.
 
-I've been building a sandboxed execution layer. The agent runs in isolation. Filesystem access is scoped. Network calls are proxied. Tool execution is audited. Nothing runs without explicit user approval.
+This works fine for coarse-grained permissions like read-only access, or write but no shell. In OpenCode, you can even define permissions for specific paths, or even specific shell commands (with simple glob patterns, so you can, e.g., allow `ls *` but reject all other shell commands).
 
-This isn't just about safety, though. When you know the agent can't accidentally wipe your home directory or exfiltrate your API keys, you can let it do more. Security enables capability. You can let the agent download arbitrary code from the internet, run arbitrary scripts, break things and observe changes. Everything happens inside a Docker container with precise constraints that enable maximum capability with absolute security.
+However, even in this case, I find these permissions too restrictive. They are conflating two different dimensions into one--what tools the agent can use, and what side-effects can those tool have.
 
-I also kind of already implemented this, but it's still in beta phase. More on this idea in a future article.
+For example, say I want to give my agent `git` access but only for reading operations. How do you achieve that? You need to list all safe patterns like `git ls-tree *`, `git status`, `git log *`. But what about `git branch`? Depending on the arguments, this subcommand can have read-only or write side effects. And then think about pipes, shell substitution, custom bash scripts, or worse, `python *`.
+
+If you want your agent to be capable, you need to give it access to a wide variety of tools. For example, my bug-hunting workflow depends on the agent been able to execute arbitrary code that it synthesizes on the fly. However, I want guardrails. There is simply no way to whitelist all possible commands. We need separation of permission to run a command and permission to modify the system.
+
+The solution, of course, is some form of filesystem isolation. The most obvious one is wrapping all shell execution in Docker, so commands run in a container with proper constraints. This creates all sorts of other problems, which I can discuss in a future post, but for now, it remains my best (and simplest) solution to robust sandboxing.
+
+And this isn't just about safety, though. When you know the agent can't accidentally wipe your home directory or exfiltrate your API keys, you can let it do more. Security enables capability. You can let the agent download arbitrary code from the internet, run arbitrary scripts, break things and observe changes. Everything happens inside a Docker container with precise constraints that enable maximum capability with absolute security.
+
+As of now, I kind of implemented this as a plugin for OpenCode, but it's still in beta phase and not ready for widespread use. More on this idea in a future article.
 
 ### Idea Three: Context-Aware Execution
 
@@ -234,16 +256,20 @@ And finally, we need to rethink the whole oversimplistic ReAct loop that simply 
 
 I've been designing a system where the context never saturates. It branches when you're exploring, spawning parallel contexts for different approaches. It prunes old tool calls that went nowhere. It removes internal reasoning that no longer matters. It maintains a "trail" that actually works: a structured record of decisions, not a lossy summary.
 
-The goal is simple: keep context between 40% and 60% saturation at all times. Not by compacting a 150K context down to 10K--which kills all understanding the agent had achieved--but by never letting it grow unchecked.
+The goal is simple: keep context between 40% and 60% saturation at all times. Not by compacting a 150K tokens context down to 10K---which kills all understanding the agent had achieved---but by never letting it grow unchecked.
 
 Nothing like this exists yet, so I'm building it, but's a story for another day.
 
 ## Conclusion
 
-The three modes are one expression of the four-element framework. But here's what surprised me: I didn't design this symmetry. It emerged.
+The main takeaway from this article is not that _my_ system is better. Is that _you_ can design your own system to adapt perfectly to your workflows if you clearly separate concerns. The main modes are for establishing an overal persona--inquisitive and critical, versus detailed and forward-looking, versus focused and action-biased--while skills incorporate domain knowledge, and commands act as precise workflows.
 
-Modes kept getting tangled with commands, so I pulled them apart. Skills kept leaking into workflows, so I isolated them. Subagents kept needing access to shared context, so I made them ephemeral. The separation created composability—and composability is what makes the whole thing work.
+The workflows I described are real, based on actual commands and promtps I'm using in production code. But I have abstracted them a bit to make them easier to understand in the context of an arbitrary agent, not tied to specific idiosincracies of the tool I happen to be using at the moment. If you want to see and try for yourself a concrete implementation of these ideas---still imperfect, but working nonetheless---check out my [opencode toolkit](https://apiad.github.io/opencode) repository. It's still pretty much work in progress, so use it with care.
 
-The insight isn't that Mode, Skill, Command, and Subagent *exist*. It's that separating them creates emergent properties you couldn't have planned. You define the boundaries once; the system handles everything between them. That's not organization—that's leverage.
+In future articles I will explore specific problems in more detail and discuss concrete strategies to implement powerful workflows that keep you, the user, in absolute control, while delegating the majority of the grunt work.
 
-Build for the long game. Your future self (and your context window) will thank you.
+And, as a final remark, I'm seriously considering building my own CLI agent. I know, I know. Reinventing the wheel and all that. But my plan is not to compete with any of the professional tools out there. What I always care about is _understanding_ things deeply, and as my computer science career has taught me so far, there is no deeper understanding than the one you gain from actually building stuff.
+
+So stay tuned for that. I will share progress as usual in the form of educational articles, so you'll get to see under the hood how to build a fully functional CLI agent with tool calling, context compaction, skills, commands (the powerful ones, not the cheap single-prompt injection), subagent delegation, sandboxing, and all the engineering design hurdles that come with it.
+
+Until next time, stay curious.
